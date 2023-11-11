@@ -10,6 +10,6 @@ public interface IAutoFakerConfigBuilder
     ///     Registers the args to use when constructing an <see cref="AutoFaker{Type}" /> instance.
     /// </summary>
     /// <param name="args">The args to use for construction.</param>
-    /// <returns>The current configuration builder instance.</returns>
+    /// <returns>The given configuration builder instance.</returns>
     IAutoFakerConfigBuilder WithArgs(params object[] args);
 }

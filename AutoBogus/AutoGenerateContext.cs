@@ -12,7 +12,7 @@ public sealed class AutoGenerateContext
     {
     }
 
-    internal AutoGenerateContext(Faker faker, AutoConfig config)
+    internal AutoGenerateContext(Faker? faker, AutoConfig config)
     {
         Faker  = faker ?? new Faker(config.Locale);
         Config = config;
@@ -22,25 +22,20 @@ public sealed class AutoGenerateContext
         RuleSets = Enumerable.Empty<string>();
     }
 
-    internal AutoConfig  Config     { get; }
-    internal Stack<Type> TypesStack { get; }
-
-    internal object Instance { get; set; }
-
     /// <summary>
     ///     The parent type of the type associated with the current generate request.
     /// </summary>
-    public Type ParentType { get; set; }
+    public Type? ParentType { get; set; }
 
     /// <summary>
     ///     The type associated with the current generate request.
     /// </summary>
-    public Type GenerateType { get; internal set; }
+    public Type? GenerateType { get; internal set; }
 
     /// <summary>
     ///     The name associated with the current generate request.
     /// </summary>
-    public string GenerateName { get; internal set; }
+    public string? GenerateName { get; internal set; }
 
     /// <summary>
     ///     The underlying <see cref="Bogus.Faker" /> instance used to generate random values.
@@ -52,6 +47,13 @@ public sealed class AutoGenerateContext
     /// </summary>
     public IEnumerable<string> RuleSets { get; internal set; }
 
-    internal IAutoBinder                        Binder    => Config.Binder;
+    internal AutoConfig Config { get; }
+
+    internal Stack<Type> TypesStack { get; }
+
+    internal object? Instance { get; set; }
+
+    internal IAutoBinder Binder => Config.Binder;
+
     internal IEnumerable<AutoGeneratorOverride> Overrides => Config.Overrides;
 }

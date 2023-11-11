@@ -495,10 +495,12 @@ dotnet_diagnostic.ca1040.severity = none
 # CA1030: Consider making an event TODO: remove later
 dotnet_diagnostic.ca1030.severity = none
 
-# CA1034: Do not nest type SearchData. Alternatively, change its accessibility so that it is not externally visible.
+# CA1034: Do not nest type. Alternatively, change its accessibility so that it is not externally visible.
 dotnet_diagnostic.ca1034.severity = none
 
-## ----------------------------------------------------------------------------
+# CA1002: Change 'List ' to use 'Collection ', 'ReadOnlyCollection ' or 'KeyedCollection
+dotnet_diagnostic.ca1002.severity = suggestion
+                                                     ## ----------------------------------------------------------------------------
 ##                               Style Cop rules
 ## ----------------------------------------------------------------------------
 

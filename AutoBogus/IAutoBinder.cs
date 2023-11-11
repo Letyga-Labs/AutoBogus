@@ -24,13 +24,11 @@ public interface IAutoBinder
     /// <param name="instance">The instance to populate.</param>
     /// <param name="context">The <see cref="AutoGenerateContext" /> instance for the generate request.</param>
     /// <param name="members">
-    ///     An optional collection of members to populate. If null, all writable instance members are
-    ///     populated.
+    ///     An optional collection of members to populate. If null, all writable instance members are populated.
     /// </param>
     /// <remarks>
-    ///     Due to the boxing nature of value types, the <paramref name="instance" /> parameter is an object. This means the
-    ///     populated
-    ///     values are applied to the provided instance and not a copy.
+    ///     Due to the boxing nature of value types, the <paramref name="instance" /> parameter is an object.
+    ///     This means the populated values are applied to the provided instance and not a copy.
     /// </remarks>
-    void PopulateInstance<TType>(object instance, AutoGenerateContext context, IEnumerable<MemberInfo> members = null);
+    void PopulateInstance<TType>(object instance, AutoGenerateContext context, IEnumerable<MemberInfo>? members = null);
 }

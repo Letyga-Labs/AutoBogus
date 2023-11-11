@@ -10,14 +10,17 @@ internal sealed class AutoGeneratorMemberOverride<TType, TValue>
             throw new ArgumentException("Value cannot be null or white space", nameof(memberName));
         }
 
+        ArgumentNullException.ThrowIfNull(generator);
+
         Type       = typeof(TType);
         MemberName = memberName;
-        Generator  = generator ?? throw new ArgumentNullException(nameof(generator));
+        Generator  = generator;
     }
 
-    private Type                                      Type       { get; }
-    private string                                    MemberName { get; }
-    private Func<AutoGenerateOverrideContext, TValue> Generator  { get; }
+    private Type   Type       { get; }
+    private string MemberName { get; }
+
+    private Func<AutoGenerateOverrideContext, TValue> Generator { get; }
 
     public override bool CanOverride(AutoGenerateContext context)
     {

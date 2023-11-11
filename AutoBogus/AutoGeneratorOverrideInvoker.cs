@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace AutoBogus;
 
 internal sealed class AutoGeneratorOverrideInvoker
@@ -9,7 +11,8 @@ internal sealed class AutoGeneratorOverrideInvoker
         Overrides = overrides;
     }
 
-    internal IAutoGenerator                     Generator { get; }
+    internal IAutoGenerator Generator { get; }
+
     internal IEnumerable<AutoGeneratorOverride> Overrides { get; }
 
     object IAutoGenerator.Generate(AutoGenerateContext context)
@@ -28,6 +31,7 @@ internal sealed class AutoGeneratorOverrideInvoker
             generatorOverride.Generate(overrideContext);
         }
 
+        Debug.Assert(overrideContext.Instance != null, "overrideContext.Instance != null");
         return overrideContext.Instance;
     }
 }

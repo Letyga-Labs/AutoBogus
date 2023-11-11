@@ -11,9 +11,9 @@ internal sealed class ExpandoObjectGenerator
 
 #if !NETSTANDARD1_3
         // Need to copy the target dictionary to avoid mutations during population
-        var target     = instance as IDictionary<string, object>;
-        var source     = new Dictionary<string, object>(target);
-        var properties = source.Where(pair => pair.Value != null);
+        var                                        target     = instance as IDictionary<string, object>;
+        var                                        source     = new Dictionary<string, object>(target);
+        IEnumerable<KeyValuePair<string?, object>> properties = source.Where(pair => pair.Value != null);
 
         foreach (var property in properties)
         {

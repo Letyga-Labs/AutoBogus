@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using AutoBogus.Generators;
 using AutoBogus.Util;
@@ -6,7 +7,7 @@ namespace AutoBogus;
 
 internal static class AutoGeneratorFactory
 {
-    internal static IDictionary<Type, IAutoGenerator> Generators = new Dictionary<Type, IAutoGenerator>
+    internal static readonly IDictionary<Type, IAutoGenerator> Generators = new Dictionary<Type, IAutoGenerator>
     {
         { typeof(bool), new BoolGenerator() },
         { typeof(byte), new ByteGenerator() },
@@ -49,10 +50,12 @@ internal static class AutoGeneratorFactory
         var type = context.GenerateType;
 
         // Need check if the type is an in/out parameter and adjusted accordingly
-        if (type.IsByRef)
+        if (type != null && type.IsByRef)
         {
             type = type.GetElementType();
         }
+
+        Debug.Assert(type != null, nameof(type) + " != null");
 
         // Check if an expando object needs to generator
         // This actually means an existing dictionary needs to be populated
@@ -65,10 +68,10 @@ internal static class AutoGeneratorFactory
         if (type.IsArray)
         {
             type = type.GetElementType();
+            Debug.Assert(type != null, nameof(type) + " != null");
             return CreateGenericGenerator(typeof(ArrayGenerator<>), type);
         }
 
-#if !NETSTANDARD1_3
         if (DataTableGenerator.TryCreateGenerator(type, out var dataTableGenerator))
         {
             return dataTableGenerator;
@@ -78,7 +81,6 @@ internal static class AutoGeneratorFactory
         {
             return dataSetGenerator;
         }
-#endif
 
         if (ReflectionHelper.IsEnum(type))
         {
@@ -100,8 +102,8 @@ internal static class AutoGeneratorFactory
 
             if (ReflectionHelper.IsReadOnlyDictionary(genericCollectionType))
             {
-                var keyType   = generics.ElementAt(0);
-                var valueType = generics.ElementAt(1);
+                var keyType   = generics[0];
+                var valueType = generics[1];
 
                 return CreateGenericGenerator(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
             }
@@ -129,31 +131,28 @@ internal static class AutoGeneratorFactory
                 return CreateGenericGenerator(typeof(ListGenerator<>), elementType);
             }
 
-            if (ReflectionHelper.IsEnumerable(genericCollectionType))
+            // Not a full list type, we can't fake it if it's anything other than
+            // the actual IEnumerable<T> interface itelf.
+            if (ReflectionHelper.IsEnumerable(genericCollectionType) && type == genericCollectionType)
             {
-                // Not a full list type, we can't fake it if it's anything other than
-                // the actual IEnumerable<T> interface itelf.
-                if (type == genericCollectionType)
-                {
-                    var elementType = generics.Single();
-                    return CreateGenericGenerator(typeof(EnumerableGenerator<>), elementType);
-                }
+                var elementType = generics.Single();
+                return CreateGenericGenerator(typeof(EnumerableGenerator<>), elementType);
             }
         }
 
         // Resolve the generator from the type
-        if (Generators.ContainsKey(type))
+        if (Generators.TryGetValue(type, out var generator))
         {
-            return Generators[type];
+            return generator;
         }
 
         return CreateGenericGenerator(typeof(TypeGenerator<>), type);
     }
 
-    private static IAutoGenerator CreateDictionaryGenerator(IEnumerable<Type> generics)
+    private static IAutoGenerator CreateDictionaryGenerator(Type[] generics)
     {
-        var keyType   = generics.ElementAt(0);
-        var valueType = generics.ElementAt(1);
+        var keyType   = generics[0];
+        var valueType = generics[1];
 
         return CreateGenericGenerator(typeof(DictionaryGenerator<,>), keyType, valueType);
     }
@@ -161,6 +160,6 @@ internal static class AutoGeneratorFactory
     private static IAutoGenerator CreateGenericGenerator(Type generatorType, params Type[] genericTypes)
     {
         var type = generatorType.MakeGenericType(genericTypes);
-        return (IAutoGenerator)Activator.CreateInstance(type);
+        return (IAutoGenerator)Activator.CreateInstance(type)!;
     }
 }

@@ -9,84 +9,52 @@ internal static class ReflectionHelper
 {
     internal static bool IsEnum(Type type)
     {
-#if NET40
-      return type.IsEnum;
-#else
         var typeInfo = type.GetTypeInfo();
         return typeInfo.IsEnum;
-#endif
     }
 
     internal static bool IsAbstract(Type type)
     {
-#if NET40
-      return type.IsAbstract;
-#else
         var typeInfo = type.GetTypeInfo();
         return typeInfo.IsAbstract;
-#endif
     }
 
     internal static bool IsInterface(Type type)
     {
-#if NET40
-      return type.IsInterface;
-#else
         var typeInfo = type.GetTypeInfo();
         return typeInfo.IsInterface;
-#endif
     }
 
     internal static bool IsGenericType(Type type)
     {
-#if NET40
-      return type.IsGenericType;
-#else
         var typeInfo = type.GetTypeInfo();
         return typeInfo.IsGenericType;
-#endif
     }
 
     internal static bool IsExpandoObject(Type type)
     {
-#if NETSTANDARD1_3
-      return false;
-#else
         return type == typeof(ExpandoObject);
-#endif
     }
 
     internal static bool IsAssignableFrom(Type baseType, Type type)
     {
-#if NET40
-      return baseType.IsAssignableFrom(type);
-#else
         var baseTypeInfo = baseType.GetTypeInfo();
         var typeInfo     = type.GetTypeInfo();
 
         return baseTypeInfo.IsAssignableFrom(typeInfo);
-#endif
     }
 
     internal static bool IsField(MemberInfo member)
     {
-#if NET40
-      return member.MemberType == MemberTypes.Field;
-#else
         return member is FieldInfo;
-#endif
     }
 
     internal static bool IsProperty(MemberInfo member)
     {
-#if NET40
-      return member.MemberType == MemberTypes.Property;
-#else
         return member is PropertyInfo;
-#endif
     }
 
-    internal static IEnumerable<Type> GetGenericArguments(Type type)
+    internal static Type[] GetGenericArguments(Type type)
     {
         return type.GetGenericArguments();
     }
@@ -96,7 +64,7 @@ internal static class ReflectionHelper
         return type.GetGenericTypeDefinition();
     }
 
-    internal static Type GetGenericCollectionType(Type type)
+    internal static Type? GetGenericCollectionType(Type type)
     {
         var interfaces = type.GetInterfaces().Where(IsGenericType);
 
@@ -105,12 +73,12 @@ internal static class ReflectionHelper
             interfaces = interfaces.Concat(new[] { type, });
         }
 
-        Type dictionaryType         = null;
-        Type readOnlyDictionaryType = null;
-        Type listType               = null;
-        Type setType                = null;
-        Type collectionType         = null;
-        Type enumerableType         = null;
+        Type? dictionaryType         = null;
+        Type? readOnlyDictionaryType = null;
+        Type? listType               = null;
+        Type? setType                = null;
+        Type? collectionType         = null;
+        Type? enumerableType         = null;
 
         foreach (var interfaceType in interfaces.Where(IsGenericType))
         {
@@ -161,23 +129,19 @@ internal static class ReflectionHelper
 
     internal static bool IsReadOnlyDictionary(Type type)
     {
-#if NET40
-      return false;
-#else
         var baseType = typeof(IReadOnlyDictionary<,>);
 
-        if (IsGenericTypeDefinition(baseType, type))
+        if (!IsGenericTypeDefinition(baseType, type))
         {
-            // Read only dictionaries don't have an Add() method
-            var methods = type
-                .GetMethods()
-                .Where(m => m.Name.Equals("Add"));
-
-            return !methods.Any();
+            return false;
         }
 
-        return false;
-#endif
+        // Read only dictionaries don't have an Add() method
+        var methods = type
+            .GetMethods()
+            .Where(m => m.Name.Equals("Add", StringComparison.Ordinal));
+
+        return !methods.Any();
     }
 
     internal static bool IsSet(Type type)
@@ -211,24 +175,20 @@ internal static class ReflectionHelper
 
     private static bool IsGenericTypeDefinition(Type baseType, Type type)
     {
-        if (IsGenericType(type))
+        if (!IsGenericType(type))
         {
-            var definition = GetGenericTypeDefinition(type);
-
-            // Do an assignable query first
-            if (IsAssignableFrom(baseType, definition))
-            {
-                return true;
-            }
-
-            // If that don't work use the more complex interface checks
-            var interfaces = from i in type.GetInterfaces()
-                where IsGenericTypeDefinition(baseType, i)
-                select i;
-
-            return interfaces.Any();
+            return false;
         }
 
-        return false;
+        var definition = GetGenericTypeDefinition(type);
+
+        // Do an assignable query first
+        if (IsAssignableFrom(baseType, definition))
+        {
+            return true;
+        }
+
+        // If that don't work use the more complex interface checks
+        return Array.Exists(type.GetInterfaces(), i => IsGenericTypeDefinition(baseType, i));
     }
 }

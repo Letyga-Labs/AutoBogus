@@ -20,17 +20,17 @@ public sealed class AutoGenerateOverrideContext
     /// <summary>
     ///     The instance generated during the override.
     /// </summary>
-    public object Instance { get; set; }
+    public object? Instance { get; set; }
 
     /// <summary>
     ///     The type associated with the current generate request.
     /// </summary>
-    public Type GenerateType { get; }
+    public Type? GenerateType { get; }
 
     /// <summary>
     ///     The name associated with the current generate request.
     /// </summary>
-    public string GenerateName { get; }
+    public string? GenerateName { get; }
 
     /// <summary>
     ///     The underlying <see cref="Bogus.Faker" /> instance used to generate random values.

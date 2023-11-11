@@ -2,8 +2,10 @@ using Bogus;
 
 namespace AutoBogus;
 
-internal sealed class AutoConfigBuilder
-    : IAutoFakerDefaultConfigBuilder, IAutoGenerateConfigBuilder, IAutoFakerConfigBuilder
+internal sealed class AutoConfigBuilder :
+    IAutoFakerDefaultConfigBuilder,
+    IAutoGenerateConfigBuilder,
+    IAutoFakerConfigBuilder
 {
     internal AutoConfigBuilder(AutoConfig config)
     {
@@ -12,7 +14,7 @@ internal sealed class AutoConfigBuilder
 
     internal AutoConfig Config { get; }
 
-    internal object[] Args { get; private set; }
+    internal object?[]? Args { get; private set; }
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithLocale(string locale)
     {
@@ -21,7 +23,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithRepeatCount(int count)
     {
-        return WithRepeatCount<IAutoFakerConfigBuilder>(context => count, this);
+        return WithRepeatCount<IAutoFakerConfigBuilder>(_ => count, this);
     }
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithRepeatCount(
@@ -32,7 +34,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithDataTableRowCount(int count)
     {
-        return WithDataTableRowCount<IAutoFakerConfigBuilder>(context => count, this);
+        return WithDataTableRowCount<IAutoFakerConfigBuilder>(_ => count, this);
     }
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithDataTableRowCount(
@@ -43,7 +45,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithRecursiveDepth(int depth)
     {
-        return WithRecursiveDepth<IAutoFakerConfigBuilder>(context => depth, this);
+        return WithRecursiveDepth<IAutoFakerConfigBuilder>(_ => depth, this);
     }
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithRecursiveDepth(
@@ -54,7 +56,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithTreeDepth(int? depth)
     {
-        return WithTreeDepth<IAutoFakerConfigBuilder>(context => depth, this);
+        return WithTreeDepth<IAutoFakerConfigBuilder>(_ => depth, this);
     }
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithTreeDepth(
@@ -106,7 +108,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithRepeatCount(int count)
     {
-        return WithRepeatCount<IAutoFakerDefaultConfigBuilder>(context => count, this);
+        return WithRepeatCount<IAutoFakerDefaultConfigBuilder>(_ => count, this);
     }
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithRepeatCount(
@@ -117,7 +119,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithDataTableRowCount(int count)
     {
-        return WithDataTableRowCount<IAutoFakerDefaultConfigBuilder>(context => count, this);
+        return WithDataTableRowCount<IAutoFakerDefaultConfigBuilder>(_ => count, this);
     }
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithDataTableRowCount(
@@ -128,7 +130,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithRecursiveDepth(int depth)
     {
-        return WithRecursiveDepth<IAutoFakerDefaultConfigBuilder>(context => depth, this);
+        return WithRecursiveDepth<IAutoFakerDefaultConfigBuilder>(_ => depth, this);
     }
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithRecursiveDepth(
@@ -139,7 +141,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithTreeDepth(int? depth)
     {
-        return WithTreeDepth<IAutoFakerDefaultConfigBuilder>(context => depth, this);
+        return WithTreeDepth<IAutoFakerDefaultConfigBuilder>(_ => depth, this);
     }
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithTreeDepth(
@@ -188,7 +190,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithRepeatCount(int count)
     {
-        return WithRepeatCount<IAutoGenerateConfigBuilder>(context => count, this);
+        return WithRepeatCount<IAutoGenerateConfigBuilder>(_ => count, this);
     }
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithRepeatCount(
@@ -199,7 +201,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithDataTableRowCount(int count)
     {
-        return WithDataTableRowCount<IAutoGenerateConfigBuilder>(context => count, this);
+        return WithDataTableRowCount<IAutoGenerateConfigBuilder>(_ => count, this);
     }
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithDataTableRowCount(
@@ -210,7 +212,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithRecursiveDepth(int depth)
     {
-        return WithRecursiveDepth<IAutoGenerateConfigBuilder>(context => depth, this);
+        return WithRecursiveDepth<IAutoGenerateConfigBuilder>(_ => depth, this);
     }
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithRecursiveDepth(
@@ -221,7 +223,7 @@ internal sealed class AutoConfigBuilder
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithTreeDepth(int? depth)
     {
-        return WithTreeDepth<IAutoGenerateConfigBuilder>(context => depth, this);
+        return WithTreeDepth<IAutoGenerateConfigBuilder>(_ => depth, this);
     }
 
     IAutoGenerateConfigBuilder IAutoConfigBuilder<IAutoGenerateConfigBuilder>.WithTreeDepth(
@@ -261,43 +263,43 @@ internal sealed class AutoConfigBuilder
         return WithOverride<IAutoGenerateConfigBuilder>(generatorOverride, this);
     }
 
-    internal TBuilder WithLocale<TBuilder>(string locale, TBuilder builder)
+    internal TBuilder WithLocale<TBuilder>(string? locale, TBuilder builder)
     {
         Config.Locale = locale ?? AutoConfig.DefaultLocale;
         return builder;
     }
 
-    internal TBuilder WithRepeatCount<TBuilder>(Func<AutoGenerateContext, int> count, TBuilder builder)
+    internal TBuilder WithRepeatCount<TBuilder>(Func<AutoGenerateContext, int>? count, TBuilder builder)
     {
         Config.RepeatCount = count ?? AutoConfig.DefaultRepeatCount;
         return builder;
     }
 
-    internal TBuilder WithDataTableRowCount<TBuilder>(Func<AutoGenerateContext, int> count, TBuilder builder)
+    internal TBuilder WithDataTableRowCount<TBuilder>(Func<AutoGenerateContext, int>? count, TBuilder builder)
     {
         Config.DataTableRowCount = count ?? AutoConfig.DefaultDataTableRowCount;
         return builder;
     }
 
-    internal TBuilder WithRecursiveDepth<TBuilder>(Func<AutoGenerateContext, int> depth, TBuilder builder)
+    internal TBuilder WithRecursiveDepth<TBuilder>(Func<AutoGenerateContext, int>? depth, TBuilder builder)
     {
         Config.RecursiveDepth = depth ?? AutoConfig.DefaultRecursiveDepth;
         return builder;
     }
 
-    internal TBuilder WithTreeDepth<TBuilder>(Func<AutoGenerateContext, int?> depth, TBuilder builder)
+    internal TBuilder WithTreeDepth<TBuilder>(Func<AutoGenerateContext, int?>? depth, TBuilder builder)
     {
         Config.TreeDepth = depth ?? AutoConfig.DefaultTreeDepth;
         return builder;
     }
 
-    internal TBuilder WithBinder<TBuilder>(IAutoBinder binder, TBuilder builder)
+    internal TBuilder WithBinder<TBuilder>(IAutoBinder? binder, TBuilder builder)
     {
         Config.Binder = binder ?? new AutoBinder();
         return builder;
     }
 
-    internal TBuilder WithFakerHub<TBuilder>(Faker fakerHub, TBuilder builder)
+    internal TBuilder WithFakerHub<TBuilder>(Faker? fakerHub, TBuilder builder)
     {
         Config.FakerHub = fakerHub;
         return builder;
@@ -305,8 +307,7 @@ internal sealed class AutoConfigBuilder
 
     internal TBuilder WithSkip<TBuilder>(Type type, TBuilder builder)
     {
-        var existing = Config.SkipTypes.Any(t => t == type);
-
+        var existing = Config.SkipTypes.Any(it => it == type);
         if (!existing)
         {
             Config.SkipTypes.Add(type);
@@ -317,15 +318,17 @@ internal sealed class AutoConfigBuilder
 
     internal TBuilder WithSkip<TBuilder>(Type type, string memberName, TBuilder builder)
     {
-        if (!string.IsNullOrWhiteSpace(memberName))
+        if (string.IsNullOrWhiteSpace(memberName))
         {
-            var path     = $"{type.FullName}.{memberName}";
-            var existing = Config.SkipPaths.Any(s => s == path);
+            return builder;
+        }
 
-            if (!existing)
-            {
-                Config.SkipPaths.Add(path);
-            }
+        var path     = $"{type.FullName}.{memberName}";
+        var existing = Config.SkipPaths.Any(it => it == path);
+
+        if (!existing)
+        {
+            Config.SkipPaths.Add(path);
         }
 
         return builder;
@@ -336,22 +339,23 @@ internal sealed class AutoConfigBuilder
         return WithSkip(typeof(TType), memberName, builder);
     }
 
-    internal TBuilder WithOverride<TBuilder>(AutoGeneratorOverride generatorOverride, TBuilder builder)
+    internal TBuilder WithOverride<TBuilder>(AutoGeneratorOverride? generatorOverride, TBuilder builder)
     {
-        if (generatorOverride != null)
+        if (generatorOverride == null)
         {
-            var existing = Config.Overrides.Any(o => o == generatorOverride);
+            return builder;
+        }
 
-            if (!existing)
-            {
-                Config.Overrides.Add(generatorOverride);
-            }
+        var existing = Config.Overrides.Any(it => it == generatorOverride);
+        if (!existing)
+        {
+            Config.Overrides.Add(generatorOverride);
         }
 
         return builder;
     }
 
-    internal TBuilder WithArgs<TBuilder>(object[] args, TBuilder builder)
+    internal TBuilder WithArgs<TBuilder>(object?[]? args, TBuilder builder)
     {
         Args = args;
         return builder;
