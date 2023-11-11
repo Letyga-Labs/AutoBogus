@@ -1,23 +1,12 @@
-#if !NETSTANDARD1_3
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AutoBogus.Generators;
 
 internal abstract class DataTableGenerator
     : IAutoGenerator
 {
-    public object Generate(AutoGenerateContext context)
-    {
-        var table = CreateTable(context);
-
-        context.Instance = table;
-
-        PopulateRows(table, context);
-
-        return table;
-    }
-
-    public static bool IsTypedDataTableType(Type type, out Type rowType)
+    public static bool IsTypedDataTableType(Type? type, [NotNullWhen(true)] out Type? rowType)
     {
         rowType = default;
 
@@ -35,7 +24,7 @@ internal abstract class DataTableGenerator
         return false;
     }
 
-    public static bool TryCreateGenerator(Type tableType, out DataTableGenerator generator)
+    public static bool TryCreateGenerator(Type tableType, [NotNullWhen(true)] out DataTableGenerator? generator)
     {
         generator = default;
 
@@ -46,11 +35,18 @@ internal abstract class DataTableGenerator
         else if (IsTypedDataTableType(tableType, out var rowType))
         {
             var generatorType = typeof(TypedDataTableGenerator<,>).MakeGenericType(tableType, rowType);
-
-            generator = (DataTableGenerator)Activator.CreateInstance(generatorType);
+            generator = (DataTableGenerator)Activator.CreateInstance(generatorType)!;
         }
 
         return generator != null;
+    }
+
+    public object Generate(AutoGenerateContext context)
+    {
+        var table = CreateTable(context);
+        context.Instance = table;
+        PopulateRows(table, context);
+        return table;
     }
 
     public void PopulateRows(DataTable table, AutoGenerateContext context)
@@ -72,13 +68,13 @@ internal abstract class DataTableGenerator
 
         var constrainedColumns         = new Dictionary<DataColumn, ConstrainedColumnInformation>();
         var constraintHasUniqueColumns = new HashSet<ForeignKeyConstraint>();
-        var referencedRowByConstraint  = new Dictionary<ForeignKeyConstraint, DataRow>();
+        var referencedRowByConstraint  = new Dictionary<ForeignKeyConstraint, DataRow?>();
 
         foreach (var foreignKey in table.Constraints.OfType<ForeignKeyConstraint>())
         {
-            var containsUniqueColumns = foreignKey.Columns.Any(col =>
-                col.Unique ||
-                table.Constraints.OfType<UniqueConstraint>().Any(constraint => constraint.Columns.Contains(col)));
+            var containsUniqueColumns = Array.Exists(foreignKey.Columns, col =>
+                col.Unique
+                || table.Constraints.OfType<UniqueConstraint>().Any(constraint => constraint.Columns.Contains(col)));
 
             for (var i = 0; i < foreignKey.Columns.Length; i++)
             {
@@ -87,7 +83,7 @@ internal abstract class DataTableGenerator
 
                 if (constrainedColumns.ContainsKey(column))
                 {
-                    throw new Exception(
+                    throw new InvalidOperationException(
                         $"Column is constrained in multiple foreign key relationships simultaneously: {column.ColumnName} in DataTable {table.TableName}");
                 }
 
@@ -99,10 +95,9 @@ internal abstract class DataTableGenerator
                     };
             }
 
-            if (foreignKey.RelatedTable == table
-                && foreignKey.Columns.Any(col => !col.AllowDBNull))
+            if (foreignKey.RelatedTable == table && Array.Exists(foreignKey.Columns, col => !col.AllowDBNull))
             {
-                throw new Exception(
+                throw new InvalidOperationException(
                     $"Self-reference columns must be nullable so that at least one record can be added when the table is initially empty: DataTable {table.TableName}");
             }
 
@@ -112,7 +107,7 @@ internal abstract class DataTableGenerator
             }
 
             // Prepare a slot to be filled per-row.
-            referencedRowByConstraint[foreignKey] = default;
+            referencedRowByConstraint[foreignKey] = null;
 
             if (containsUniqueColumns
                 && foreignKey.RelatedTable != table
@@ -143,16 +138,22 @@ internal abstract class DataTableGenerator
 
             foreach (var foreignKey in allConstraints)
             {
-                referencedRowByConstraint[foreignKey] =
-                    constraintHasUniqueColumns.Contains(foreignKey)
-                        ? foreignKey.RelatedTable.Rows[rowIndex]
-                        : foreignKey.RelatedTable.Rows.Count == 0
-                            ? null
-                            : foreignKey.RelatedTable.Rows[
-                                context.Faker.Random.Number(0, foreignKey.RelatedTable.Rows.Count - 1)];
+                if (constraintHasUniqueColumns.Contains(foreignKey))
+                {
+                    referencedRowByConstraint[foreignKey] = foreignKey.RelatedTable.Rows[rowIndex];
+                }
+                else if (foreignKey.RelatedTable.Rows.Count == 0)
+                {
+                    referencedRowByConstraint[foreignKey] = null;
+                }
+                else
+                {
+                    var randomRowIndex = context.Faker.Random.Number(0, foreignKey.RelatedTable.Rows.Count - 1);
+                    referencedRowByConstraint[foreignKey] = foreignKey.RelatedTable.Rows[randomRowIndex];
+                }
             }
 
-            var columnValues = new object[table.Columns.Count];
+            var columnValues = new object?[table.Columns.Count];
 
             for (var i = 0; i < table.Columns.Count; i++)
             {
@@ -174,76 +175,78 @@ internal abstract class DataTableGenerator
         }
     }
 
-    private object GenerateColumnValue(DataColumn dataColumn, AutoGenerateContext context)
-    {
-        switch (Type.GetTypeCode(dataColumn.DataType))
-        {
-            case TypeCode.Empty:
-            case TypeCode.DBNull: return null;
-            case TypeCode.Boolean: return context.Faker.Random.Bool();
-            case TypeCode.Char:    return context.Faker.Lorem.Letter().Single();
-            case TypeCode.SByte:   return context.Faker.Random.SByte();
-            case TypeCode.Byte:    return context.Faker.Random.Byte();
-            case TypeCode.Int16:   return context.Faker.Random.Short();
-            case TypeCode.UInt16:  return context.Faker.Random.UShort();
-            case TypeCode.Int32:
-            {
-                if (dataColumn.ColumnName.EndsWith("ID", StringComparison.OrdinalIgnoreCase))
-                {
-                    return Interlocked.Increment(ref context.Faker.IndexFaker);
-                }
-
-                return context.Faker.Random.Int();
-            }
-            case TypeCode.UInt32:  return context.Faker.Random.UInt();
-            case TypeCode.Int64:   return context.Faker.Random.Long();
-            case TypeCode.UInt64:  return context.Faker.Random.ULong();
-            case TypeCode.Single:  return context.Faker.Random.Float();
-            case TypeCode.Double:  return context.Faker.Random.Double();
-            case TypeCode.Decimal: return context.Faker.Random.Decimal();
-            case TypeCode.DateTime:
-                return context.Faker.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow.AddDays(+30));
-            case TypeCode.String: return context.Faker.Lorem.Lines(1);
-
-            default:
-                if (dataColumn.DataType == typeof(TimeSpan))
-                {
-                    return context.Faker.Date.Future() - context.Faker.Date.Future();
-                }
-
-                if (dataColumn.DataType == typeof(Guid))
-                {
-                    return context.Faker.Random.Guid();
-                }
-
-                var proxy = (Proxy)Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(dataColumn.DataType));
-
-                return proxy.Generate(context);
-        }
-    }
-
     protected abstract DataTable CreateTable(AutoGenerateContext context);
 
-    private class ConstrainedColumnInformation
+    private object? GenerateColumnValue(DataColumn dataColumn, AutoGenerateContext context)
     {
-        public ForeignKeyConstraint Constraint;
-        public DataColumn           RelatedColumn;
+        var typeCode = Type.GetTypeCode(dataColumn.DataType);
+        if (typeCode == TypeCode.Object)
+        {
+            if (dataColumn.DataType == typeof(TimeSpan))
+            {
+                var randomDate1 = context.Faker.Date.Future();
+                var randomDate2 = context.Faker.Date.Future();
+                return randomDate1 - randomDate2;
+            }
+
+            if (dataColumn.DataType == typeof(Guid))
+            {
+                return context.Faker.Random.Guid();
+            }
+
+            var proxy = (Proxy)Activator.CreateInstance(typeof(Proxy<>).MakeGenericType(dataColumn.DataType))!;
+
+            return proxy.Generate(context);
+        }
+
+        object? value = typeCode switch
+        {
+            TypeCode.Empty    => null,
+            TypeCode.DBNull   => null,
+            TypeCode.Boolean  => context.Faker.Random.Bool(),
+            TypeCode.Char     => context.Faker.Lorem.Letter().Single(),
+            TypeCode.SByte    => context.Faker.Random.SByte(),
+            TypeCode.Byte     => context.Faker.Random.Byte(),
+            TypeCode.Int16    => context.Faker.Random.Short(),
+            TypeCode.UInt16   => context.Faker.Random.UShort(),
+            TypeCode.UInt32   => context.Faker.Random.UInt(),
+            TypeCode.Int64    => context.Faker.Random.Long(),
+            TypeCode.UInt64   => context.Faker.Random.ULong(),
+            TypeCode.Single   => context.Faker.Random.Float(),
+            TypeCode.Double   => context.Faker.Random.Double(),
+            TypeCode.Decimal  => context.Faker.Random.Decimal(),
+            TypeCode.DateTime => context.Faker.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow.AddDays(+30)),
+            TypeCode.String   => context.Faker.Lorem.Lines(1),
+            TypeCode.Int32 =>
+                dataColumn.ColumnName.EndsWith("ID", StringComparison.OrdinalIgnoreCase)
+                    ? Interlocked.Increment(ref context.Faker.IndexFaker)
+                    : context.Faker.Random.Int(),
+            _ => null,
+        };
+
+        return value;
+    }
+
+    private sealed class ConstrainedColumnInformation
+    {
+        public ForeignKeyConstraint Constraint    { get; set; } = null!;
+        public DataColumn           RelatedColumn { get; set; } = null!;
     }
 
     private abstract class Proxy
     {
-        public abstract object Generate(AutoGenerateContext context);
+        public abstract object? Generate(AutoGenerateContext context);
     }
 
-    private class Proxy<T> : Proxy
+    private sealed class Proxy<T> : Proxy
     {
-        public override object Generate(AutoGenerateContext context)
+        public override object? Generate(AutoGenerateContext context)
         {
             return context.Generate<T>();
         }
     }
 
-    private class UntypedDataTableGenerator
+    private sealed class UntypedDataTableGenerator
         : DataTableGenerator
     {
         protected override DataTable CreateTable(AutoGenerateContext context)
@@ -267,7 +270,8 @@ internal abstract class DataTableGenerator
         }
     }
 
-    private class TypedDataTableGenerator<TTable, TRow>
+    [SuppressMessage("Major Code Smell", "S2326:Unused type parameters should be removed")]
+    private sealed class TypedDataTableGenerator<TTable, TRow>
         : DataTableGenerator
         where TTable : DataTable, new()
     {
@@ -277,4 +281,3 @@ internal abstract class DataTableGenerator
         }
     }
 }
-#endif

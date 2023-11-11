@@ -1,7 +1,8 @@
+using System.Diagnostics;
+
 namespace AutoBogus.Generators;
 
-internal sealed class ListGenerator<TType>
-    : IAutoGenerator
+internal sealed class ListGenerator<TType> : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {
@@ -9,7 +10,8 @@ internal sealed class ListGenerator<TType>
 
         try
         {
-            list = (IList<TType>)Activator.CreateInstance(context.GenerateType);
+            Debug.Assert(context.GenerateType != null, "context.GenerateType != null");
+            list = (IList<TType>)Activator.CreateInstance(context.GenerateType)!;
         }
         catch
         {

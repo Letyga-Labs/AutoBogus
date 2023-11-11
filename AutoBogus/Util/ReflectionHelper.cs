@@ -31,7 +31,7 @@ internal static class ReflectionHelper
         return typeInfo.IsGenericType;
     }
 
-    internal static bool IsExpandoObject(Type type)
+    internal static bool IsExpandoObject(Type? type)
     {
         return type == typeof(ExpandoObject);
     }

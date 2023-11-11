@@ -1,7 +1,9 @@
+using System.Diagnostics;
+
 namespace AutoBogus.Generators;
 
-internal sealed class DictionaryGenerator<TKey, TValue>
-    : IAutoGenerator
+internal sealed class DictionaryGenerator<TKey, TValue> : IAutoGenerator
+    where TKey : notnull
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {
@@ -9,7 +11,8 @@ internal sealed class DictionaryGenerator<TKey, TValue>
         IDictionary<TKey, TValue> items;
         try
         {
-            items = (IDictionary<TKey, TValue>)Activator.CreateInstance(context.GenerateType, true);
+            Debug.Assert(context.GenerateType != null, "context.GenerateType != null");
+            items = (IDictionary<TKey, TValue>)Activator.CreateInstance(context.GenerateType, true)!;
         }
         catch
         {

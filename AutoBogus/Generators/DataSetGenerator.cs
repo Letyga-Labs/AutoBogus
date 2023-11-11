@@ -1,14 +1,15 @@
-#if !NETSTANDARD1_3
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AutoBogus.Generators;
 
+[SuppressMessage(
+    "IDisposableAnalyzers.Correctness",
+    "IDISP005:Return type should indicate that the value should be disposed")]
 internal abstract class DataSetGenerator
     : IAutoGenerator
 {
-    public abstract object Generate(AutoGenerateContext context);
-
-    public static bool TryCreateGenerator(Type dataSetType, out DataSetGenerator generator)
+    public static bool TryCreateGenerator(Type dataSetType, [NotNullWhen(true)] out DataSetGenerator? generator)
     {
         generator = default;
 
@@ -24,7 +25,9 @@ internal abstract class DataSetGenerator
         return generator != null;
     }
 
-    private class UntypedDataSetGenerator : DataSetGenerator
+    public abstract object Generate(AutoGenerateContext context);
+
+    private sealed class UntypedDataSetGenerator : DataSetGenerator
     {
         public override object Generate(AutoGenerateContext context)
         {
@@ -32,7 +35,7 @@ internal abstract class DataSetGenerator
 
             if (!DataTableGenerator.TryCreateGenerator(typeof(DataTable), out var tableGenerator))
             {
-                throw new Exception("Internal error: Couldn't create generator for DataTable");
+                throw new InvalidOperationException("Internal error: Couldn't create generator for DataTable");
             }
 
             for (var tableCount = context.Faker.Random.Int(2, 6); tableCount > 0; tableCount--)
@@ -44,7 +47,7 @@ internal abstract class DataSetGenerator
         }
     }
 
-    private class TypedDataSetGenerator : DataSetGenerator
+    private sealed class TypedDataSetGenerator : DataSetGenerator
     {
         private readonly Type _dataSetType;
 
@@ -55,7 +58,7 @@ internal abstract class DataSetGenerator
 
         public override object Generate(AutoGenerateContext context)
         {
-            var dataSet = (DataSet)Activator.CreateInstance(_dataSetType);
+            var dataSet = (DataSet)Activator.CreateInstance(_dataSetType)!;
 
             var allTables       = dataSet.Tables.OfType<DataTable>().ToList();
             var populatedTables = new HashSet<DataTable>();
@@ -80,7 +83,8 @@ internal abstract class DataSetGenerator
 
                     if (!DataTableGenerator.TryCreateGenerator(table.GetType(), out var tableGenerator))
                     {
-                        throw new Exception($"Couldn't create generator for typed table type {table.GetType()}");
+                        throw new InvalidOperationException(
+                            $"Couldn't create generator for typed table type {table.GetType()}");
                     }
 
                     populatedTables.Add(table);
@@ -97,7 +101,7 @@ internal abstract class DataSetGenerator
 
                 if (!madeProgress)
                 {
-                    throw new Exception(
+                    throw new InvalidOperationException(
                         "Couldn't generate data for all tables in data set because there are constraints that can't be satisfied");
                 }
             }
@@ -106,4 +110,3 @@ internal abstract class DataSetGenerator
         }
     }
 }
-#endif

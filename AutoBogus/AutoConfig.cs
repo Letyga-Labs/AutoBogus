@@ -46,7 +46,7 @@ internal sealed class AutoConfig
     internal IList<string> SkipPaths { get; set; }
 
     internal Func<AutoGenerateContext, int>  RepeatCount       { get; set; }
-    internal Func<AutoGenerateContext, int>  DataTableRowCount { get; set; }
+    internal Func<AutoGenerateContext, int>? DataTableRowCount { get; set; }
     internal Func<AutoGenerateContext, int>  RecursiveDepth    { get; set; }
     internal Func<AutoGenerateContext, int?> TreeDepth         { get; set; }
 

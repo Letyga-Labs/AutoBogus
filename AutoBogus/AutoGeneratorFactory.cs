@@ -19,7 +19,7 @@ internal static class AutoGeneratorFactory
         { typeof(float), new FloatGenerator() },
         { typeof(Guid), new GuidGenerator() },
         { typeof(int), new IntGenerator() },
-        { typeof(IPAddress), new IPAddressGenerator() },
+        { typeof(IPAddress), new IpAddressGenerator() },
         { typeof(long), new LongGenerator() },
         { typeof(sbyte), new SByteGenerator() },
         { typeof(short), new ShortGenerator() },

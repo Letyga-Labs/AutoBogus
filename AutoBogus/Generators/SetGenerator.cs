@@ -1,7 +1,8 @@
+using System.Diagnostics;
+
 namespace AutoBogus.Generators;
 
-internal sealed class SetGenerator<TType>
-    : IAutoGenerator
+internal sealed class SetGenerator<TType> : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {
@@ -9,7 +10,8 @@ internal sealed class SetGenerator<TType>
 
         try
         {
-            set = (ISet<TType>)Activator.CreateInstance(context.GenerateType);
+            Debug.Assert(context.GenerateType != null, "context.GenerateType != null");
+            set = (ISet<TType>)Activator.CreateInstance(context.GenerateType)!;
         }
         catch
         {

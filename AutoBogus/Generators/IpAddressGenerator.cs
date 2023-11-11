@@ -1,7 +1,6 @@
 namespace AutoBogus.Generators;
 
-internal sealed class IPAddressGenerator
-    : IAutoGenerator
+internal sealed class IpAddressGenerator : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {

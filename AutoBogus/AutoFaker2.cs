@@ -225,8 +225,10 @@ public class AutoFaker<TType>
         // Add an internal finish to auto populate any remaining values
         FinishWith((faker, instance) =>
         {
+            ArgumentNullException.ThrowIfNull(instance);
+
             // If dynamic objects are supported, populate as a dictionary
-            var type = instance?.GetType();
+            var type = instance.GetType();
 
             if (ReflectionHelper.IsExpandoObject(type))
             {
@@ -264,16 +266,13 @@ public class AutoFaker<TType>
             context.Binder.PopulateInstance<TType>(instance, context, members);
 
             // Ensure the default finish with is invoke
-            if (finishWith != null)
-            {
-                finishWith.Action(faker, instance);
-            }
+            finishWith?.Action(faker, instance);
         });
 
         FinishInitialized = true;
     }
 
-    private IEnumerable<string> GetRuleSetsMemberNames(AutoGenerateContext context)
+    private List<string> GetRuleSetsMemberNames(AutoGenerateContext context)
     {
         // Get the member names from all the rule sets being used to generate the instance
         var members = new List<string>();

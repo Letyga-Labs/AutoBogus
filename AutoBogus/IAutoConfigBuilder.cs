@@ -51,13 +51,6 @@ public interface IAutoConfigBuilder<TBuilder>
     TBuilder WithRecursiveDepth(int depth);
 
     /// <summary>
-    ///     Registers the depth of the object tree to generate
-    /// </summary>
-    /// <param name="depth">The depth to use.</param>
-    /// <returns>The given configuration builder instance.</returns>
-    TBuilder WithTreeDepth(int? depth);
-
-    /// <summary>
     ///     Registers the depth to recursively generate.
     /// </summary>
     /// <param name="depth">The recursive depth to use.</param>
@@ -65,7 +58,14 @@ public interface IAutoConfigBuilder<TBuilder>
     TBuilder WithRecursiveDepth(Func<AutoGenerateContext, int> depth);
 
     /// <summary>
-    ///     Registers the depth to generate the object tree
+    ///     Registers the depth of the object tree to generate.
+    /// </summary>
+    /// <param name="depth">The depth to use.</param>
+    /// <returns>The given configuration builder instance.</returns>
+    TBuilder WithTreeDepth(int? depth);
+
+    /// <summary>
+    ///     Registers the depth to generate the object tree.
     /// </summary>
     /// <param name="depth">The depth to use.</param>
     /// <returns>The given configuration builder instance.</returns>

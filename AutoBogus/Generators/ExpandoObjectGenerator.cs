@@ -1,37 +1,32 @@
+using System.Diagnostics;
 using AutoBogus.Util;
 
 namespace AutoBogus.Generators;
 
-internal sealed class ExpandoObjectGenerator
-    : IAutoGenerator
+internal sealed class ExpandoObjectGenerator : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {
-        var instance = context.Instance;
+        Debug.Assert(context.Instance != null, "context.Instance != null");
 
-#if !NETSTANDARD1_3
+        var instance = context.Instance!;
+
         // Need to copy the target dictionary to avoid mutations during population
-        var                                        target     = instance as IDictionary<string, object>;
-        var                                        source     = new Dictionary<string, object>(target);
-        IEnumerable<KeyValuePair<string?, object>> properties = source.Where(pair => pair.Value != null);
+        var target = (IDictionary<string, object?>)instance;
+        var source = new Dictionary<string, object?>(target);
+
+        var properties = source.Where(pair => pair.Value != null);
 
         foreach (var property in properties)
         {
             // Configure the context
-            var type = property.Value.GetType();
+            var type = property.Value!.GetType();
 
             context.ParentType   = context.GenerateType;
             context.GenerateType = type;
             context.GenerateName = property.Key;
 
-            if (ReflectionHelper.IsExpandoObject(type))
-            {
-                context.Instance = property.Value;
-            }
-            else
-            {
-                context.Instance = null;
-            }
+            context.Instance = ReflectionHelper.IsExpandoObject(type) ? property.Value : null;
 
             // Generate the property values
             var generator = AutoGeneratorFactory.GetGenerator(context);
@@ -40,7 +35,6 @@ internal sealed class ExpandoObjectGenerator
 
         // Reset the instance context
         context.Instance = instance;
-#endif
 
         return instance;
     }

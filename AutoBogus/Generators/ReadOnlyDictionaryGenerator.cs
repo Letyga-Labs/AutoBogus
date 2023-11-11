@@ -1,15 +1,18 @@
+using System.Diagnostics;
 using AutoBogus.Util;
 
 namespace AutoBogus.Generators;
 
-internal sealed class ReadOnlyDictionaryGenerator<TKey, TValue>
-    : IAutoGenerator
+internal sealed class ReadOnlyDictionaryGenerator<TKey, TValue> : IAutoGenerator
+    where TKey : notnull
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {
         IAutoGenerator generator = new DictionaryGenerator<TKey, TValue>();
 
         var generateType = context.GenerateType;
+
+        Debug.Assert(generateType != null, nameof(generateType) + " != null");
 
         if (ReflectionHelper.IsInterface(generateType))
         {
@@ -19,10 +22,6 @@ internal sealed class ReadOnlyDictionaryGenerator<TKey, TValue>
         // Generate a standard dictionary and create the read only dictionary
         var items = generator.Generate(context) as IDictionary<TKey, TValue>;
 
-#if NET40
-      return null;
-#else
-        return Activator.CreateInstance(generateType, items);
-#endif
+        return Activator.CreateInstance(generateType, items)!;
     }
 }
