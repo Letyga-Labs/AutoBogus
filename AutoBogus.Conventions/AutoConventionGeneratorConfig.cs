@@ -5,8 +5,9 @@ namespace AutoBogus.Conventions;
 /// </summary>
 public sealed class AutoConventionGeneratorConfig
 {
-    private readonly string              _name;
-    private          IEnumerable<string> _aliases;
+    private readonly string _name;
+
+    private List<string> _aliases = null!;
 
     internal AutoConventionGeneratorConfig(string name)
     {
@@ -43,7 +44,7 @@ public sealed class AutoConventionGeneratorConfig
 
     internal bool HasAlias(string name)
     {
-        return _aliases.Any(alias => alias.Equals(name, StringComparison.OrdinalIgnoreCase));
+        return _aliases.Exists(alias => alias.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
     private void SetAliases(params string[] aliases)

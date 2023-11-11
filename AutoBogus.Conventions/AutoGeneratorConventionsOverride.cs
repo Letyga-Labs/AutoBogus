@@ -1,5 +1,3 @@
-using AutoBogus.Conventions.Generators;
-
 namespace AutoBogus.Conventions;
 
 internal sealed class AutoGeneratorConventionsOverride
@@ -8,13 +6,13 @@ internal sealed class AutoGeneratorConventionsOverride
     internal AutoGeneratorConventionsOverride(AutoConventionConfig config)
     {
         var generators = new List<IAutoConventionGenerator>();
-        generators.AddRange(ByNameGeneratorRegistry.Generators);
 
         Config     = config;
         Generators = generators;
     }
 
-    private AutoConventionConfig           Config     { get; }
+    private AutoConventionConfig Config { get; }
+
     private List<IAutoConventionGenerator> Generators { get; }
 
     public override bool CanOverride(AutoGenerateContext context)
@@ -27,19 +25,21 @@ internal sealed class AutoGeneratorConventionsOverride
     {
         var generator = GetGenerator(context.GenerateContext);
 
-        if (generator != null)
+        if (generator == null)
         {
-            var conventionContext = new AutoConventionContext(Config, context)
-            {
-                Instance = context.Instance,
-            };
-
-            context.Instance = generator.Generate(conventionContext);
+            return;
         }
+
+        var conventionContext = new AutoConventionContext(Config, context)
+        {
+            Instance = context.Instance,
+        };
+
+        context.Instance = generator.Generate(conventionContext);
     }
 
-    private IAutoConventionGenerator GetGenerator(AutoGenerateContext context)
+    private IAutoConventionGenerator? GetGenerator(AutoGenerateContext context)
     {
-        return Generators.FirstOrDefault(g => g.CanGenerate(Config, context));
+        return Generators.Find(g => g.CanGenerate(Config, context));
     }
 }

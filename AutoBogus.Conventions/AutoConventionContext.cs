@@ -8,8 +8,9 @@ internal sealed class AutoConventionContext
         OverrideContext = context;
     }
 
-    internal object Instance { get; set; }
+    internal object? Instance { get; set; }
 
-    internal AutoConventionConfig        Config          { get; }
+    internal AutoConventionConfig Config { get; }
+
     internal AutoGenerateOverrideContext OverrideContext { get; }
 }

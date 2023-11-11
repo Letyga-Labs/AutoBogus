@@ -16,12 +16,4 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-        <Compile Update="ConventionByNameGenerators.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>ConventionByNameGenerators.tt</DependentUpon>
-        </Compile>
-    </ItemGroup>
-
 </Project>

@@ -1,14 +1,18 @@
-using System.Net;
-using Bogus.DataSets;
+#pragma warning disable SA1649
+#pragma warning disable SA1204
+#pragma warning disable SA1403
+#pragma warning disable SA1601
+
+using System.Diagnostics;
 
 namespace AutoBogus.Conventions.Generators
 {
     // Address.BuildingNumber
-    internal sealed class BuildingNumberByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class BuildingNumberByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.BuildingNumber.Enabled &&
                    config.BuildingNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -28,11 +32,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.CardinalDirection
-    internal sealed class CardinalDirectionByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CardinalDirectionByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CardinalDirection.Enabled &&
                    config.CardinalDirection.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -52,11 +56,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.City
-    internal sealed class CityByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CityByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.City.Enabled &&
                    config.City.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -76,11 +80,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.CityPrefix
-    internal sealed class CityPrefixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CityPrefixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CityPrefix.Enabled &&
                    config.CityPrefix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -100,11 +104,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.CitySuffix
-    internal sealed class CitySuffixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CitySuffixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CitySuffix.Enabled &&
                    config.CitySuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -124,11 +128,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.Country
-    internal sealed class CountryByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CountryByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Country.Enabled &&
                    config.Country.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -148,11 +152,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.CountryCode
-    internal sealed class CountryCodeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CountryCodeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CountryCode.Enabled &&
                    config.CountryCode.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -172,11 +176,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.County
-    internal sealed class CountyByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CountyByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.County.Enabled &&
                    config.County.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -196,11 +200,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.Direction
-    internal sealed class DirectionByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class DirectionByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Direction.Enabled &&
                    config.Direction.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -220,11 +224,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.FullAddress
-    internal sealed class FullAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FullAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FullAddress.Enabled &&
                    config.FullAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -244,11 +248,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.Latitude
-    internal sealed class LatitudeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class LatitudeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Latitude.Enabled &&
                    config.Latitude.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(double);
@@ -268,11 +272,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.Longitude
-    internal sealed class LongitudeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class LongitudeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Longitude.Enabled &&
                    config.Longitude.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(double);
@@ -292,11 +296,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.OrdinalDirection
-    internal sealed class OrdinalDirectionByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class OrdinalDirectionByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.OrdinalDirection.Enabled &&
                    config.OrdinalDirection.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -316,11 +320,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.SecondaryAddress
-    internal sealed class SecondaryAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class SecondaryAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.SecondaryAddress.Enabled &&
                    config.SecondaryAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -340,11 +344,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.State
-    internal sealed class StateByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class StateByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.State.Enabled &&
                    config.State.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -364,11 +368,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.StateAbbr
-    internal sealed class StateAbbrByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class StateAbbrByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StateAbbr.Enabled &&
                    config.StateAbbr.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -388,11 +392,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.StreetAddress
-    internal sealed class StreetAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class StreetAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StreetAddress.Enabled &&
                    config.StreetAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -412,11 +416,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.StreetName
-    internal sealed class StreetNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class StreetNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StreetName.Enabled &&
                    config.StreetName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -436,11 +440,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.StreetSuffix
-    internal sealed class StreetSuffixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class StreetSuffixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StreetSuffix.Enabled &&
                    config.StreetSuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -460,11 +464,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Address.ZipCode
-    internal sealed class ZipCodeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ZipCodeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ZipCode.Enabled &&
                    config.ZipCode.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -484,11 +488,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.Color
-    internal sealed class ColorByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ColorByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Color.Enabled &&
                    config.Color.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -508,11 +512,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.Department
-    internal sealed class DepartmentByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class DepartmentByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Department.Enabled &&
                    config.Department.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -532,11 +536,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.Ean13
-    internal sealed class Ean13ByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class Ean13ByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ean13.Enabled &&
                    config.Ean13.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -556,11 +560,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.Ean8
-    internal sealed class Ean8ByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class Ean8ByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ean8.Enabled &&
                    config.Ean8.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -580,11 +584,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.Price
-    internal sealed class PriceByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class PriceByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Price.Enabled &&
                    config.Price.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -604,11 +608,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.Product
-    internal sealed class ProductByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ProductByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Product.Enabled &&
                    config.Product.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -628,11 +632,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.ProductAdjective
-    internal sealed class ProductAdjectiveByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ProductAdjectiveByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductAdjective.Enabled &&
                    config.ProductAdjective.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -652,11 +656,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.ProductDescription
-    internal sealed class ProductDescriptionByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ProductDescriptionByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductDescription.Enabled &&
                    config.ProductDescription.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -676,11 +680,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.ProductMaterial
-    internal sealed class ProductMaterialByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ProductMaterialByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductMaterial.Enabled &&
                    config.ProductMaterial.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -700,11 +704,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Commerce.ProductName
-    internal sealed class ProductNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ProductNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductName.Enabled &&
                    config.ProductName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -724,11 +728,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Company.Bs
-    internal sealed class BsByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class BsByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Bs.Enabled &&
                    config.Bs.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -748,11 +752,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Company.CatchPhrase
-    internal sealed class CatchPhraseByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CatchPhraseByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CatchPhrase.Enabled &&
                    config.CatchPhrase.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -772,11 +776,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Company.CompanyName
-    internal sealed class CompanyNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CompanyNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CompanyName.Enabled &&
                    config.CompanyName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -796,11 +800,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Company.CompanySuffix
-    internal sealed class CompanySuffixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CompanySuffixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CompanySuffix.Enabled &&
                    config.CompanySuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -820,11 +824,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Database.Collation
-    internal sealed class CollationByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CollationByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Collation.Enabled &&
                    config.Collation.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -844,11 +848,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Database.Column
-    internal sealed class ColumnByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ColumnByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Column.Enabled &&
                    config.Column.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -868,11 +872,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Database.Engine
-    internal sealed class EngineByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class EngineByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Engine.Enabled &&
                    config.Engine.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -892,11 +896,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Database.Type
-    internal sealed class TypeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class TypeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Type.Enabled &&
                    config.Type.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -916,11 +920,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.Account
-    internal sealed class AccountByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class AccountByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Account.Enabled &&
                    config.Account.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -940,11 +944,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.AccountName
-    internal sealed class AccountNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class AccountNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.AccountName.Enabled &&
                    config.AccountName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -964,11 +968,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.Amount
-    internal sealed class AmountByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class AmountByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Amount.Enabled &&
                    config.Amount.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(decimal);
@@ -988,11 +992,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.Bic
-    internal sealed class BicByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class BicByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Bic.Enabled &&
                    config.Bic.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1012,11 +1016,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.BitcoinAddress
-    internal sealed class BitcoinAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class BitcoinAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.BitcoinAddress.Enabled &&
                    config.BitcoinAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1036,11 +1040,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.CreditCardCvv
-    internal sealed class CreditCardCvvByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CreditCardCvvByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CreditCardCvv.Enabled &&
                    config.CreditCardCvv.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1060,11 +1064,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.CreditCardNumber
-    internal sealed class CreditCardNumberByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CreditCardNumberByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CreditCardNumber.Enabled &&
                    config.CreditCardNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1084,14 +1088,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.Currency
-    internal sealed class CurrencyByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CurrencyByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Currency.Enabled &&
                    config.Currency.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(Currency);
+                   context.GenerateType == typeof(Bogus.DataSets.Currency);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -1108,11 +1112,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.EthereumAddress
-    internal sealed class EthereumAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class EthereumAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.EthereumAddress.Enabled &&
                    config.EthereumAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1132,11 +1136,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.Iban
-    internal sealed class IbanByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class IbanByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Iban.Enabled &&
                    config.Iban.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1156,11 +1160,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.LitecoinAddress
-    internal sealed class LitecoinAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class LitecoinAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.LitecoinAddress.Enabled &&
                    config.LitecoinAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1180,11 +1184,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.RoutingNumber
-    internal sealed class RoutingNumberByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class RoutingNumberByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.RoutingNumber.Enabled &&
                    config.RoutingNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1204,11 +1208,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Finance.TransactionType
-    internal sealed class TransactionTypeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class TransactionTypeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.TransactionType.Enabled &&
                    config.TransactionType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1228,11 +1232,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Avatar
-    internal sealed class AvatarByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class AvatarByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Avatar.Enabled &&
                    config.Avatar.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1252,11 +1256,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.DomainName
-    internal sealed class DomainNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class DomainNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DomainName.Enabled &&
                    config.DomainName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1276,11 +1280,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.DomainSuffix
-    internal sealed class DomainSuffixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class DomainSuffixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DomainSuffix.Enabled &&
                    config.DomainSuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1300,11 +1304,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.DomainWord
-    internal sealed class DomainWordByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class DomainWordByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DomainWord.Enabled &&
                    config.DomainWord.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1324,11 +1328,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Email
-    internal sealed class EmailByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class EmailByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Email.Enabled &&
                    config.Email.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1348,11 +1352,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.ExampleEmail
-    internal sealed class ExampleEmailByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ExampleEmailByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ExampleEmail.Enabled &&
                    config.ExampleEmail.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1372,11 +1376,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Ip
-    internal sealed class IpByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class IpByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ip.Enabled &&
                    config.Ip.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1396,14 +1400,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.IpAddress
-    internal sealed class IpAddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class IpAddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.IpAddress.Enabled &&
                    config.IpAddress.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(IPAddress);
+                   context.GenerateType == typeof(System.Net.IPAddress);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -1420,14 +1424,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.IpEndPoint
-    internal sealed class IpEndPointByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class IpEndPointByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.IpEndPoint.Enabled &&
                    config.IpEndPoint.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(IPEndPoint);
+                   context.GenerateType == typeof(System.Net.IPEndPoint);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -1444,11 +1448,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Ipv6
-    internal sealed class Ipv6ByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class Ipv6ByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ipv6.Enabled &&
                    config.Ipv6.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1468,14 +1472,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Ipv6Address
-    internal sealed class Ipv6AddressByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class Ipv6AddressByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ipv6Address.Enabled &&
                    config.Ipv6Address.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(IPAddress);
+                   context.GenerateType == typeof(System.Net.IPAddress);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -1492,14 +1496,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Ipv6EndPoint
-    internal sealed class Ipv6EndPointByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class Ipv6EndPointByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ipv6EndPoint.Enabled &&
                    config.Ipv6EndPoint.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(IPEndPoint);
+                   context.GenerateType == typeof(System.Net.IPEndPoint);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -1516,11 +1520,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Mac
-    internal sealed class MacByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class MacByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Mac.Enabled &&
                    config.Mac.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1540,11 +1544,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Password
-    internal sealed class PasswordByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class PasswordByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Password.Enabled &&
                    config.Password.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1563,12 +1567,36 @@ namespace AutoBogus.Conventions.Generators
         }
     }
 
-    // Internet.Protocol
-    internal sealed class ProtocolByNameGenerator
-        : IAutoConventionGenerator
+    // Internet.Port
+    internal sealed class PortByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
+            return config.Port.Enabled &&
+                   config.Port.HasAlias(context.GenerateName) &&
+                   context.GenerateType == typeof(int);
+        }
+
+        object IAutoConventionGenerator.Generate(AutoConventionContext context)
+        {
+            var alwaysGenerate = context.Config.AlwaysGenerate && context.Config.Port.AlwaysGenerate;
+
+            if (context.Instance == null || alwaysGenerate)
+            {
+                return context.OverrideContext.Faker.Internet.Port();
+            }
+
+            return context.Instance;
+        }
+    }
+
+    // Internet.Protocol
+    internal sealed class ProtocolByNameGenerator : IAutoConventionGenerator
+    {
+        bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
+        {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Protocol.Enabled &&
                    config.Protocol.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1588,11 +1616,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.Url
-    internal sealed class UrlByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class UrlByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Url.Enabled &&
                    config.Url.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1612,11 +1640,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.UrlRootedPath
-    internal sealed class UrlRootedPathByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class UrlRootedPathByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UrlRootedPath.Enabled &&
                    config.UrlRootedPath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1636,11 +1664,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.UrlWithPath
-    internal sealed class UrlWithPathByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class UrlWithPathByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UrlWithPath.Enabled &&
                    config.UrlWithPath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1660,11 +1688,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.UserAgent
-    internal sealed class UserAgentByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class UserAgentByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UserAgent.Enabled &&
                    config.UserAgent.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1684,11 +1712,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.UserName
-    internal sealed class UserNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class UserNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UserName.Enabled &&
                    config.UserName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1708,11 +1736,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Internet.UserNameUnicode
-    internal sealed class UserNameUnicodeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class UserNameUnicodeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UserNameUnicode.Enabled &&
                    config.UserNameUnicode.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1732,11 +1760,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Music.Genre
-    internal sealed class GenreByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class GenreByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Genre.Enabled &&
                    config.Genre.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1756,11 +1784,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.FindName
-    internal sealed class FindNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FindNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FindName.Enabled &&
                    config.FindName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1780,11 +1808,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.FirstName
-    internal sealed class FirstNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FirstNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FirstName.Enabled &&
                    config.FirstName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1804,11 +1832,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.FullName
-    internal sealed class FullNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FullNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FullName.Enabled &&
                    config.FullName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1828,11 +1856,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.JobArea
-    internal sealed class JobAreaByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class JobAreaByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobArea.Enabled &&
                    config.JobArea.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1852,11 +1880,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.JobDescriptor
-    internal sealed class JobDescriptorByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class JobDescriptorByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobDescriptor.Enabled &&
                    config.JobDescriptor.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1876,11 +1904,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.JobTitle
-    internal sealed class JobTitleByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class JobTitleByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobTitle.Enabled &&
                    config.JobTitle.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1900,11 +1928,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.JobType
-    internal sealed class JobTypeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class JobTypeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobType.Enabled &&
                    config.JobType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1924,11 +1952,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.LastName
-    internal sealed class LastNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class LastNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.LastName.Enabled &&
                    config.LastName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1948,11 +1976,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.Prefix
-    internal sealed class PrefixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class PrefixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Prefix.Enabled &&
                    config.Prefix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1972,11 +2000,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Name.Suffix
-    internal sealed class SuffixByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class SuffixByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Suffix.Enabled &&
                    config.Suffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1996,11 +2024,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Phone.PhoneNumber
-    internal sealed class PhoneNumberByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class PhoneNumberByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.PhoneNumber.Enabled &&
                    config.PhoneNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2020,11 +2048,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Phone.PhoneNumberFormat
-    internal sealed class PhoneNumberFormatByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class PhoneNumberFormatByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.PhoneNumberFormat.Enabled &&
                    config.PhoneNumberFormat.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2044,11 +2072,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.AndroidId
-    internal sealed class AndroidIdByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class AndroidIdByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.AndroidId.Enabled &&
                    config.AndroidId.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2068,11 +2096,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.ApplePushToken
-    internal sealed class ApplePushTokenByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ApplePushTokenByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ApplePushToken.Enabled &&
                    config.ApplePushToken.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2092,11 +2120,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.BlackBerryPin
-    internal sealed class BlackBerryPinByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class BlackBerryPinByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.BlackBerryPin.Enabled &&
                    config.BlackBerryPin.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2116,11 +2144,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.CommonFileExt
-    internal sealed class CommonFileExtByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CommonFileExtByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CommonFileExt.Enabled &&
                    config.CommonFileExt.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2140,11 +2168,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.CommonFileName
-    internal sealed class CommonFileNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CommonFileNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CommonFileName.Enabled &&
                    config.CommonFileName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2164,11 +2192,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.CommonFileType
-    internal sealed class CommonFileTypeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class CommonFileTypeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CommonFileType.Enabled &&
                    config.CommonFileType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2188,11 +2216,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.DirectoryPath
-    internal sealed class DirectoryPathByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class DirectoryPathByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DirectoryPath.Enabled &&
                    config.DirectoryPath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2212,14 +2240,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.Exception
-    internal sealed class ExceptionByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ExceptionByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Exception.Enabled &&
                    config.Exception.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(Exception);
+                   context.GenerateType == typeof(System.Exception);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -2236,11 +2264,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.FileExt
-    internal sealed class FileExtByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FileExtByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FileExt.Enabled &&
                    config.FileExt.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2260,11 +2288,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.FileName
-    internal sealed class FileNameByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FileNameByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FileName.Enabled &&
                    config.FileName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2284,11 +2312,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.FilePath
-    internal sealed class FilePathByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FilePathByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FilePath.Enabled &&
                    config.FilePath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2308,11 +2336,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.FileType
-    internal sealed class FileTypeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FileTypeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FileType.Enabled &&
                    config.FileType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2332,11 +2360,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.MimeType
-    internal sealed class MimeTypeByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class MimeTypeByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.MimeType.Enabled &&
                    config.MimeType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2356,11 +2384,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.Semver
-    internal sealed class SemverByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class SemverByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Semver.Enabled &&
                    config.Semver.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2380,14 +2408,14 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // System.Version
-    internal sealed class VersionByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class VersionByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Version.Enabled &&
                    config.Version.HasAlias(context.GenerateName) &&
-                   context.GenerateType == typeof(Version);
+                   context.GenerateType == typeof(System.Version);
         }
 
         object IAutoConventionGenerator.Generate(AutoConventionContext context)
@@ -2404,11 +2432,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Vehicle.Fuel
-    internal sealed class FuelByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class FuelByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Fuel.Enabled &&
                    config.Fuel.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2428,11 +2456,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Vehicle.Manufacturer
-    internal sealed class ManufacturerByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ManufacturerByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Manufacturer.Enabled &&
                    config.Manufacturer.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2452,11 +2480,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Vehicle.Model
-    internal sealed class ModelByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class ModelByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Model.Enabled &&
                    config.Model.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2476,11 +2504,11 @@ namespace AutoBogus.Conventions.Generators
     }
 
     // Vehicle.Vin
-    internal sealed class VinByNameGenerator
-        : IAutoConventionGenerator
+    internal sealed class VinByNameGenerator : IAutoConventionGenerator
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
+            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Vin.Enabled &&
                    config.Vin.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2501,7 +2529,7 @@ namespace AutoBogus.Conventions.Generators
 
     internal static class ByNameGeneratorRegistry
     {
-        internal static IList<IAutoConventionGenerator> Generators = new List<IAutoConventionGenerator>
+        internal static readonly System.Collections.Generic.IList<IAutoConventionGenerator> Generators = new System.Collections.Generic.List<IAutoConventionGenerator>
         {
             new BuildingNumberByNameGenerator(),
             new CardinalDirectionByNameGenerator(),
@@ -2568,6 +2596,7 @@ namespace AutoBogus.Conventions.Generators
             new Ipv6EndPointByNameGenerator(),
             new MacByNameGenerator(),
             new PasswordByNameGenerator(),
+            new PortByNameGenerator(),
             new ProtocolByNameGenerator(),
             new UrlByNameGenerator(),
             new UrlRootedPathByNameGenerator(),
@@ -2616,523 +2645,528 @@ namespace AutoBogus.Conventions
     public sealed partial class AutoConventionConfig
     {
         /// <summary>
-        ///     Configures the BuildingNumber convention generator.
+        /// Configures the BuildingNumber convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig BuildingNumber { get; } = new("BuildingNumber");
+        public AutoConventionGeneratorConfig BuildingNumber { get; } = new AutoConventionGeneratorConfig("BuildingNumber");
 
         /// <summary>
-        ///     Configures the CardinalDirection convention generator.
+        /// Configures the CardinalDirection convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CardinalDirection { get; } = new("CardinalDirection");
+        public AutoConventionGeneratorConfig CardinalDirection { get; } = new AutoConventionGeneratorConfig("CardinalDirection");
 
         /// <summary>
-        ///     Configures the City convention generator.
+        /// Configures the City convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig City { get; } = new("City");
+        public AutoConventionGeneratorConfig City { get; } = new AutoConventionGeneratorConfig("City");
 
         /// <summary>
-        ///     Configures the CityPrefix convention generator.
+        /// Configures the CityPrefix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CityPrefix { get; } = new("CityPrefix");
+        public AutoConventionGeneratorConfig CityPrefix { get; } = new AutoConventionGeneratorConfig("CityPrefix");
 
         /// <summary>
-        ///     Configures the CitySuffix convention generator.
+        /// Configures the CitySuffix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CitySuffix { get; } = new("CitySuffix");
+        public AutoConventionGeneratorConfig CitySuffix { get; } = new AutoConventionGeneratorConfig("CitySuffix");
 
         /// <summary>
-        ///     Configures the Country convention generator.
+        /// Configures the Country convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Country { get; } = new("Country");
+        public AutoConventionGeneratorConfig Country { get; } = new AutoConventionGeneratorConfig("Country");
 
         /// <summary>
-        ///     Configures the CountryCode convention generator.
+        /// Configures the CountryCode convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CountryCode { get; } = new("CountryCode");
+        public AutoConventionGeneratorConfig CountryCode { get; } = new AutoConventionGeneratorConfig("CountryCode");
 
         /// <summary>
-        ///     Configures the County convention generator.
+        /// Configures the County convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig County { get; } = new("County");
+        public AutoConventionGeneratorConfig County { get; } = new AutoConventionGeneratorConfig("County");
 
         /// <summary>
-        ///     Configures the Direction convention generator.
+        /// Configures the Direction convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Direction { get; } = new("Direction");
+        public AutoConventionGeneratorConfig Direction { get; } = new AutoConventionGeneratorConfig("Direction");
 
         /// <summary>
-        ///     Configures the FullAddress convention generator.
+        /// Configures the FullAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FullAddress { get; } = new("FullAddress");
+        public AutoConventionGeneratorConfig FullAddress { get; } = new AutoConventionGeneratorConfig("FullAddress");
 
         /// <summary>
-        ///     Configures the Latitude convention generator.
+        /// Configures the Latitude convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Latitude { get; } = new("Latitude");
+        public AutoConventionGeneratorConfig Latitude { get; } = new AutoConventionGeneratorConfig("Latitude");
 
         /// <summary>
-        ///     Configures the Longitude convention generator.
+        /// Configures the Longitude convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Longitude { get; } = new("Longitude");
+        public AutoConventionGeneratorConfig Longitude { get; } = new AutoConventionGeneratorConfig("Longitude");
 
         /// <summary>
-        ///     Configures the OrdinalDirection convention generator.
+        /// Configures the OrdinalDirection convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig OrdinalDirection { get; } = new("OrdinalDirection");
+        public AutoConventionGeneratorConfig OrdinalDirection { get; } = new AutoConventionGeneratorConfig("OrdinalDirection");
 
         /// <summary>
-        ///     Configures the SecondaryAddress convention generator.
+        /// Configures the SecondaryAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig SecondaryAddress { get; } = new("SecondaryAddress");
+        public AutoConventionGeneratorConfig SecondaryAddress { get; } = new AutoConventionGeneratorConfig("SecondaryAddress");
 
         /// <summary>
-        ///     Configures the State convention generator.
+        /// Configures the State convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig State { get; } = new("State");
+        public AutoConventionGeneratorConfig State { get; } = new AutoConventionGeneratorConfig("State");
 
         /// <summary>
-        ///     Configures the StateAbbr convention generator.
+        /// Configures the StateAbbr convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig StateAbbr { get; } = new("StateAbbr");
+        public AutoConventionGeneratorConfig StateAbbr { get; } = new AutoConventionGeneratorConfig("StateAbbr");
 
         /// <summary>
-        ///     Configures the StreetAddress convention generator.
+        /// Configures the StreetAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig StreetAddress { get; } = new("StreetAddress");
+        public AutoConventionGeneratorConfig StreetAddress { get; } = new AutoConventionGeneratorConfig("StreetAddress");
 
         /// <summary>
-        ///     Configures the StreetName convention generator.
+        /// Configures the StreetName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig StreetName { get; } = new("StreetName");
+        public AutoConventionGeneratorConfig StreetName { get; } = new AutoConventionGeneratorConfig("StreetName");
 
         /// <summary>
-        ///     Configures the StreetSuffix convention generator.
+        /// Configures the StreetSuffix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig StreetSuffix { get; } = new("StreetSuffix");
+        public AutoConventionGeneratorConfig StreetSuffix { get; } = new AutoConventionGeneratorConfig("StreetSuffix");
 
         /// <summary>
-        ///     Configures the ZipCode convention generator.
+        /// Configures the ZipCode convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ZipCode { get; } = new("ZipCode");
+        public AutoConventionGeneratorConfig ZipCode { get; } = new AutoConventionGeneratorConfig("ZipCode");
 
         /// <summary>
-        ///     Configures the Color convention generator.
+        /// Configures the Color convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Color { get; } = new("Color");
+        public AutoConventionGeneratorConfig Color { get; } = new AutoConventionGeneratorConfig("Color");
 
         /// <summary>
-        ///     Configures the Department convention generator.
+        /// Configures the Department convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Department { get; } = new("Department");
+        public AutoConventionGeneratorConfig Department { get; } = new AutoConventionGeneratorConfig("Department");
 
         /// <summary>
-        ///     Configures the Ean13 convention generator.
+        /// Configures the Ean13 convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Ean13 { get; } = new("Ean13");
+        public AutoConventionGeneratorConfig Ean13 { get; } = new AutoConventionGeneratorConfig("Ean13");
 
         /// <summary>
-        ///     Configures the Ean8 convention generator.
+        /// Configures the Ean8 convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Ean8 { get; } = new("Ean8");
+        public AutoConventionGeneratorConfig Ean8 { get; } = new AutoConventionGeneratorConfig("Ean8");
 
         /// <summary>
-        ///     Configures the Price convention generator.
+        /// Configures the Price convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Price { get; } = new("Price");
+        public AutoConventionGeneratorConfig Price { get; } = new AutoConventionGeneratorConfig("Price");
 
         /// <summary>
-        ///     Configures the Product convention generator.
+        /// Configures the Product convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Product { get; } = new("Product");
+        public AutoConventionGeneratorConfig Product { get; } = new AutoConventionGeneratorConfig("Product");
 
         /// <summary>
-        ///     Configures the ProductAdjective convention generator.
+        /// Configures the ProductAdjective convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ProductAdjective { get; } = new("ProductAdjective");
+        public AutoConventionGeneratorConfig ProductAdjective { get; } = new AutoConventionGeneratorConfig("ProductAdjective");
 
         /// <summary>
-        ///     Configures the ProductDescription convention generator.
+        /// Configures the ProductDescription convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ProductDescription { get; } = new("ProductDescription");
+        public AutoConventionGeneratorConfig ProductDescription { get; } = new AutoConventionGeneratorConfig("ProductDescription");
 
         /// <summary>
-        ///     Configures the ProductMaterial convention generator.
+        /// Configures the ProductMaterial convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ProductMaterial { get; } = new("ProductMaterial");
+        public AutoConventionGeneratorConfig ProductMaterial { get; } = new AutoConventionGeneratorConfig("ProductMaterial");
 
         /// <summary>
-        ///     Configures the ProductName convention generator.
+        /// Configures the ProductName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ProductName { get; } = new("ProductName");
+        public AutoConventionGeneratorConfig ProductName { get; } = new AutoConventionGeneratorConfig("ProductName");
 
         /// <summary>
-        ///     Configures the Bs convention generator.
+        /// Configures the Bs convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Bs { get; } = new("Bs");
+        public AutoConventionGeneratorConfig Bs { get; } = new AutoConventionGeneratorConfig("Bs");
 
         /// <summary>
-        ///     Configures the CatchPhrase convention generator.
+        /// Configures the CatchPhrase convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CatchPhrase { get; } = new("CatchPhrase");
+        public AutoConventionGeneratorConfig CatchPhrase { get; } = new AutoConventionGeneratorConfig("CatchPhrase");
 
         /// <summary>
-        ///     Configures the CompanyName convention generator.
+        /// Configures the CompanyName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CompanyName { get; } = new("CompanyName");
+        public AutoConventionGeneratorConfig CompanyName { get; } = new AutoConventionGeneratorConfig("CompanyName");
 
         /// <summary>
-        ///     Configures the CompanySuffix convention generator.
+        /// Configures the CompanySuffix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CompanySuffix { get; } = new("CompanySuffix");
+        public AutoConventionGeneratorConfig CompanySuffix { get; } = new AutoConventionGeneratorConfig("CompanySuffix");
 
         /// <summary>
-        ///     Configures the Collation convention generator.
+        /// Configures the Collation convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Collation { get; } = new("Collation");
+        public AutoConventionGeneratorConfig Collation { get; } = new AutoConventionGeneratorConfig("Collation");
 
         /// <summary>
-        ///     Configures the Column convention generator.
+        /// Configures the Column convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Column { get; } = new("Column");
+        public AutoConventionGeneratorConfig Column { get; } = new AutoConventionGeneratorConfig("Column");
 
         /// <summary>
-        ///     Configures the Engine convention generator.
+        /// Configures the Engine convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Engine { get; } = new("Engine");
+        public AutoConventionGeneratorConfig Engine { get; } = new AutoConventionGeneratorConfig("Engine");
 
         /// <summary>
-        ///     Configures the Type convention generator.
+        /// Configures the Type convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Type { get; } = new("Type");
+        public AutoConventionGeneratorConfig Type { get; } = new AutoConventionGeneratorConfig("Type");
 
         /// <summary>
-        ///     Configures the Account convention generator.
+        /// Configures the Account convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Account { get; } = new("Account");
+        public AutoConventionGeneratorConfig Account { get; } = new AutoConventionGeneratorConfig("Account");
 
         /// <summary>
-        ///     Configures the AccountName convention generator.
+        /// Configures the AccountName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig AccountName { get; } = new("AccountName");
+        public AutoConventionGeneratorConfig AccountName { get; } = new AutoConventionGeneratorConfig("AccountName");
 
         /// <summary>
-        ///     Configures the Amount convention generator.
+        /// Configures the Amount convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Amount { get; } = new("Amount");
+        public AutoConventionGeneratorConfig Amount { get; } = new AutoConventionGeneratorConfig("Amount");
 
         /// <summary>
-        ///     Configures the Bic convention generator.
+        /// Configures the Bic convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Bic { get; } = new("Bic");
+        public AutoConventionGeneratorConfig Bic { get; } = new AutoConventionGeneratorConfig("Bic");
 
         /// <summary>
-        ///     Configures the BitcoinAddress convention generator.
+        /// Configures the BitcoinAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig BitcoinAddress { get; } = new("BitcoinAddress");
+        public AutoConventionGeneratorConfig BitcoinAddress { get; } = new AutoConventionGeneratorConfig("BitcoinAddress");
 
         /// <summary>
-        ///     Configures the CreditCardCvv convention generator.
+        /// Configures the CreditCardCvv convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CreditCardCvv { get; } = new("CreditCardCvv");
+        public AutoConventionGeneratorConfig CreditCardCvv { get; } = new AutoConventionGeneratorConfig("CreditCardCvv");
 
         /// <summary>
-        ///     Configures the CreditCardNumber convention generator.
+        /// Configures the CreditCardNumber convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CreditCardNumber { get; } = new("CreditCardNumber");
+        public AutoConventionGeneratorConfig CreditCardNumber { get; } = new AutoConventionGeneratorConfig("CreditCardNumber");
 
         /// <summary>
-        ///     Configures the Currency convention generator.
+        /// Configures the Currency convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Currency { get; } = new("Currency");
+        public AutoConventionGeneratorConfig Currency { get; } = new AutoConventionGeneratorConfig("Currency");
 
         /// <summary>
-        ///     Configures the EthereumAddress convention generator.
+        /// Configures the EthereumAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig EthereumAddress { get; } = new("EthereumAddress");
+        public AutoConventionGeneratorConfig EthereumAddress { get; } = new AutoConventionGeneratorConfig("EthereumAddress");
 
         /// <summary>
-        ///     Configures the Iban convention generator.
+        /// Configures the Iban convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Iban { get; } = new("Iban");
+        public AutoConventionGeneratorConfig Iban { get; } = new AutoConventionGeneratorConfig("Iban");
 
         /// <summary>
-        ///     Configures the LitecoinAddress convention generator.
+        /// Configures the LitecoinAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig LitecoinAddress { get; } = new("LitecoinAddress");
+        public AutoConventionGeneratorConfig LitecoinAddress { get; } = new AutoConventionGeneratorConfig("LitecoinAddress");
 
         /// <summary>
-        ///     Configures the RoutingNumber convention generator.
+        /// Configures the RoutingNumber convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig RoutingNumber { get; } = new("RoutingNumber");
+        public AutoConventionGeneratorConfig RoutingNumber { get; } = new AutoConventionGeneratorConfig("RoutingNumber");
 
         /// <summary>
-        ///     Configures the TransactionType convention generator.
+        /// Configures the TransactionType convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig TransactionType { get; } = new("TransactionType");
+        public AutoConventionGeneratorConfig TransactionType { get; } = new AutoConventionGeneratorConfig("TransactionType");
 
         /// <summary>
-        ///     Configures the Avatar convention generator.
+        /// Configures the Avatar convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Avatar { get; } = new("Avatar");
+        public AutoConventionGeneratorConfig Avatar { get; } = new AutoConventionGeneratorConfig("Avatar");
 
         /// <summary>
-        ///     Configures the DomainName convention generator.
+        /// Configures the DomainName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig DomainName { get; } = new("DomainName");
+        public AutoConventionGeneratorConfig DomainName { get; } = new AutoConventionGeneratorConfig("DomainName");
 
         /// <summary>
-        ///     Configures the DomainSuffix convention generator.
+        /// Configures the DomainSuffix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig DomainSuffix { get; } = new("DomainSuffix");
+        public AutoConventionGeneratorConfig DomainSuffix { get; } = new AutoConventionGeneratorConfig("DomainSuffix");
 
         /// <summary>
-        ///     Configures the DomainWord convention generator.
+        /// Configures the DomainWord convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig DomainWord { get; } = new("DomainWord");
+        public AutoConventionGeneratorConfig DomainWord { get; } = new AutoConventionGeneratorConfig("DomainWord");
 
         /// <summary>
-        ///     Configures the Email convention generator.
+        /// Configures the Email convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Email { get; } = new("Email");
+        public AutoConventionGeneratorConfig Email { get; } = new AutoConventionGeneratorConfig("Email");
 
         /// <summary>
-        ///     Configures the ExampleEmail convention generator.
+        /// Configures the ExampleEmail convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ExampleEmail { get; } = new("ExampleEmail");
+        public AutoConventionGeneratorConfig ExampleEmail { get; } = new AutoConventionGeneratorConfig("ExampleEmail");
 
         /// <summary>
-        ///     Configures the Ip convention generator.
+        /// Configures the Ip convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Ip { get; } = new("Ip");
+        public AutoConventionGeneratorConfig Ip { get; } = new AutoConventionGeneratorConfig("Ip");
 
         /// <summary>
-        ///     Configures the IpAddress convention generator.
+        /// Configures the IpAddress convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig IpAddress { get; } = new("IpAddress");
+        public AutoConventionGeneratorConfig IpAddress { get; } = new AutoConventionGeneratorConfig("IpAddress");
 
         /// <summary>
-        ///     Configures the IpEndPoint convention generator.
+        /// Configures the IpEndPoint convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig IpEndPoint { get; } = new("IpEndPoint");
+        public AutoConventionGeneratorConfig IpEndPoint { get; } = new AutoConventionGeneratorConfig("IpEndPoint");
 
         /// <summary>
-        ///     Configures the Ipv6 convention generator.
+        /// Configures the Ipv6 convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Ipv6 { get; } = new("Ipv6");
+        public AutoConventionGeneratorConfig Ipv6 { get; } = new AutoConventionGeneratorConfig("Ipv6");
 
         /// <summary>
-        ///     Configures the Ipv6Address convention generator.
+        /// Configures the Ipv6Address convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Ipv6Address { get; } = new("Ipv6Address");
+        public AutoConventionGeneratorConfig Ipv6Address { get; } = new AutoConventionGeneratorConfig("Ipv6Address");
 
         /// <summary>
-        ///     Configures the Ipv6EndPoint convention generator.
+        /// Configures the Ipv6EndPoint convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Ipv6EndPoint { get; } = new("Ipv6EndPoint");
+        public AutoConventionGeneratorConfig Ipv6EndPoint { get; } = new AutoConventionGeneratorConfig("Ipv6EndPoint");
 
         /// <summary>
-        ///     Configures the Mac convention generator.
+        /// Configures the Mac convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Mac { get; } = new("Mac");
+        public AutoConventionGeneratorConfig Mac { get; } = new AutoConventionGeneratorConfig("Mac");
 
         /// <summary>
-        ///     Configures the Password convention generator.
+        /// Configures the Password convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Password { get; } = new("Password");
+        public AutoConventionGeneratorConfig Password { get; } = new AutoConventionGeneratorConfig("Password");
 
         /// <summary>
-        ///     Configures the Protocol convention generator.
+        /// Configures the Port convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Protocol { get; } = new("Protocol");
+        public AutoConventionGeneratorConfig Port { get; } = new AutoConventionGeneratorConfig("Port");
 
         /// <summary>
-        ///     Configures the Url convention generator.
+        /// Configures the Protocol convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Url { get; } = new("Url");
+        public AutoConventionGeneratorConfig Protocol { get; } = new AutoConventionGeneratorConfig("Protocol");
 
         /// <summary>
-        ///     Configures the UrlRootedPath convention generator.
+        /// Configures the Url convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig UrlRootedPath { get; } = new("UrlRootedPath");
+        public AutoConventionGeneratorConfig Url { get; } = new AutoConventionGeneratorConfig("Url");
 
         /// <summary>
-        ///     Configures the UrlWithPath convention generator.
+        /// Configures the UrlRootedPath convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig UrlWithPath { get; } = new("UrlWithPath");
+        public AutoConventionGeneratorConfig UrlRootedPath { get; } = new AutoConventionGeneratorConfig("UrlRootedPath");
 
         /// <summary>
-        ///     Configures the UserAgent convention generator.
+        /// Configures the UrlWithPath convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig UserAgent { get; } = new("UserAgent");
+        public AutoConventionGeneratorConfig UrlWithPath { get; } = new AutoConventionGeneratorConfig("UrlWithPath");
 
         /// <summary>
-        ///     Configures the UserName convention generator.
+        /// Configures the UserAgent convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig UserName { get; } = new("UserName");
+        public AutoConventionGeneratorConfig UserAgent { get; } = new AutoConventionGeneratorConfig("UserAgent");
 
         /// <summary>
-        ///     Configures the UserNameUnicode convention generator.
+        /// Configures the UserName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig UserNameUnicode { get; } = new("UserNameUnicode");
+        public AutoConventionGeneratorConfig UserName { get; } = new AutoConventionGeneratorConfig("UserName");
 
         /// <summary>
-        ///     Configures the Genre convention generator.
+        /// Configures the UserNameUnicode convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Genre { get; } = new("Genre");
+        public AutoConventionGeneratorConfig UserNameUnicode { get; } = new AutoConventionGeneratorConfig("UserNameUnicode");
 
         /// <summary>
-        ///     Configures the FindName convention generator.
+        /// Configures the Genre convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FindName { get; } = new("FindName");
+        public AutoConventionGeneratorConfig Genre { get; } = new AutoConventionGeneratorConfig("Genre");
 
         /// <summary>
-        ///     Configures the FirstName convention generator.
+        /// Configures the FindName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FirstName { get; } = new("FirstName");
+        public AutoConventionGeneratorConfig FindName { get; } = new AutoConventionGeneratorConfig("FindName");
 
         /// <summary>
-        ///     Configures the FullName convention generator.
+        /// Configures the FirstName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FullName { get; } = new("FullName");
+        public AutoConventionGeneratorConfig FirstName { get; } = new AutoConventionGeneratorConfig("FirstName");
 
         /// <summary>
-        ///     Configures the JobArea convention generator.
+        /// Configures the FullName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig JobArea { get; } = new("JobArea");
+        public AutoConventionGeneratorConfig FullName { get; } = new AutoConventionGeneratorConfig("FullName");
 
         /// <summary>
-        ///     Configures the JobDescriptor convention generator.
+        /// Configures the JobArea convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig JobDescriptor { get; } = new("JobDescriptor");
+        public AutoConventionGeneratorConfig JobArea { get; } = new AutoConventionGeneratorConfig("JobArea");
 
         /// <summary>
-        ///     Configures the JobTitle convention generator.
+        /// Configures the JobDescriptor convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig JobTitle { get; } = new("JobTitle");
+        public AutoConventionGeneratorConfig JobDescriptor { get; } = new AutoConventionGeneratorConfig("JobDescriptor");
 
         /// <summary>
-        ///     Configures the JobType convention generator.
+        /// Configures the JobTitle convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig JobType { get; } = new("JobType");
+        public AutoConventionGeneratorConfig JobTitle { get; } = new AutoConventionGeneratorConfig("JobTitle");
 
         /// <summary>
-        ///     Configures the LastName convention generator.
+        /// Configures the JobType convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig LastName { get; } = new("LastName");
+        public AutoConventionGeneratorConfig JobType { get; } = new AutoConventionGeneratorConfig("JobType");
 
         /// <summary>
-        ///     Configures the Prefix convention generator.
+        /// Configures the LastName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Prefix { get; } = new("Prefix");
+        public AutoConventionGeneratorConfig LastName { get; } = new AutoConventionGeneratorConfig("LastName");
 
         /// <summary>
-        ///     Configures the Suffix convention generator.
+        /// Configures the Prefix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Suffix { get; } = new("Suffix");
+        public AutoConventionGeneratorConfig Prefix { get; } = new AutoConventionGeneratorConfig("Prefix");
 
         /// <summary>
-        ///     Configures the PhoneNumber convention generator.
+        /// Configures the Suffix convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig PhoneNumber { get; } = new("PhoneNumber");
+        public AutoConventionGeneratorConfig Suffix { get; } = new AutoConventionGeneratorConfig("Suffix");
 
         /// <summary>
-        ///     Configures the PhoneNumberFormat convention generator.
+        /// Configures the PhoneNumber convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig PhoneNumberFormat { get; } = new("PhoneNumberFormat");
+        public AutoConventionGeneratorConfig PhoneNumber { get; } = new AutoConventionGeneratorConfig("PhoneNumber");
 
         /// <summary>
-        ///     Configures the AndroidId convention generator.
+        /// Configures the PhoneNumberFormat convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig AndroidId { get; } = new("AndroidId");
+        public AutoConventionGeneratorConfig PhoneNumberFormat { get; } = new AutoConventionGeneratorConfig("PhoneNumberFormat");
 
         /// <summary>
-        ///     Configures the ApplePushToken convention generator.
+        /// Configures the AndroidId convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig ApplePushToken { get; } = new("ApplePushToken");
+        public AutoConventionGeneratorConfig AndroidId { get; } = new AutoConventionGeneratorConfig("AndroidId");
 
         /// <summary>
-        ///     Configures the BlackBerryPin convention generator.
+        /// Configures the ApplePushToken convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig BlackBerryPin { get; } = new("BlackBerryPin");
+        public AutoConventionGeneratorConfig ApplePushToken { get; } = new AutoConventionGeneratorConfig("ApplePushToken");
 
         /// <summary>
-        ///     Configures the CommonFileExt convention generator.
+        /// Configures the BlackBerryPin convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CommonFileExt { get; } = new("CommonFileExt");
+        public AutoConventionGeneratorConfig BlackBerryPin { get; } = new AutoConventionGeneratorConfig("BlackBerryPin");
 
         /// <summary>
-        ///     Configures the CommonFileName convention generator.
+        /// Configures the CommonFileExt convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CommonFileName { get; } = new("CommonFileName");
+        public AutoConventionGeneratorConfig CommonFileExt { get; } = new AutoConventionGeneratorConfig("CommonFileExt");
 
         /// <summary>
-        ///     Configures the CommonFileType convention generator.
+        /// Configures the CommonFileName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig CommonFileType { get; } = new("CommonFileType");
+        public AutoConventionGeneratorConfig CommonFileName { get; } = new AutoConventionGeneratorConfig("CommonFileName");
 
         /// <summary>
-        ///     Configures the DirectoryPath convention generator.
+        /// Configures the CommonFileType convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig DirectoryPath { get; } = new("DirectoryPath");
+        public AutoConventionGeneratorConfig CommonFileType { get; } = new AutoConventionGeneratorConfig("CommonFileType");
 
         /// <summary>
-        ///     Configures the Exception convention generator.
+        /// Configures the DirectoryPath convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Exception { get; } = new("Exception");
+        public AutoConventionGeneratorConfig DirectoryPath { get; } = new AutoConventionGeneratorConfig("DirectoryPath");
 
         /// <summary>
-        ///     Configures the FileExt convention generator.
+        /// Configures the Exception convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FileExt { get; } = new("FileExt");
+        public AutoConventionGeneratorConfig Exception { get; } = new AutoConventionGeneratorConfig("Exception");
 
         /// <summary>
-        ///     Configures the FileName convention generator.
+        /// Configures the FileExt convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FileName { get; } = new("FileName");
+        public AutoConventionGeneratorConfig FileExt { get; } = new AutoConventionGeneratorConfig("FileExt");
 
         /// <summary>
-        ///     Configures the FilePath convention generator.
+        /// Configures the FileName convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FilePath { get; } = new("FilePath");
+        public AutoConventionGeneratorConfig FileName { get; } = new AutoConventionGeneratorConfig("FileName");
 
         /// <summary>
-        ///     Configures the FileType convention generator.
+        /// Configures the FilePath convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig FileType { get; } = new("FileType");
+        public AutoConventionGeneratorConfig FilePath { get; } = new AutoConventionGeneratorConfig("FilePath");
 
         /// <summary>
-        ///     Configures the MimeType convention generator.
+        /// Configures the FileType convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig MimeType { get; } = new("MimeType");
+        public AutoConventionGeneratorConfig FileType { get; } = new AutoConventionGeneratorConfig("FileType");
 
         /// <summary>
-        ///     Configures the Semver convention generator.
+        /// Configures the MimeType convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Semver { get; } = new("Semver");
+        public AutoConventionGeneratorConfig MimeType { get; } = new AutoConventionGeneratorConfig("MimeType");
 
         /// <summary>
-        ///     Configures the Version convention generator.
+        /// Configures the Semver convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Version { get; } = new("Version");
+        public AutoConventionGeneratorConfig Semver { get; } = new AutoConventionGeneratorConfig("Semver");
 
         /// <summary>
-        ///     Configures the Fuel convention generator.
+        /// Configures the Version convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Fuel { get; } = new("Fuel");
+        public AutoConventionGeneratorConfig Version { get; } = new AutoConventionGeneratorConfig("Version");
 
         /// <summary>
-        ///     Configures the Manufacturer convention generator.
+        /// Configures the Fuel convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Manufacturer { get; } = new("Manufacturer");
+        public AutoConventionGeneratorConfig Fuel { get; } = new AutoConventionGeneratorConfig("Fuel");
 
         /// <summary>
-        ///     Configures the Model convention generator.
+        /// Configures the Manufacturer convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Model { get; } = new("Model");
+        public AutoConventionGeneratorConfig Manufacturer { get; } = new AutoConventionGeneratorConfig("Manufacturer");
 
         /// <summary>
-        ///     Configures the Vin convention generator.
+        /// Configures the Model convention generator.
         /// </summary>
-        public AutoConventionGeneratorConfig Vin { get; } = new("Vin");
+        public AutoConventionGeneratorConfig Model { get; } = new AutoConventionGeneratorConfig("Model");
+
+        /// <summary>
+        /// Configures the Vin convention generator.
+        /// </summary>
+        public AutoConventionGeneratorConfig Vin { get; } = new AutoConventionGeneratorConfig("Vin");
     }
 }
