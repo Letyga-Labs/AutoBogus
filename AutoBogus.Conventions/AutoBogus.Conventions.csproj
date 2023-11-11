@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>A C# library complementing the Bogus generator by adding auto creation and population capabilities. This package includes generator options for common conventions.</Description>
+        <Version>3.0.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AutoBogus\AutoBogus.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="ConventionByNameGenerators.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>ConventionByNameGenerators.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="ConventionByNameGenerators.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ConventionByNameGenerators.tt</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+</Project>

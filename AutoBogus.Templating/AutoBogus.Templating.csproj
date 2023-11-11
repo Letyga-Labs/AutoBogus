@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Authors>Ian Cox</Authors>
+        <Product>LetygaLabs.AutoBogus.Templating</Product>
+        <Description>A C# library extending AutoBogus with templating for specifying specific data values.</Description>
+        <Version>3.0.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AutoBogus\AutoBogus.csproj"/>
+    </ItemGroup>
+
+</Project>

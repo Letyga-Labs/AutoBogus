@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Description>A C# library complementing the Bogus generator by adding auto creation and population capabilities. This package includes mocking options using FakeItEasy.</Description>
+        <Version>3.0.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FakeItEasy" Version="6.2.1"/>
+        <ProjectReference Include="..\AutoBogus\AutoBogus.csproj"/>
+    </ItemGroup>
+
+</Project>
+

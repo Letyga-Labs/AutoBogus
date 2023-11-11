@@ -1,0 +1,119 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)\AutoBogus.Conventions\bin\Debug\net40\Bogus.dll" #>
+<#@ output extension=".cs" #>
+namespace AutoBogus.Conventions.Generators
+{
+<#
+    const string classSuffix = "ByNameGenerator";
+
+    var fakerType = typeof(Faker);
+    var generators = new List<string>();
+    var fakerProperties = fakerType.GetProperties();
+    var propertyNames = new[]
+    {
+        "Address",
+        "Commerce",
+        "Company",
+        "Database",
+        "Finance",
+        "Internet",
+        "Music",
+        "Name",
+        "Person",
+        "Phone",
+        "System",
+        "Vehicle"
+    };
+
+    foreach (var fakerProperty in fakerProperties.OrderBy(p => p.Name))
+    {
+        if (propertyNames.Contains(fakerProperty.Name))
+        {
+            var propertyType = fakerProperty.PropertyType;
+            var generatorMethods = propertyType.GetMethods();
+
+            foreach (var generatorMethod in generatorMethods.OrderBy(m => m.Name))
+            {
+                if (generatorMethod.DeclaringType != typeof(object) && !generatorMethod.IsSpecialName &&
+                    generatorMethod.ReturnType != typeof(void))
+                {
+                    var generator = generatorMethod.Name;
+
+                    if (fakerProperty.Name == "Commerce" && generatorMethod.Name == "Categories")
+                    {
+                        continue;
+                    }
+
+                    if (!generators.Contains(generator))
+                    {
+                        generators.Add(generator);
+#>
+
+  // <#= fakerProperty.Name #>.<#= generatorMethod.Name #>
+  internal sealed class <#= generator #><#= classSuffix #>
+    : IAutoConventionGenerator
+  {  
+    bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
+    {
+      return config.<#= generatorMethod.Name #>.Enabled &&
+             config.<#= generatorMethod.Name #>.HasAlias(context.GenerateName) &&
+             context.GenerateType == typeof(<#=
+                                generatorMethod.ReturnType.FullName #>);
+    }
+
+    object IAutoConventionGenerator.Generate(AutoConventionContext context)
+    {
+      var alwaysGenerate = context.Config.AlwaysGenerate && context.Config.<#= generatorMethod.Name #>.AlwaysGenerate;
+
+      if (context.Instance == null || alwaysGenerate)
+      {
+        return context.OverrideContext.Faker.<#= fakerProperty.Name #>.<#= generatorMethod.Name #>();
+      }
+
+      return context.Instance;
+    }
+  }
+<#
+                    }
+                }
+            }
+        }
+    }
+#>
+
+  internal static class ByNameGeneratorRegistry
+  {
+    internal static System.Collections.Generic.IList<IAutoConventionGenerator> Generators = new System.Collections.Generic.List<IAutoConventionGenerator>
+    {
+<#
+    foreach (var generator in generators)
+    {
+#>
+      new <#= generator #><#= classSuffix #>(),
+<#
+    }
+#>   
+    };
+  }
+}
+
+namespace AutoBogus.Conventions
+{
+  public sealed partial class AutoConventionConfig
+  {
+<#
+    foreach (var generator in generators)
+    {
+#>
+
+    /// <summary>
+    /// Configures the <#= generator #> convention generator.
+    /// </summary>
+    public AutoConventionGeneratorConfig <#= generator #> { get; } = new AutoConventionGeneratorConfig("<#= generator #>");
+<#
+    }
+#>
+
+  }
+}
