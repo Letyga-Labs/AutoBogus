@@ -13,8 +13,6 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>../autobogus.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -38,15 +36,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="../logo.png">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-        <None Include="..\LICENSE" Link="LICENSE"/>
-        <None Include="..\LICENSE">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
+        <None Include="..\logo.png" PackagePath="" Pack="True"/>
+        <None Include="..\LICENSE" PackagePath="" Pack="True" Link="LICENSE"/>
     </ItemGroup>
     
     <ItemGroup>
