@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace AutoBogus.Conventions;
 
 internal sealed class AutoGeneratorConventionsOverride
@@ -23,6 +25,7 @@ internal sealed class AutoGeneratorConventionsOverride
 
     public override void Generate(AutoGenerateOverrideContext context)
     {
+        Debug.Assert(context.GenerateContext != null, "context.GenerateContext != null");
         var generator = GetGenerator(context.GenerateContext);
 
         if (generator == null)

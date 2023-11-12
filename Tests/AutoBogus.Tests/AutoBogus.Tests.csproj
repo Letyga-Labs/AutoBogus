@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="NSubstitute" Version="5.1.0"/>
+        <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\AutoBogus.Conventions\AutoBogus.Conventions.csproj"/>
+        <ProjectReference Include="..\..\AutoBogus.FakeItEasy\AutoBogus.FakeItEasy.csproj"/>
+        <ProjectReference Include="..\..\AutoBogus.Moq\AutoBogus.Moq.csproj"/>
+        <ProjectReference Include="..\..\AutoBogus.NSubstitute\AutoBogus.NSubstitute.csproj"/>
+        <ProjectReference Include="..\..\AutoBogus.Templating\AutoBogus.Templating.csproj"/>
+        <ProjectReference Include="..\..\AutoBogus\AutoBogus.csproj"/>
+        <ProjectReference Include="..\AutoBogus.Tests.Models\AutoBogus.Tests.Models.csproj"/>
+    </ItemGroup>
+
+</Project>

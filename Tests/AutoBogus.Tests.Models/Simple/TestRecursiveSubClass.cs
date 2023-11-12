@@ -2,5 +2,5 @@
 
 public sealed class TestRecursiveSubClass
 {
-    public TestRecursiveClass Value { get; set; }
+    public TestRecursiveClass Value { get; set; } = null!;
 }

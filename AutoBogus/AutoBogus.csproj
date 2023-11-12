@@ -9,5 +9,20 @@
         <PackageReference Include="Bogus" Version="34.0.2" />
     </ItemGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>AutoBogus.Conventions</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>AutoBogus.FakeItEasy</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>AutoBogus.Moq</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>AutoBogus.NSubstitute</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
 </Project>
 
