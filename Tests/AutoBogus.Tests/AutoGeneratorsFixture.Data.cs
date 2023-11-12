@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using AutoBogus.Generators;
 using FluentAssertions;
 using Xunit;
@@ -6,9 +7,9 @@ using Xunit.Sdk;
 
 namespace AutoBogus.Tests;
 
-partial class AutoGeneratorsFixture
+public partial class AutoGeneratorsFixture
 {
-    internal static Type ResolveType(string fullTypeName, bool throwOnError)
+    internal static Type? ResolveType(string fullTypeName, bool throwOnError)
     {
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
@@ -26,6 +27,7 @@ partial class AutoGeneratorsFixture
         return null;
     }
 
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate")]
     public class DataSetGeneratorFacet
         : AutoGeneratorsFixture
     {
@@ -34,6 +36,14 @@ partial class AutoGeneratorsFixture
             yield return new object[] { typeof(DataSet), true, };
             yield return new object[] { typeof(TypedDataSet), true, };
             yield return new object[] { typeof(object), false, };
+        }
+
+        public static IEnumerable<object[]> GetGenerateTestCases()
+        {
+            yield return new object[] { typeof(DataSet), };
+            yield return new object[] { typeof(TypedDataSet), };
+            yield return new object[] { typeof(TypedDataSetWithRelations), };
+            yield return new object[] { typeof(TypedDataSetWithSelfReferencingTable), };
         }
 
         [Theory]
@@ -55,27 +65,21 @@ partial class AutoGeneratorsFixture
             }
         }
 
-        public static IEnumerable<object[]> GetGenerateTestCases()
-        {
-            yield return new object[] { typeof(DataSet), };
-            yield return new object[] { typeof(TypedDataSet), };
-            yield return new object[] { typeof(TypedDataSetWithRelations), };
-            yield return new object[] { typeof(TypedDataSetWithSelfReferencingTable), };
-        }
-
         [SkippableTheory]
         [MemberData(nameof(GetGenerateTestCases))]
         public void Generate_Should_Return_DataSet(Type dataSetType)
         {
+            ArgumentNullException.ThrowIfNull(dataSetType);
+
             // Arrange
             var context = CreateContext(dataSetType);
 
-            var success = DataSetGenerator.TryCreateGenerator(context.GenerateType, out var generator);
+            var success = DataSetGenerator.TryCreateGenerator(context.GenerateType!, out var generator);
 
             Skip.IfNot(success, $"couldn't create generator for {dataSetType.Name}");
 
             // Act
-            var result = generator.Generate(context);
+            var result = generator!.Generate(context);
 
             // Assert
             result.Should().BeOfType(dataSetType);
@@ -95,13 +99,15 @@ partial class AutoGeneratorsFixture
         [MemberData(nameof(GetGenerateTestCases))]
         public void Generate_Should_Return_DataSet_With_Specified_DataTable_Row_Counts(Type dataSetType)
         {
+            ArgumentNullException.ThrowIfNull(dataSetType);
+
             // Arrange
             var rowCountByTable = new Dictionary<DataTable, int>();
 
             Func<AutoGenerateContext, int> rowCountFunctor =
                 ctx =>
                 {
-                    var dataTable = (DataTable)ctx.Instance;
+                    var dataTable = (DataTable)ctx.Instance!;
 
                     if (!rowCountByTable.TryGetValue(dataTable, out var count))
                     {
@@ -110,7 +116,6 @@ partial class AutoGeneratorsFixture
                         // to have unique values. So, assuming that the dependent tables
                         // come last in the DataSet, we have a decreasing count as we progress
                         // through the list.
-
                         count = 100 - ((rowCountByTable.Count + 1) * 10);
 
                         rowCountByTable[dataTable] = count;
@@ -121,12 +126,12 @@ partial class AutoGeneratorsFixture
 
             var context = CreateContext(dataSetType, dataTableRowCountFunctor: rowCountFunctor);
 
-            var success = DataSetGenerator.TryCreateGenerator(context.GenerateType, out var generator);
+            var success = DataSetGenerator.TryCreateGenerator(context.GenerateType!, out var generator);
 
             Skip.IfNot(success, $"couldn't create generator for {dataSetType.Name}");
 
             // Act
-            var result = generator.Generate(context);
+            var result = generator!.Generate(context);
 
             // Assert
             result.Should().BeOfType(dataSetType);
@@ -154,7 +159,7 @@ partial class AutoGeneratorsFixture
             Func<AutoGenerateContext, int> rowCountFunctor =
                 ctx =>
                 {
-                    var dataTable = (DataTable)ctx.Instance;
+                    var dataTable = (DataTable)ctx.Instance!;
 
                     if (!rowCountByTable.TryGetValue(dataTable, out var count))
                     {
@@ -164,7 +169,6 @@ partial class AutoGeneratorsFixture
                         // come last in the DataSet, having an increasing count creates an
                         // impossible situation where there aren't enough related records
                         // to produce unique values.
-
                         count = 100 + ((rowCountByTable.Count + 1) * 10);
 
                         rowCountByTable[dataTable] = count;
@@ -175,13 +179,12 @@ partial class AutoGeneratorsFixture
 
             var context = CreateContext(dataSetType, dataTableRowCountFunctor: rowCountFunctor);
 
-            var success = DataSetGenerator.TryCreateGenerator(context.GenerateType, out var generator);
+            var success = DataSetGenerator.TryCreateGenerator(context.GenerateType!, out var generator);
 
             Skip.IfNot(success, $"couldn't create generator for {dataSetType.Name}");
 
             // Act
-            Action action =
-                () => generator.Generate(context);
+            Action action = () => generator!.Generate(context);
 
             // Assert
             action.Should().Throw<ArgumentException>()
@@ -209,11 +212,10 @@ partial class AutoGeneratorsFixture
                 Tables.Add(table2);
                 Tables.Add(table1);
 
-                Relations.Add(
-                    new DataRelation("Relation1", table1.Columns["RecordID"], table2.Columns["RecordID"], true));
-                Relations.Add(
-                    new DataRelation("Relation2", table2.Columns["IntColumn"], table3.Columns["ParentIntColumn"],
-                        true));
+                Relations.Add(new DataRelation(
+                    "Relation1", table1.Columns["RecordID"]!, table2.Columns["RecordID"]!, true));
+                Relations.Add(new DataRelation(
+                    "Relation2", table2.Columns["IntColumn"]!, table3.Columns["ParentIntColumn"]!, true));
             }
         }
 
@@ -226,11 +228,12 @@ partial class AutoGeneratorsFixture
                 Tables.Add(table);
 
                 Relations.Add(
-                    new DataRelation("Relation", table.Columns["RecordID"], table.Columns["ParentIntColumn"], true));
+                    new DataRelation("Relation", table.Columns["RecordID"]!, table.Columns["ParentIntColumn"]!, true));
             }
         }
     }
 
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate")]
     public class DataTableGeneratorFacet
         : AutoGeneratorsFixture
     {
@@ -240,6 +243,13 @@ partial class AutoGeneratorsFixture
             yield return new object[] { typeof(TypedDataTable1), true, };
             yield return new object[] { typeof(TypedDataTable2), true, };
             yield return new object[] { typeof(object), false, };
+        }
+
+        public static IEnumerable<object[]> GetGenerateTestCases()
+        {
+            yield return new object[] { typeof(DataTable), };
+            yield return new object[] { typeof(TypedDataTable1), };
+            yield return new object[] { typeof(TypedDataTable2), };
         }
 
         [Theory]
@@ -261,26 +271,21 @@ partial class AutoGeneratorsFixture
             }
         }
 
-        public static IEnumerable<object[]> GetGenerateTestCases()
-        {
-            yield return new object[] { typeof(DataTable), };
-            yield return new object[] { typeof(TypedDataTable1), };
-            yield return new object[] { typeof(TypedDataTable2), };
-        }
-
         [SkippableTheory]
         [MemberData(nameof(GetGenerateTestCases))]
         public void Generate_Should_Return_DataTable(Type dataTableType)
         {
+            ArgumentNullException.ThrowIfNull(dataTableType);
+
             // Arrange
             var context = CreateContext(dataTableType);
 
-            var success = DataTableGenerator.TryCreateGenerator(context.GenerateType, out var generator);
+            var success = DataTableGenerator.TryCreateGenerator(context.GenerateType!, out var generator);
 
             Skip.IfNot(success, $"couldn't create generator for {dataTableType.Name}");
 
             // Act
-            var result = generator.Generate(context);
+            var result = generator!.Generate(context);
 
             // Assert
             result.Should().BeOfType(dataTableType);
@@ -295,20 +300,21 @@ partial class AutoGeneratorsFixture
         [MemberData(nameof(GetGenerateTestCases))]
         public void Generate_Should_Return_DataTable_With_Specified_Row_Count(Type dataTableType)
         {
+            ArgumentNullException.ThrowIfNull(dataTableType);
+
             // Arrange
             const int RowCount = 100;
 
-            Func<AutoGenerateContext, int> rowCountFunctor =
-                _ => RowCount;
+            Func<AutoGenerateContext, int> rowCountFunctor = _ => RowCount;
 
             var context = CreateContext(dataTableType, dataTableRowCountFunctor: rowCountFunctor);
 
-            var success = DataTableGenerator.TryCreateGenerator(context.GenerateType, out var generator);
+            var success = DataTableGenerator.TryCreateGenerator(context.GenerateType!, out var generator);
 
             Skip.IfNot(success, $"couldn't create generator for {dataTableType.Name}");
 
             // Act
-            var result = generator.Generate(context);
+            var result = generator!.Generate(context);
 
             // Assert
             result.Should().BeOfType(dataTableType);

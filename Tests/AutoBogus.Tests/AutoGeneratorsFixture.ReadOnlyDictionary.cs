@@ -18,10 +18,10 @@ public partial class AutoGeneratorsFixture
         public void Generate_Should_Return_Dictionary(Type type)
         {
             var genericTypes = ReflectionHelper.GetGenericArguments(type);
-            var keyType      = genericTypes.ElementAt(0);
-            var valueType    = genericTypes.ElementAt(1);
+            var keyType      = genericTypes[0];
+            var valueType    = genericTypes[1];
             var generator    = CreateGenerator(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
-            var dictionary   = InvokeGenerator(type, generator) as IReadOnlyDictionary<int, string>;
+            var dictionary   = (IReadOnlyDictionary<int, string>)InvokeGenerator(type, generator);
 
             dictionary.Should().NotBeNull().And.NotContainNulls();
 
@@ -45,8 +45,8 @@ public partial class AutoGeneratorsFixture
         {
             var context       = CreateContext(type);
             var genericTypes  = ReflectionHelper.GetGenericArguments(type);
-            var keyType       = genericTypes.ElementAt(0);
-            var valueType     = genericTypes.ElementAt(1);
+            var keyType       = genericTypes[0];
+            var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
 
             AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);

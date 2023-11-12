@@ -58,7 +58,8 @@ public partial class AutoGeneratorsFixture
         };
     }
 
-    public class Factory
+    [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
+    public static class Factory
     {
         public class ReadOnlyDictionary
         {
@@ -97,22 +98,26 @@ public partial class AutoGeneratorsFixture
                 instance.Should().BeOfType(readOnlyDictionaryType);
             }
 
-            public class ReadOnlyDictionaryBase<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+            public class BaseReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+                where TKey : notnull
             {
                 private readonly Dictionary<TKey, TValue> _store = new();
 
-                public ReadOnlyDictionaryBase(IEnumerable<KeyValuePair<TKey, TValue>> items)
+                public BaseReadOnlyDictionary(IEnumerable<KeyValuePair<TKey, TValue>> items)
                 {
+                    ArgumentNullException.ThrowIfNull(items);
                     foreach (var item in items)
                     {
                         _store[item.Key] = item.Value;
                     }
                 }
 
-                public TValue this[TKey key] => _store[key];
                 public IEnumerable<TKey>   Keys   => _store.Keys;
                 public IEnumerable<TValue> Values => _store.Values;
-                public int                 Count  => _store.Count;
+
+                public int Count => _store.Count;
+
+                public TValue this[TKey key] => _store[key];
 
                 public bool ContainsKey(TKey key)
                 {
@@ -124,7 +129,7 @@ public partial class AutoGeneratorsFixture
                     return _store.GetEnumerator();
                 }
 
-                public bool TryGetValue(TKey key, out TValue value)
+                public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
                 {
                     return _store.TryGetValue(key, out value);
                 }
@@ -135,7 +140,7 @@ public partial class AutoGeneratorsFixture
                 }
             }
 
-            public class NonGeneric : ReadOnlyDictionaryBase<int, string>
+            public class NonGeneric : BaseReadOnlyDictionary<int, string>
             {
                 public NonGeneric(IEnumerable<KeyValuePair<int, string>> items)
                     : base(items)
@@ -143,7 +148,8 @@ public partial class AutoGeneratorsFixture
                 }
             }
 
-            public class OneArgument<T> : ReadOnlyDictionaryBase<T, string>
+            public class OneArgument<T> : BaseReadOnlyDictionary<T, string>
+                where T : notnull
             {
                 public OneArgument(IEnumerable<KeyValuePair<T, string>> items)
                     : base(items)
@@ -151,9 +157,9 @@ public partial class AutoGeneratorsFixture
                 }
             }
 
-            public class
-                TwoArgumentsThatAreDifferentFromBaseReadOnlyDictionaryClass<TValue, TKey> : ReadOnlyDictionaryBase<TKey,
-                    TValue>
+            public class TwoArgumentsThatAreDifferentFromBaseReadOnlyDictionaryClass<TValue, TKey> :
+                BaseReadOnlyDictionary<TKey, TValue>
+                where TKey : notnull
             {
                 public TwoArgumentsThatAreDifferentFromBaseReadOnlyDictionaryClass(
                     IEnumerable<KeyValuePair<TKey, TValue>> items)
@@ -202,15 +208,18 @@ public partial class AutoGeneratorsFixture
             }
 
             public class OneArgument<T> : Dictionary<T, string>
+                where T : notnull
             {
             }
 
-            public class TwoArgumentsThatAreDifferentFromBaseDictionaryClass<TValue, TKey> : Dictionary<TKey, TValue>
+            public class TwoArgumentsThatAreDifferentFromBaseDictionaryClass<TValue, TKey> :
+                Dictionary<TKey, TValue>
+                where TKey : notnull
             {
             }
         }
 
-        public class Set
+        public class SetTests
         {
             public static IEnumerable<object[]> ListOfSetTypes
             {
@@ -249,7 +258,7 @@ public partial class AutoGeneratorsFixture
 
             public class GenericWithDifferentType<TType> : HashSet<int>
             {
-                public TType Property { get; set; }
+                public TType Property { get; set; } = default!;
             }
         }
 
@@ -292,7 +301,7 @@ public partial class AutoGeneratorsFixture
 
             public class GenericWithDifferentType<TType> : List<int>
             {
-                public TType Property { get; set; }
+                public TType Property { get; set; } = default!;
             }
         }
     }
@@ -323,6 +332,21 @@ public partial class AutoGeneratorsFixture
     public class RegisteredGenerator
         : AutoGeneratorsFixture
     {
+        public static IEnumerable<object[]> GetRegisteredTypes()
+        {
+            return AutoGeneratorFactory.Generators.Select(g => new object[] { g.Key, });
+        }
+
+        [SuppressMessage("Design", "CA1024:Use properties where appropriate")]
+        public static IEnumerable<object[]> GetDataSetAndDataTableTypes()
+        {
+            yield return new object[] { typeof(DataSet), typeof(DataSetGenerator), };
+            yield return new object[] { typeof(DataSetGeneratorFacet.TypedDataSet), typeof(DataSetGenerator), };
+            yield return new object[] { typeof(DataTable), typeof(DataTableGenerator), };
+            yield return new object[] { typeof(DataTableGeneratorFacet.TypedDataTable1), typeof(DataTableGenerator), };
+            yield return new object[] { typeof(DataTableGeneratorFacet.TypedDataTable2), typeof(DataTableGenerator), };
+        }
+
         [Theory]
         [MemberData(nameof(GetRegisteredTypes))]
         public void Generate_Should_Return_Value(Type type)
@@ -342,11 +366,6 @@ public partial class AutoGeneratorsFixture
             AutoGeneratorFactory.GetGenerator(context).Should().Be(generator);
         }
 
-        public static IEnumerable<object[]> GetRegisteredTypes()
-        {
-            return AutoGeneratorFactory.Generators.Select(g => new object[] { g.Key, });
-        }
-
         [Theory]
         [MemberData(nameof(GetDataSetAndDataTableTypes))]
         public void GetGenerator_Should_Return_Generator_For_DataSets_And_DataTables(Type dataType, Type generatorType)
@@ -359,15 +378,6 @@ public partial class AutoGeneratorsFixture
 
             // Assert
             generator.Should().BeAssignableTo(generatorType);
-        }
-
-        public static IEnumerable<object[]> GetDataSetAndDataTableTypes()
-        {
-            yield return new object[] { typeof(DataSet), typeof(DataSetGenerator), };
-            yield return new object[] { typeof(DataSetGeneratorFacet.TypedDataSet), typeof(DataSetGenerator), };
-            yield return new object[] { typeof(DataTable), typeof(DataTableGenerator), };
-            yield return new object[] { typeof(DataTableGeneratorFacet.TypedDataTable1), typeof(DataTableGenerator), };
-            yield return new object[] { typeof(DataTableGeneratorFacet.TypedDataTable2), typeof(DataTableGenerator), };
         }
     }
 
@@ -407,8 +417,7 @@ public partial class AutoGeneratorsFixture
         }
     }
 
-    public class ArrayGenerator
-        : AutoGeneratorsFixture
+    public class ArrayGenerator : AutoGeneratorsFixture
     {
         [Theory]
         [InlineData(typeof(TestEnum[]))]
@@ -418,11 +427,17 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(TestAbstractClass[]))]
         public void Generate_Should_Return_Array(Type type)
         {
-            var itemType  = type.GetElementType();
-            var generator = CreateGenerator(typeof(ArrayGenerator<>), itemType);
-            var array     = InvokeGenerator(type, generator) as Array;
+            ArgumentNullException.ThrowIfNull(type);
 
-            array.Should().NotBeNull().And.NotContainNulls();
+            var itemType  = type.GetElementType()!;
+            var generator = CreateGenerator(typeof(ArrayGenerator<>), itemType);
+            var array     = (Array)InvokeGenerator(type, generator);
+
+            array.Should().NotBeNull();
+            foreach (var value in array)
+            {
+                value.Should().NotBeNull();
+            }
         }
 
         [Theory]
@@ -433,8 +448,10 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(TestAbstractClass[]))]
         public void GetGenerator_Should_Return_ArrayGenerator(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var context       = CreateContext(type);
-            var itemType      = type.GetElementType();
+            var itemType      = type.GetElementType()!;
             var generatorType = GetGeneratorType(typeof(ArrayGenerator<>), itemType);
 
             AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
@@ -477,16 +494,18 @@ public partial class AutoGeneratorsFixture
         public void Generate_Should_Return_Dictionary(Type type)
         {
             var genericTypes = ReflectionHelper.GetGenericArguments(type);
-            var keyType      = genericTypes.ElementAt(0);
-            var valueType    = genericTypes.ElementAt(1);
+            var keyType      = genericTypes[0];
+            var valueType    = genericTypes[1];
             var generator    = CreateGenerator(typeof(DictionaryGenerator<,>), keyType, valueType);
-            var dictionary   = InvokeGenerator(type, generator) as IDictionary;
+            var dictionary   = (IDictionary)InvokeGenerator(type, generator);
 
-            dictionary.Should().NotBeNull().And.NotContainNulls();
+            dictionary.Should().NotBeNull();
 
             foreach (var key in dictionary.Keys)
             {
+                key.Should().NotBeNull();
                 var value = dictionary[key];
+                value.Should().NotBeNull();
 
                 key.Should().BeOfType(keyType);
                 value.Should().BeOfType(valueType);
@@ -505,8 +524,8 @@ public partial class AutoGeneratorsFixture
         {
             var context       = CreateContext(type);
             var genericTypes  = ReflectionHelper.GetGenericArguments(type);
-            var keyType       = genericTypes.ElementAt(0);
-            var valueType     = genericTypes.ElementAt(1);
+            var keyType       = genericTypes[0];
+            var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(DictionaryGenerator<,>), keyType, valueType);
 
             AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
@@ -531,11 +550,15 @@ public partial class AutoGeneratorsFixture
         public void Generate_Should_Return_List(Type type)
         {
             var genericTypes = ReflectionHelper.GetGenericArguments(type);
-            var itemType     = genericTypes.ElementAt(0);
+            var itemType     = genericTypes[0];
             var generator    = CreateGenerator(typeof(ListGenerator<>), itemType);
-            var list         = InvokeGenerator(type, generator) as IEnumerable;
+            var list         = (IEnumerable)InvokeGenerator(type, generator);
 
-            list.Should().NotBeNull().And.NotContainNulls();
+            list.Should().NotBeNull();
+            foreach (var item in list)
+            {
+                item.Should().NotBeNull();
+            }
         }
 
         [Theory]
@@ -554,7 +577,7 @@ public partial class AutoGeneratorsFixture
         {
             var context       = CreateContext(type);
             var genericTypes  = ReflectionHelper.GetGenericArguments(type);
-            var itemType      = genericTypes.ElementAt(0);
+            var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(ListGenerator<>), itemType);
 
             AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
@@ -574,11 +597,15 @@ public partial class AutoGeneratorsFixture
         public void Generate_Should_Return_Set(Type type)
         {
             var genericTypes = ReflectionHelper.GetGenericArguments(type);
-            var itemType     = genericTypes.ElementAt(0);
+            var itemType     = genericTypes[0];
             var generator    = CreateGenerator(typeof(SetGenerator<>), itemType);
-            var set          = InvokeGenerator(type, generator) as IEnumerable;
+            var set          = (IEnumerable)InvokeGenerator(type, generator);
 
-            set.Should().NotBeNull().And.NotContainNulls();
+            set.Should().NotBeNull();
+            foreach (var value in set)
+            {
+                value.Should().NotBeNull();
+            }
         }
 
         [Theory]
@@ -592,7 +619,7 @@ public partial class AutoGeneratorsFixture
         {
             var context       = CreateContext(type);
             var genericTypes  = ReflectionHelper.GetGenericArguments(type);
-            var itemType      = genericTypes.ElementAt(0);
+            var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(SetGenerator<>), itemType);
 
             AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
@@ -611,11 +638,15 @@ public partial class AutoGeneratorsFixture
         public void Generate_Should_Return_Enumerable(Type type)
         {
             var genericTypes = ReflectionHelper.GetGenericArguments(type);
-            var itemType     = genericTypes.ElementAt(0);
+            var itemType     = genericTypes[0];
             var generator    = CreateGenerator(typeof(EnumerableGenerator<>), itemType);
-            var enumerable   = InvokeGenerator(type, generator) as IEnumerable;
+            var enumerable   = (IEnumerable)InvokeGenerator(type, generator);
 
-            enumerable.Should().NotBeNull().And.NotContainNulls();
+            enumerable.Should().NotBeNull();
+            foreach (var value in enumerable)
+            {
+                value.Should().NotBeNull();
+            }
         }
 
         [Theory]
@@ -628,7 +659,7 @@ public partial class AutoGeneratorsFixture
         {
             var context       = CreateContext(type);
             var genericTypes  = ReflectionHelper.GetGenericArguments(type);
-            var itemType      = genericTypes.ElementAt(0);
+            var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(EnumerableGenerator<>), itemType);
 
             AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
@@ -718,9 +749,9 @@ public partial class AutoGeneratorsFixture
             _overrides.Insert(1, generatorOverride);
 
             var context = CreateContext(typeof(string), _overrides);
-            var invoker = AutoGeneratorFactory.GetGenerator(context) as AutoGeneratorOverrideInvoker;
+            var invoker = (AutoGeneratorOverrideInvoker)AutoGeneratorFactory.GetGenerator(context);
 
-            invoker.Overrides.Should().BeEquivalentTo(generatorOverride, _generatorOverride);
+            invoker.Overrides.Should().BeEquivalentTo(new[] { generatorOverride, _generatorOverride });
         }
 
         [Fact]
@@ -741,7 +772,7 @@ public partial class AutoGeneratorsFixture
             var context           = CreateContext(typeof(string), _overrides);
             var generatorOverride = AutoGeneratorFactory.GetGenerator(context);
 
-            generatorOverride.Generate(context).Should().BeOfType<string>().And.Should().NotBeNull();
+            generatorOverride.Generate(context).Should().BeOfType<string>().And.NotBeNull();
         }
 
         private class TestGeneratorOverride
