@@ -1,3 +1,6 @@
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class CollectionsFixture
@@ -90,13 +93,13 @@ public class CollectionsFixture
 
     private class Collections
     {
-        public ICollection<string>                 C1 { get; set; }
-        public IDictionary<string, string>         C2 { get; set; }
-        public IEnumerable<string>                 C3 { get; set; }
-        public IList<string>                       C4 { get; set; }
-        public IReadOnlyCollection<string>         C5 { get; set; }
-        public IReadOnlyDictionary<string, string> C6 { get; set; }
-        public IReadOnlyList<string>               C7 { get; set; }
-        public ISet<string>                        C8 { get; set; }
+        public ICollection<string>                 C1 { get; set; } = null!;
+        public IDictionary<string, string>         C2 { get; set; } = null!;
+        public IEnumerable<string>                 C3 { get; set; } = null!;
+        public IList<string>                       C4 { get; set; } = null!;
+        public IReadOnlyCollection<string>         C5 { get; set; } = null!;
+        public IReadOnlyDictionary<string, string> C6 { get; set; } = null!;
+        public IReadOnlyList<string>               C7 { get; set; } = null!;
+        public ISet<string>                        C8 { get; set; } = null!;
     }
 }

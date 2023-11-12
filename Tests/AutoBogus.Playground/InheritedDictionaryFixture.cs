@@ -1,3 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class InheritedDictionaryFixture
@@ -11,10 +15,11 @@ public class InheritedDictionaryFixture
         obj.Properties.Should().NotBeNull();
     }
 
+    [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
     public class Obj
     {
         public Guid       Id         { get; set; }
-        public Properties Properties { get; set; }
+        public Properties Properties { get; set; } = null!;
     }
 
     public class Properties : Dictionary<Guid, string>

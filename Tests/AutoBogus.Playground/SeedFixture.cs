@@ -1,3 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+using Bogus;
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class SeedFixture
@@ -5,7 +10,7 @@ public class SeedFixture
     [Fact]
     public void DateTimeOffsetTest()
     {
-        int seed = 1;
+        const int seed = 1;
 
         var faker1  = new AutoFaker<MyEntity>().UseSeed(seed);
         var faker2  = new AutoFaker<MyEntity>().UseSeed(seed);
@@ -15,10 +20,10 @@ public class SeedFixture
         var entity3 = faker3.Generate();
 
         entity2.Name.Should().Be(entity1.Name);
-        entity2.DeprecationDate.Should().BeCloseTo(entity1.DeprecationDate, 500);
+        entity2.DeprecationDate.Should().BeCloseTo(entity1.DeprecationDate, new TimeSpan(500));
 
         entity3.Name.Should().NotBe(entity2.Name);
-        entity3.DeprecationDate.Should().NotBeCloseTo(entity2.DeprecationDate, 500);
+        entity3.DeprecationDate.Should().NotBeCloseTo(entity2.DeprecationDate, new TimeSpan(500));
     }
 
     [Fact]
@@ -42,25 +47,27 @@ public class SeedFixture
         author.LastName.Should().Be("throughput");
     }
 
-    private sealed class MyEntity
-    {
-        public DateTimeOffset DeprecationDate { get; set; }
-        public string         Name            { get; set; }
-    }
-
     public class Book
     {
         public int    Id   { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 
+    [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
     public class Author
     {
         public int    Id        { get; set; }
-        public string FirstName { get; set; }
-        public string LastName  { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName  { get; set; } = null!;
 
         // Navigation properties
-        public ICollection<Book> Books { get; set; }
+        public ICollection<Book> Books { get; set; } = null!;
+    }
+
+    private sealed class MyEntity
+    {
+        [SuppressMessage("Minor Code Smell", "S3459:Unassigned members should be removed")]
+        public DateTimeOffset DeprecationDate { get; set; }
+        public string         Name            { get; set; } = null!;
     }
 }

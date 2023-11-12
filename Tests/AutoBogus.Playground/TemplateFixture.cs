@@ -1,3 +1,7 @@
+using AutoBogus.Templating;
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class TemplateFixture
@@ -6,13 +10,14 @@ public class TemplateFixture
     public void TestAutoFaker()
     {
         var binder = new TemplateBinder();
-        var persons = new AutoFaker<Person>(binder)
-            .GenerateWithTemplate(@"
-          Id | FirstName | LastName
-	        0  | John      | Smith
-	        1  | Jane      | Jones
-	        2  | Bob       | Clark
-        ");
+        var persons = new AutoFaker<Person>(null, binder)
+            .GenerateWithTemplate(
+                """
+                Id | FirstName | LastName
+                0  | John      | Smith
+                1  | Jane      | Jones
+                2  | Bob       | Clark
+                """);
 
         persons.Should().BeEquivalentTo(
             new[]
@@ -41,15 +46,15 @@ public class TemplateFixture
             },
             options => options
                 .Using<string>(context => context.Subject.Should().NotBeNull())
-                .When(info => info.SelectedMemberPath == "Status")
+                .When(info => info.Path == "Status")
         );
     }
 
     private class Person
     {
         public int    Id        { get; set; }
-        public string FirstName { get; set; }
-        public string LastName  { get; set; }
-        public string Status    { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName  { get; set; } = null!;
+        public string Status    { get; set; } = null!;
     }
 }

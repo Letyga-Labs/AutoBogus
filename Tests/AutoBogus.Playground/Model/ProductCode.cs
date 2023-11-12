@@ -2,5 +2,5 @@
 
 public sealed class ProductCode
 {
-    public string SerialNumber { get; set; }
+    public string SerialNumber { get; set; } = null!;
 }

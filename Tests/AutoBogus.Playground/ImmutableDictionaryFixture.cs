@@ -1,3 +1,8 @@
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class ImmutableDictionaryFixture
@@ -15,8 +20,8 @@ public class ImmutableDictionaryFixture
 
     private class Obj
     {
-        public string                              SomeStringProperty      { get; set; }
-        public ReadOnlyDictionary<string, string>  SomeReadOnlyDictionary  { get; set; }
-        public ImmutableDictionary<string, string> SomeImmutableDictionary { get; set; }
+        public string                              SomeStringProperty      { get; set; } = null!;
+        public ReadOnlyDictionary<string, string>  SomeReadOnlyDictionary  { get; set; } = null!;
+        public ImmutableDictionary<string, string> SomeImmutableDictionary { get; set; } = null!;
     }
 }

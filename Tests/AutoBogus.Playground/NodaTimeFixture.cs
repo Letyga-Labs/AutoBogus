@@ -1,6 +1,10 @@
+using Bogus;
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
-public class NodaTimeFixture
+public static class NodaTimeFixture
 {
     public sealed class TimeHolder
     {
@@ -19,7 +23,7 @@ public class NodaTimeFixture
 
                 if (_unstable)
                 {
-                    throw new Exception();
+                    throw new InvalidOperationException();
                 }
 
                 _time = value;
@@ -29,13 +33,13 @@ public class NodaTimeFixture
 
     public class TestValidValueCreation
     {
-        private readonly DateTime _validDate = new DateTime(2020, 2, 2);
+        private readonly DateTime _validDate = new(2020, 2, 2, 0, 0, 0, DateTimeKind.Utc);
 
         [Fact]
         public void TestFaker()
         {
             var created = new Faker<TimeHolder>()
-                .RuleFor(x => x.Time, faker => _validDate)
+                .RuleFor(x => x.Time, _ => _validDate)
                 .Generate();
 
             created.Should().NotBeNull();
@@ -44,10 +48,9 @@ public class NodaTimeFixture
         [Fact]
         public void TestAutoFaker()
         {
-            var fake = new AutoFaker<TimeHolder>()
-                .RuleFor(x => x.Time, faker => _validDate);
+            var fake = new AutoFaker<TimeHolder>().RuleFor(x => x.Time, _ => _validDate);
+            fake.Generate();
             var created = fake.Generate();
-            created = fake.Generate();
 
             created.Should().NotBeNull();
         }

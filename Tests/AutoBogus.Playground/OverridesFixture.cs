@@ -1,3 +1,6 @@
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class OverridesFixture
@@ -6,12 +9,12 @@ public class OverridesFixture
     public void Should_Override()
     {
         var name = AutoFaker.Generate<string>();
-        var ex   = new Exception();
+        var ex   = new InvalidOperationException();
         var obj = AutoFaker.Generate<Obj>(builder =>
         {
             builder
-                .WithOverride<Obj, string>(model => model.Name, context => name)
-                .WithOverride(context => ex);
+                .WithOverride<Obj, string>(model => model.Name, _ => name)
+                .WithOverride(_ => ex);
         });
 
         obj.Name.Should().Be(name);
@@ -21,7 +24,7 @@ public class OverridesFixture
     private sealed class Obj
     {
         public int       Id        { get; set; }
-        public string    Name      { get; set; }
-        public Exception Exception { get; set; }
+        public string    Name      { get; set; } = null!;
+        public Exception Exception { get; set; } = null!;
     }
 }

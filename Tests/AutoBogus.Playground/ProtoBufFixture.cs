@@ -1,3 +1,7 @@
+using FluentAssertions;
+using Google.Protobuf.Collections;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class ProtoBufFixture

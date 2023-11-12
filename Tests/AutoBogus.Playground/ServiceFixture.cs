@@ -1,19 +1,23 @@
+using AutoBogus.Conventions;
 using AutoBogus.Playground.Model;
+using FluentAssertions;
+using NSubstitute;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace AutoBogus.Playground;
 
 public abstract class ServiceFixture
 {
-    protected IAutoFaker _faker;
+    private readonly IAutoFaker _faker;
 
-    protected Item              _item;
-    protected IEnumerable<Item> _items;
-    protected ITestOutputHelper _output;
+    private readonly Item              _item;
+    private readonly IEnumerable<Item> _items;
 
-    protected IRepository _repository;
-    protected Service     _service;
+    private readonly IRepository _repository;
+    private readonly Service     _service;
 
-    protected ServiceFixture(ITestOutputHelper output, IAutoBinder binder)
+    protected ServiceFixture(ITestOutputHelper output, IAutoBinder? binder)
     {
         _faker = AutoFaker.Create(builder =>
         {
@@ -27,10 +31,10 @@ public abstract class ServiceFixture
 
         // Setup
         var id = _faker.Generate<Guid>();
-        var generator = new AutoFaker<Item>(binder)
+        var generator = new AutoFaker<Item>(null, binder)
             .RuleFor(item => item.Id,   () => id)
             .RuleFor(item => item.Name, faker => faker.Person.FullName)
-            .RuleFor(item => item.Amendments, faker => new HashSet<string>
+            .RuleFor(item => item.Amendments, _ => new HashSet<string>
             {
                 "1",
                 "2",
@@ -46,7 +50,6 @@ public abstract class ServiceFixture
         _repository.GetAll().Returns(_items);
 
         _service = new Service(_repository);
-        _output  = output;
     }
 
     [Fact]
@@ -142,36 +145,36 @@ public abstract class ServiceFixture
 
         _service.GetPending().Should().BeSameAs(items);
 
-        items.ElementAt(0).ProcessedBy.Email.Should().NotContain("@");
-        items.ElementAt(0).SupplierEmail.Should().NotContain("@");
-        items.ElementAt(0).ProductInt.Code.SerialNumber.Should().Be(item1Override.Code);
-        items.ElementAt(0).ProductString.Code.SerialNumber.Should().Be(item1Override.Code);
+        items[0].ProcessedBy.Email.Should().NotContain("@");
+        items[0].SupplierEmail.Should().NotContain("@");
+        items[0].ProductInt.Code.SerialNumber.Should().Be(item1Override.Code);
+        items[0].ProductString.Code.SerialNumber.Should().Be(item1Override.Code);
 
-        items.ElementAt(1).ProcessedBy.Email.Should().NotContain("@");
-        items.ElementAt(1).SupplierEmail.Should().NotContain("@");
-        items.ElementAt(1).ProductInt.Code.SerialNumber.Should().Be(item2Override.Code);
-        items.ElementAt(1).ProductString.Code.SerialNumber.Should().Be(item2Override.Code);
+        items[1].ProcessedBy.Email.Should().NotContain("@");
+        items[1].SupplierEmail.Should().NotContain("@");
+        items[1].ProductInt.Code.SerialNumber.Should().Be(item2Override.Code);
+        items[1].ProductString.Code.SerialNumber.Should().Be(item2Override.Code);
 
-        items.ElementAt(2).ProcessedBy.Should().BeNull();
-        items.ElementAt(2).SupplierEmail.Should().NotContain("@");
-        items.ElementAt(2).ProductInt.Code.SerialNumber.Should().BeNull();
-        items.ElementAt(2).ProductString.Code.SerialNumber.Should().BeNull();
+        items[2].ProcessedBy.Should().BeNull();
+        items[2].SupplierEmail.Should().NotContain("@");
+        items[2].ProductInt.Code.SerialNumber.Should().BeNull();
+        items[2].ProductString.Code.SerialNumber.Should().BeNull();
 
-        items.ElementAt(3).ProcessedBy.Email.Should().Contain("@");
-        items.ElementAt(3).SupplierEmail.Should().Contain("@");
-        items.ElementAt(3).ProductInt.Code.SerialNumber.Should().BeNull();
-        items.ElementAt(3).ProductString.Code.SerialNumber.Should().BeNull();
+        items[3].ProcessedBy.Email.Should().Contain("@");
+        items[3].SupplierEmail.Should().Contain("@");
+        items[3].ProductInt.Code.SerialNumber.Should().BeNull();
+        items[3].ProductString.Code.SerialNumber.Should().BeNull();
 
-        items.ElementAt(4).ProcessedBy.Email.Should().NotContain("@");
-        items.ElementAt(4).SupplierEmail.Should().NotContain("@");
-        items.ElementAt(4).ProductInt.Code.SerialNumber.Should().BeNull();
-        items.ElementAt(4).ProductString.Code.SerialNumber.Should().BeNull();
+        items[4].ProcessedBy.Email.Should().NotContain("@");
+        items[4].SupplierEmail.Should().NotContain("@");
+        items[4].ProductInt.Code.SerialNumber.Should().BeNull();
+        items[4].ProductString.Code.SerialNumber.Should().BeNull();
     }
 
     private class TestProduct
         : Product<int>
     {
-        public Exception Error { get; set; }
+        public Exception Error { get; set; } = null!;
 
         public IEnumerable<string> GetNotes()
         {
@@ -184,7 +187,7 @@ public abstract class ServiceFixture
     {
         public override bool CanOverride(AutoGenerateContext context)
         {
-            return context.GenerateType.IsGenericType &&
+            return context.GenerateType!.IsGenericType &&
                    context.GenerateType.GetGenericTypeDefinition() == typeof(Product<>);
         }
 
@@ -192,9 +195,9 @@ public abstract class ServiceFixture
         {
             // Get the code and apply a serial number value
             var serialNumber         = AutoFaker.Generate<string>();
-            var codeProperty         = context.GenerateType.GetProperty("Code");
+            var codeProperty         = context.GenerateType!.GetProperty("Code")!;
             var codeInstance         = codeProperty.GetValue(context.Instance);
-            var serialNumberProperty = codeProperty.PropertyType.GetProperty("SerialNumber");
+            var serialNumberProperty = codeProperty.PropertyType.GetProperty("SerialNumber")!;
 
             serialNumberProperty.SetValue(codeInstance, serialNumber);
         }
@@ -203,25 +206,20 @@ public abstract class ServiceFixture
     private class ProductCodeOverride
         : AutoGeneratorOverride
     {
-        public ProductCodeOverride()
-        {
-            Code = AutoFaker.Generate<string>();
-        }
-
-        public string Code { get; set; }
+        public string Code { get; set; } = AutoFaker.Generate<string>();
 
         public override bool CanOverride(AutoGenerateContext context)
         {
-            return context.GenerateType.IsGenericType &&
+            return context.GenerateType!.IsGenericType &&
                    context.GenerateType.GetGenericTypeDefinition() == typeof(Product<>);
         }
 
         public override void Generate(AutoGenerateOverrideContext context)
         {
             var type                = typeof(ProductCode);
-            var productCodeProperty = context.GenerateType.GetProperty("Code");
+            var productCodeProperty = context.GenerateType!.GetProperty("Code")!;
             var productCode         = productCodeProperty.GetValue(context.Instance);
-            var serialNoProperty    = type.GetProperty("SerialNumber");
+            var serialNoProperty    = type.GetProperty("SerialNumber")!;
 
             serialNoProperty.SetValue(productCode, Code);
         }

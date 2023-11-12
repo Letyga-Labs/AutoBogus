@@ -1,3 +1,6 @@
+using FluentAssertions;
+using Xunit;
+
 namespace AutoBogus.Playground;
 
 public class ParametersByRefFixture
@@ -11,7 +14,7 @@ public class ParametersByRefFixture
 
     private class TestId
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
     }
 
     private sealed class TestClass

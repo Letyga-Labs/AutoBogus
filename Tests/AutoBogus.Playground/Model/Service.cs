@@ -2,7 +2,7 @@ namespace AutoBogus.Playground.Model;
 
 public sealed class Service
 {
-    internal static Func<Item, bool> PendingFilter = item => item.Status == ItemStatus.Pending;
+    internal static readonly Func<Item, bool> PendingFilter = item => item.Status == ItemStatus.Pending;
 
     public Service(IRepository repository)
     {
