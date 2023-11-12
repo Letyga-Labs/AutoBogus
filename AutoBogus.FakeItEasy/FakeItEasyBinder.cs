@@ -10,14 +10,10 @@ namespace AutoBogus.FakeItEasy;
 public class FakeItEasyBinder
     : AutoBinder
 {
-    private static readonly MethodInfo Factory;
-
-    static FakeItEasyBinder()
-    {
-        // Cache the fake factory method
-        var type = typeof(A);
-        Factory = type.GetMethod("Fake", new Type[0]);
-    }
+    private static readonly MethodInfo _factory =
+        typeof(A).GetMethod("Fake", Array.Empty<Type>())
+        ?? throw new InvalidOperationException(
+            "Cannot find method `Fake` on class `FakeItEasy.A`. Did an API changed unnoticeably?");
 
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.
@@ -33,8 +29,8 @@ public class FakeItEasyBinder
         {
             // Take the cached factory method and make it generic based on the requested type
             // Because this method supports struct and class types, and FakeItEasy only supports class types we need to put this 'hack' into place
-            var factory = Factory.MakeGenericMethod(type);
-            return (TType)factory.Invoke(null, new object[0]);
+            var factory = _factory.MakeGenericMethod(type);
+            return (TType)factory.Invoke(null, Array.Empty<object>())!;
         }
 
         return base.CreateInstance<TType>(context);

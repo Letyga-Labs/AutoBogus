@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace AutoBogus.Templating;
 
-internal class ReflectionHelper
+internal static class ReflectionHelper
 {
     public static Type GetPropType(object src, string propName)
     {
@@ -12,23 +12,22 @@ internal class ReflectionHelper
 
     public static MethodInfo GetMethod(Type t, string n, Type[] genargs, Type[] args)
     {
-        var methods =
-                from m in t.GetMethods()
-                where m.Name == n && m.GetGenericArguments().Length == genargs.Length
-                let mg = m.IsGenericMethodDefinition ? m.MakeGenericMethod(genargs) : m
-                where mg.GetParameters().Select(p => p.ParameterType).SequenceEqual(args)
-                select mg
-            ;
+        var methods = t.GetMethods()
+            .Where(it => it.Name == n && it.GetGenericArguments().Length == genargs.Length)
+            .Select(it => it.IsGenericMethodDefinition ? it.MakeGenericMethod(genargs) : it)
+            .Where(it => it.GetParameters().Select(p => p.ParameterType).SequenceEqual(args))
+            .Select(it => it)
+            .ToList();
 
         return methods.Single();
     }
 
     public static string GetMemberName(Expression expression)
     {
-        var unaryExpression = expression as UnaryExpression;
-        var memberExpression = unaryExpression == null
-            ? expression as MemberExpression
-            : unaryExpression.Operand as MemberExpression;
+        var memberExpression = expression is UnaryExpression unaryExpression
+            ? unaryExpression.Operand as MemberExpression
+            : expression as MemberExpression;
+
         if (memberExpression == null)
         {
             throw new ArgumentException("Expression was not of the form 'x => x.Property or x => x.Field'.");
@@ -37,7 +36,7 @@ internal class ReflectionHelper
         return memberExpression.Member.Name;
     }
 
-    public static object GetPropValue(object src, string propName)
+    public static object? GetPropValue(object src, string propName)
     {
         return src.GetType().GetProperty(propName)?.GetValue(src, null);
     }

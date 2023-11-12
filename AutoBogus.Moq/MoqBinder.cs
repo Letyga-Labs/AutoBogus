@@ -10,14 +10,10 @@ namespace AutoBogus.Moq;
 public class MoqBinder
     : AutoBinder
 {
-    private static readonly MethodInfo Factory;
-
-    static MoqBinder()
-    {
-        // Cache the mock factory method
-        var type = typeof(Mock);
-        Factory = type.GetMethod("Of", new Type[0]);
-    }
+    private static readonly MethodInfo _factory =
+        typeof(Mock).GetMethod("Of", Array.Empty<Type>()) ??
+        throw new InvalidOperationException(
+            "Cannot find method `Of` of class `Mock`. Did an API changed unnoticeably?");
 
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.
@@ -33,8 +29,8 @@ public class MoqBinder
         {
             // Take the cached factory method and make it generic based on the requested type
             // Because this method supports struct and class types, and Moq only supports class types we need to put this 'hack' into place
-            var factory = Factory.MakeGenericMethod(type);
-            return (TType)factory.Invoke(null, new object[0]);
+            var factory = _factory.MakeGenericMethod(type);
+            return (TType)factory.Invoke(null, Array.Empty<object>())!;
         }
 
         return base.CreateInstance<TType>(context);

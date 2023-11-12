@@ -21,7 +21,7 @@ public class NSubstituteBinder
 
         if (ReflectionHelper.IsInterface(type) || ReflectionHelper.IsAbstract(type))
         {
-            return (TType)Substitute.For(new[] { type, }, new object[0]);
+            return (TType)Substitute.For(new[] { type, }, Array.Empty<object>());
         }
 
         return base.CreateInstance<TType>(context);
