@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using AutoBogus.Generators;
 using AutoBogus.Tests.Models.Simple;
@@ -11,16 +12,9 @@ using DataSet = System.Data.DataSet;
 
 namespace AutoBogus.Tests;
 
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1601:Partial elements should be documented")]
 public partial class AutoGeneratorsFixture
 {
-    private object InvokeGenerator(Type type, IAutoGenerator generator, object instance = null)
-    {
-        var context = CreateContext(type);
-        context.Instance = instance;
-
-        return generator.Generate(context);
-    }
-
     private static Type GetGeneratorType(Type type, params Type[] types)
     {
         return type.MakeGenericType(types);
@@ -29,13 +23,21 @@ public partial class AutoGeneratorsFixture
     private static IAutoGenerator CreateGenerator(Type type, params Type[] types)
     {
         type = GetGeneratorType(type, types);
-        return (IAutoGenerator)Activator.CreateInstance(type);
+        return (IAutoGenerator)Activator.CreateInstance(type)!;
+    }
+
+    private object InvokeGenerator(Type type, IAutoGenerator generator, object? instance = null)
+    {
+        var context = CreateContext(type);
+        context.Instance = instance;
+
+        return generator.Generate(context);
     }
 
     private AutoGenerateContext CreateContext(
-        Type                           type,
-        IList<AutoGeneratorOverride>   generatorOverrides       = null,
-        Func<AutoGenerateContext, int> dataTableRowCountFunctor = null)
+        Type                            type,
+        IList<AutoGeneratorOverride>?   generatorOverrides       = null,
+        Func<AutoGenerateContext, int>? dataTableRowCountFunctor = null)
     {
         var faker  = new Faker();
         var config = new AutoConfig();

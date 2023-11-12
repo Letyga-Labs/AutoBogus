@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Reflection;
 using AutoBogus.Tests.Models;
@@ -11,11 +12,14 @@ using Xunit;
 
 namespace AutoBogus.Tests;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public class AutoFakerFixture
 {
-    private const           string _name = "Generate";
-    private static readonly Type   _type = typeof(AutoFaker);
+    private const string _name = "Generate";
 
+    private static readonly Type _type = typeof(AutoFaker);
+
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate")]
     public static IEnumerable<object[]> GetTypes()
     {
         foreach (var type in AutoGeneratorFactory.Generators.Keys)
@@ -30,75 +34,68 @@ public class AutoFakerFixture
         yield return new object[] { typeof(int?), };
     }
 
-    private Action<TBuilder> CreateConfigure<TBuilder>(AutoConfig assertConfig, Action<TBuilder> configure = null)
+    public static void AssertGenerate(Type type, MethodInfo methodInfo, IAutoFaker? faker, params object[] args)
     {
-        return builder =>
-        {
-            if (configure != null)
-            {
-                configure.Invoke(builder);
-            }
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
-            var instance = builder as AutoConfigBuilder;
-            instance.Config.Should().NotBe(assertConfig);
-        };
-    }
-
-    public static void AssertGenerate(Type type, MethodInfo methodInfo, IAutoFaker faker, params object[] args)
-    {
         var method   = methodInfo.MakeGenericMethod(type);
         var instance = method.Invoke(faker, args);
 
         instance.Should().BeGenerated();
     }
 
-    public static void AssertGenerateMany(Type type, MethodInfo methodInfo, IAutoFaker faker, params object[] args)
+    public static void AssertGenerateMany(Type type, MethodInfo methodInfo, IAutoFaker? faker, params object[] args)
     {
-        var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+        ArgumentNullException.ThrowIfNull(methodInfo);
+
+        var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
         var method    = methodInfo.MakeGenericMethod(type);
-        var instances = method.Invoke(faker, args) as IEnumerable;
+        var instances = (IEnumerable)method.Invoke(faker, args)!;
 
-        instances.Should().HaveCount(count);
-
+        var list = new List<object>();
         foreach (var instance in instances)
         {
             instance.Should().BeGenerated();
+            list.Add(instance);
         }
+
+        list.Should().HaveCount(count);
     }
 
     public static void AssertGenerateMany(IEnumerable<Order> instances)
     {
-        var count = AutoConfig.DefaultRepeatCount.Invoke(null);
+        ArgumentNullException.ThrowIfNull(instances);
 
-        instances.Should().HaveCount(count);
-
+        var count = AutoConfig.DefaultRepeatCount.Invoke(null!);
+        var list  = new List<Order>();
         foreach (var instance in instances)
         {
             instance.Should().BeGeneratedWithoutMocks();
+            list.Add(instance);
         }
+
+        list.Should().HaveCount(count);
     }
 
-    private class TestFaker
-        : AutoFaker<Order>
+    private Action<TBuilder> CreateConfigure<TBuilder>(AutoConfig assertConfig, Action<TBuilder>? configure = null)
     {
+        return builder =>
+        {
+            configure?.Invoke(builder);
+            var instance = builder as AutoConfigBuilder;
+            instance!.Config.Should().NotBe(assertConfig);
+        };
     }
 
-    private class TestBinder
-        : AutoBinder
-    {
-    }
-
-    public class Configure
-        : AutoFakerFixture
+    public class Configure : AutoFakerFixture
     {
         [Fact]
         public void Should_Configure_Default_Config()
         {
-            AutoConfig config = null;
+            AutoConfig? config = null;
             AutoFaker.Configure(builder =>
             {
-                var instance = builder as AutoConfigBuilder;
-                config = instance.Config;
+                config = ((AutoConfigBuilder)builder).Config;
             });
 
             config.Should().Be(AutoFaker.DefaultConfig);
@@ -116,19 +113,24 @@ public class AutoFakerFixture
         }
     }
 
-    public class Generate_Instance
-        : AutoFakerFixture
+    public class Generate_Instance : AutoFakerFixture
     {
         private static readonly Type   _interfaceType = typeof(IAutoFaker);
         private static readonly string _methodName    = $"{_interfaceType.FullName}.{_name}";
 
-        private static readonly MethodInfo _generate = _type.GetMethod(_methodName,
-            BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Action<IAutoGenerateConfigBuilder>), },
-            null);
+        private static readonly MethodInfo _generate = _type.GetMethod(
+            _methodName,
+            BindingFlags.Instance | BindingFlags.NonPublic,
+            null,
+            new[] { typeof(Action<IAutoGenerateConfigBuilder>), },
+            null)!;
 
-        private static readonly MethodInfo _generateMany = _type.GetMethod(_methodName,
-            BindingFlags.Instance | BindingFlags.NonPublic, null,
-            new[] { typeof(int), typeof(Action<IAutoGenerateConfigBuilder>), }, null);
+        private static readonly MethodInfo _generateMany = _type.GetMethod(
+            _methodName,
+            BindingFlags.Instance | BindingFlags.NonPublic,
+            null,
+            new[] { typeof(int), typeof(Action<IAutoGenerateConfigBuilder>), },
+            null)!;
 
         private readonly AutoConfig _config;
 
@@ -136,7 +138,7 @@ public class AutoFakerFixture
 
         public Generate_Instance()
         {
-            var faker = AutoFaker.Create() as AutoFaker;
+            var faker = (AutoFaker)AutoFaker.Create();
 
             _faker  = faker;
             _config = faker.Config;
@@ -154,7 +156,7 @@ public class AutoFakerFixture
         [MemberData(nameof(GetTypes))]
         public void Should_Generate_Many_Types(Type type)
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(_config);
 
             AssertGenerateMany(type, _generateMany, _faker, count, configure);
@@ -170,7 +172,7 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Many_Complex_Types()
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(_config);
             var instances = _faker.Generate<Order>(count, configure);
 
@@ -181,15 +183,12 @@ public class AutoFakerFixture
     public class Generate_Instance_Faker
         : AutoFakerFixture
     {
-        private          AutoConfig _config;
         private readonly IAutoFaker _faker;
 
         public Generate_Instance_Faker()
         {
-            var faker = AutoFaker.Create() as AutoFaker;
-
+            var faker = (AutoFaker)AutoFaker.Create();
             _faker  = faker;
-            _config = faker.Config;
         }
 
         [Fact]
@@ -202,7 +201,7 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Many_Complex_Types()
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoFakerConfigBuilder>(AutoFaker.DefaultConfig);
             var instances = _faker.Generate<Order, TestFaker>(count, configure);
 
@@ -213,12 +212,19 @@ public class AutoFakerFixture
     public class Generate_Static
         : AutoFakerFixture
     {
-        private static readonly MethodInfo _generate = _type.GetMethod(_name, BindingFlags.Static | BindingFlags.Public,
-            null, new[] { typeof(Action<IAutoGenerateConfigBuilder>), }, null);
+        private static readonly MethodInfo _generate = _type.GetMethod(
+            _name,
+            BindingFlags.Static | BindingFlags.Public,
+            null,
+            new[] { typeof(Action<IAutoGenerateConfigBuilder>), },
+            null)!;
 
-        private static readonly MethodInfo _generateMany = _type.GetMethod(_name,
-            BindingFlags.Static | BindingFlags.Public, null,
-            new[] { typeof(int), typeof(Action<IAutoGenerateConfigBuilder>), }, null);
+        private static readonly MethodInfo _generateMany = _type.GetMethod(
+            _name,
+            BindingFlags.Static | BindingFlags.Public,
+            null,
+            new[] { typeof(int), typeof(Action<IAutoGenerateConfigBuilder>), },
+            null)!;
 
         [Theory]
         [MemberData(nameof(GetTypes))]
@@ -232,7 +238,7 @@ public class AutoFakerFixture
         [MemberData(nameof(GetTypes))]
         public void Should_Generate_Many_Types(Type type)
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(AutoFaker.DefaultConfig);
 
             AssertGenerateMany(type, _generateMany, null, count, configure);
@@ -248,7 +254,7 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Many_Complex_Types()
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(AutoFaker.DefaultConfig);
             var instances = AutoFaker.Generate<Order>(count, configure);
 
@@ -269,7 +275,7 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Many_Complex_Types()
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
+            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoFakerConfigBuilder>(AutoFaker.DefaultConfig);
             var instances = AutoFaker.Generate<Order, TestFaker>(count, configure);
 
@@ -280,12 +286,7 @@ public class AutoFakerFixture
     public class AutoFaker_T
         : AutoFakerFixture
     {
-        private readonly Faker<Order> _faker;
-
-        public AutoFaker_T()
-        {
-            _faker = new AutoFaker<Order>();
-        }
+        private readonly Faker<Order> _faker = new AutoFaker<Order>();
 
         [Fact]
         public void Should_Generate_Type()
@@ -336,8 +337,8 @@ public class AutoFakerFixture
             var binder = Substitute.For<IAutoBinder>();
             binder.GetMembers(typeof(Order)).Returns(new Dictionary<string, MemberInfo>());
 
-            var order = new AutoFaker<Order>(binder)
-                .CustomInstantiator(faker => new Order(default, default))
+            new AutoFaker<Order>(null, binder)
+                .CustomInstantiator(_ => new Order(default, default))
                 .Generate();
 
             binder.DidNotReceive().CreateInstance<Order>(Arg.Any<AutoGenerateContext>());
@@ -371,9 +372,9 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Call_FinishWith()
         {
-            Order instance = null;
+            Order? instance = null;
             var order = new AutoFaker<Order>()
-                .FinishWith((f, i) => instance = i)
+                .FinishWith((_, i) => instance = i)
                 .Generate();
 
             order.Should().BeGeneratedWithoutMocks();
@@ -433,10 +434,15 @@ public class AutoFakerFixture
             instance1.Should().BeEquivalentTo(instance2);
         }
 
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private")]
         private class TestObject
         {
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
+#pragma warning disable CS0414 // Field is assigned but its value is never used
             public int    IntegerValue;
-            public string StringValue;
+            public string StringValue = null!;
+#pragma warning restore CS0414 // Field is assigned but its value is never used
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
         }
     }
 
@@ -534,155 +540,8 @@ public class AutoFakerFixture
         }
     }
 
-    public class Obsolete
+    private class TestFaker
+        : AutoFaker<Order>
     {
-        #region Obsolete Instance
-
-        public class Generate_Instance_Faker
-            : AutoFakerFixture
-        {
-            private readonly IAutoFaker _faker;
-
-            public Generate_Instance_Faker()
-            {
-                _faker = AutoFaker.Create();
-            }
-
-            [Fact]
-            public void Should_Generate_Complex_Type()
-            {
-                _faker.Generate<Order, TestFaker>(new object[0]).Should().BeGeneratedWithoutMocks();
-            }
-
-            [Fact]
-            public void Should_Generate_Many_Complex_Types()
-            {
-                var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
-                var instances = _faker.Generate<Order, TestFaker>(count, new object[0]);
-
-                AssertGenerateMany(instances);
-            }
-        }
-
-        #endregion
-
-        #region Obsolete Static
-
-        public class Create
-            : AutoFakerFixture
-        {
-            [Fact]
-            public void Should_Configure_Locale()
-            {
-                AutoFaker.Create(AutoConfig.DefaultLocale).Should().BeOfType<AutoFaker>();
-            }
-
-            [Fact]
-            public void Should_Configure_Binder_With_Instance()
-            {
-                AutoFaker.Create(new TestBinder()).Should().BeOfType<AutoFaker>();
-            }
-
-            [Fact]
-            public void Should_Configure_Locale_And_Binder()
-            {
-                AutoFaker.Create<TestBinder>(AutoConfig.DefaultLocale).Should().BeOfType<AutoFaker>();
-            }
-
-            [Fact]
-            public void Should_Configure_Locale_And_Binder_With_Instance()
-            {
-                AutoFaker.Create(AutoConfig.DefaultLocale, new TestBinder()).Should().BeOfType<AutoFaker>();
-            }
-        }
-
-        public class SetBinder
-            : AutoFakerFixture, IDisposable
-        {
-            public void Dispose()
-            {
-                // Clear the binder to ensure other tests are not affected - its static
-                AutoFaker.SetBinder(null);
-            }
-
-            [Fact]
-            public void Should_Configure_Binder()
-            {
-                AutoFaker.SetBinder<TestBinder>();
-
-                AutoFaker.DefaultConfig.Binder.Should().BeOfType<TestBinder>();
-            }
-
-            [Fact]
-            public void Should_Configure_Binder_With_Instance()
-            {
-                var binder = new TestBinder();
-
-                AutoFaker.SetBinder(binder);
-
-                AutoFaker.DefaultConfig.Binder.Should().Be(binder);
-            }
-        }
-
-        public class Generate_Static
-            : AutoFakerFixture
-        {
-            private static readonly MethodInfo _generate = _type.GetMethod(_name,
-                BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(string), }, null);
-
-            private static readonly MethodInfo _generateMany = _type.GetMethod(_name,
-                BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(int), typeof(string), }, null);
-
-            [Theory]
-            [MemberData(nameof(GetTypes))]
-            public void Should_Generate_Type(Type type)
-            {
-                AssertGenerate(type, _generate, null, AutoConfig.DefaultLocale);
-            }
-
-            [Theory]
-            [MemberData(nameof(GetTypes))]
-            public void Should_Generate_Many_Types(Type type)
-            {
-                var count = AutoConfig.DefaultRepeatCount.Invoke(null);
-                AssertGenerateMany(type, _generateMany, null, count, AutoConfig.DefaultLocale);
-            }
-
-            [Fact]
-            public void Should_Generate_Complex_Type()
-            {
-                AutoFaker.Generate<Order>(AutoConfig.DefaultLocale).Should().BeGeneratedWithoutMocks();
-            }
-
-            [Fact]
-            public void Should_Generate_Many_Complex_Types()
-            {
-                var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
-                var instances = AutoFaker.Generate<Order>(count, AutoConfig.DefaultLocale);
-
-                AssertGenerateMany(instances);
-            }
-        }
-
-        public class Generate_Static_Faker
-            : AutoFakerFixture
-        {
-            [Fact]
-            public void Should_Generate_Complex_Type()
-            {
-                AutoFaker.Generate<Order, TestFaker>(new object[0]).Should().BeGeneratedWithoutMocks();
-            }
-
-            [Fact]
-            public void Should_Generate_Many_Complex_Types()
-            {
-                var count     = AutoConfig.DefaultRepeatCount.Invoke(null);
-                var instances = AutoFaker.Generate<Order, TestFaker>(count, new object[0]);
-
-                AssertGenerateMany(instances);
-            }
-        }
-
-        #endregion
     }
 }

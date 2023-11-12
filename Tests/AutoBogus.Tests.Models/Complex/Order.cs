@@ -8,16 +8,16 @@ public sealed class Order
     [SuppressMessage("Design",                               "CA1051:Do not declare visible instance fields")]
     public DateTime Timestamp;
 
-    public Order(int id, ICalculator calculator)
+    public Order(int id, ICalculator? calculator)
     {
         Id         = id;
         Calculator = calculator;
     }
 
-    public int         Id         { get; }
-    public ICalculator Calculator { get; }
-    public Guid?       Code       { get; set; }
-    public Status      Status     { get; set; }
+    public int          Id         { get; }
+    public ICalculator? Calculator { get; }
+    public Guid?        Code       { get; set; }
+    public Status       Status     { get; set; }
 
     public IEnumerable<OrderItem>? Items       { get; set; }
     public DateTimeOffset          DateCreated { get; set; }

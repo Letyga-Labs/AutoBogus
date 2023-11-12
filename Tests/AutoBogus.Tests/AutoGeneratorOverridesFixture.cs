@@ -26,8 +26,8 @@ public class AutoGeneratorOverridesFixture
         {
             builder.WithOverride(context =>
             {
-                var instance = context.Instance as OverrideClass;
-                var method   = typeof(OverrideId).GetMethod("SetValue");
+                var instance = (OverrideClass)context.Instance!;
+                var method   = typeof(OverrideId).GetMethod("SetValue")!;
 
                 method.Invoke(instance.Id, new object[] { value, });
 
@@ -40,8 +40,7 @@ public class AutoGeneratorOverridesFixture
         result.Amounts.Should().NotBeEmpty();
     }
 
-    private sealed class TestOverride
-        : AutoGeneratorOverride
+    private sealed class TestOverride : AutoGeneratorOverride
     {
         public TestOverride(bool preinitialize, Action<AutoGenerateOverrideContext> generator)
         {
@@ -49,8 +48,9 @@ public class AutoGeneratorOverridesFixture
             Generator     = generator;
         }
 
-        public override bool                                Preinitialize { get; }
-        private         Action<AutoGenerateOverrideContext> Generator     { get; }
+        public override bool Preinitialize { get; }
+
+        private Action<AutoGenerateOverrideContext> Generator { get; }
 
         public override bool CanOverride(AutoGenerateContext context)
         {

@@ -1,25 +1,20 @@
+using System.Diagnostics.CodeAnalysis;
 using Bogus;
 using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Tests;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public class AutoGenerateContextFixture
 {
-    private readonly AutoConfig          _config;
-    private          AutoGenerateContext _context;
-    private readonly Faker               _faker;
-    private readonly IEnumerable<string> _ruleSets;
+    private readonly AutoConfig          _config   = new();
+    private readonly Faker               _faker    = new();
+    private readonly IEnumerable<string> _ruleSets = Enumerable.Empty<string>();
 
-    public AutoGenerateContextFixture()
-    {
-        _faker    = new Faker();
-        _ruleSets = Enumerable.Empty<string>();
-        _config   = new AutoConfig();
-    }
+    private AutoGenerateContext _context = null!;
 
-    public class GenerateMany_Internal
-        : AutoGenerateContextFixture
+    public class GenerateMany_Internal : AutoGenerateContextFixture
     {
         private readonly List<int> _items;
         private          int       _value;
@@ -43,7 +38,7 @@ public class AutoGenerateContextFixture
             var count    = _faker.Random.Int(3, 5);
             var expected = Enumerable.Range(0, count).Select(i => _value).ToList();
 
-            _config.RepeatCount = context => count;
+            _config.RepeatCount = _ => count;
 
             AutoGenerateContextExtensions.GenerateMany(_context, null, _items, false, 1, () => _value);
 

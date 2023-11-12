@@ -6,7 +6,7 @@ namespace AutoBogus.Tests;
 
 public class AutoConventionsFixture
 {
-    private IAutoFaker _faker;
+    private IAutoFaker _faker = null!;
 
     [Fact]
     public void Should_Apply_Conventions()
@@ -74,8 +74,8 @@ public class AutoConventionsFixture
 
     private class TestClass
     {
-        public string Email        { get; }
-        public string AnotherEmail { get; }
+        public string Email        { get; } = null!;
+        public string AnotherEmail { get; } = null!;
     }
 
     private class TestGeneratorOverride
