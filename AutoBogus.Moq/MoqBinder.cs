@@ -6,12 +6,12 @@ namespace AutoBogus.Moq;
 /// <summary>
 ///     A class that enables Moq binding for interface and abstract types.
 /// </summary>
-public class MoqBinder : AutoBinder
+public sealed class MoqBinder : AutoBinder
 {
     private static readonly MethodInfo _factory =
         typeof(Mock).GetMethod("Of", Array.Empty<Type>()) ??
         throw new InvalidOperationException(
-            "Cannot find method `Of` of class `Mock`. Did an API changed unnoticeably?");
+            "Could not find method `Of` of class `Mock`. Did an API changed unnoticeably?");
 
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.

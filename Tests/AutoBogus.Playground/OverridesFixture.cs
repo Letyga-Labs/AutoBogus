@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -14,11 +13,11 @@ public class OverridesFixture
         {
             builder
                 .WithOverride<Obj, string>(model => model.Name, _ => name)
-                .WithOverride(_ => ex);
+                .WithOverride<Exception>(_ => ex);
         });
 
-        obj.Name.Should().Be(name);
-        obj.Exception.Should().Be(ex);
+        Assert.Equal(name, obj.Name);
+        Assert.Equal(ex,   obj.Exception);
     }
 
     private sealed class Obj

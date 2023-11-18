@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using AutoBogus.Generators;
 using AutoBogus.Tests.Models.Simple;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Tests;
@@ -24,14 +23,15 @@ public partial class AutoGeneratorsFixture
             var generator    = CreateGenerator(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
             var dictionary   = (IReadOnlyDictionary<int, string>)InvokeGenerator(type, generator);
 
-            dictionary.Should().NotBeNull().And.NotContainNulls();
+            Assert.NotNull(dictionary);
+            Assert.All(dictionary, it => Assert.NotNull(it.Value));
 
             foreach (var key in dictionary.Keys)
             {
                 var value = dictionary[key];
 
-                key.Should().BeOfType(keyType);
-                value.Should().BeOfType(valueType);
+                Assert.IsType(keyType, key);
+                Assert.IsType(valueType, value);
             }
         }
 
@@ -52,7 +52,9 @@ public partial class AutoGeneratorsFixture
             var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            var generator = AutoGeneratorFactory.GetGenerator(context);
+
+            Assert.IsType(generatorType, generator);
         }
     }
 }

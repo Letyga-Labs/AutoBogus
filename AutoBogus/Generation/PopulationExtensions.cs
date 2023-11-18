@@ -3,9 +3,9 @@ using System.Reflection;
 using AutoBogus.Errors;
 using AutoBogus.Util;
 
-namespace AutoBogus.Population;
+namespace AutoBogus.Generation;
 
-internal static class AutoMemberPopulationExtensions
+internal static class PopulationExtensions
 {
     public static void PopulateWithNewValue(this AutoMember member, object memberHolder, object newValue)
     {

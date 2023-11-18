@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using AutoBogus.Templating;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Tests;
@@ -21,10 +20,10 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(3);
-        result[0].StringField.Should().Be("value1");
-        result[1].StringField.Should().BeNull();
-        result[2].StringField.Should().BeEmpty();
+        Assert.Equal(3,        result.Count);
+        Assert.Equal("value1", result[0].StringField);
+        Assert.Null(result[1].StringField);
+        Assert.Empty(result[2].StringField);
     }
 
     [Fact]
@@ -42,13 +41,13 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(3);
-        result[0].IntField.Should().Be(0);
-        result[0].NullableIntField.Should().BeNull();
-        result[1].IntField.Should().Be(1);
-        result[1].NullableIntField.Should().Be(0);
-        result[2].IntField.Should().Be(3);
-        result[2].NullableIntField.Should().Be(2);
+        Assert.Equal(3, result.Count);
+        Assert.Equal(0, result[0].IntField);
+        Assert.Null(result[0].NullableIntField);
+        Assert.Equal(1, result[1].IntField);
+        Assert.Equal(0, result[1].NullableIntField);
+        Assert.Equal(3, result[2].IntField);
+        Assert.Equal(2, result[2].NullableIntField);
     }
 
     [Fact]
@@ -66,13 +65,13 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(3);
-        result[0].DecimalField.Should().Be(0);
-        result[0].NullableDecimalField.Should().BeNull();
-        result[1].DecimalField.Should().Be(1.23m);
-        result[1].NullableDecimalField.Should().Be(0.01m);
-        result[2].DecimalField.Should().Be(3.000354m);
-        result[2].NullableDecimalField.Should().Be(2);
+        Assert.Equal(3, result.Count);
+        Assert.Equal(0, result[0].DecimalField);
+        Assert.Null(result[0].NullableDecimalField);
+        Assert.Equal(1.23m,     result[1].DecimalField);
+        Assert.Equal(0.01m,     result[1].NullableDecimalField);
+        Assert.Equal(3.000354m, result[2].DecimalField);
+        Assert.Equal(2,         result[2].NullableDecimalField);
     }
 
     [Fact]
@@ -89,11 +88,11 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(2);
-        result[0].DateTimeField.Should().Be(DateTime.Parse("2006-02-28", CultureInfo.InvariantCulture));
-        result[0].NullableDateTimeField.Should().BeNull();
-        result[1].DateTimeField.Should().Be(DateTime.Parse("2010-03-01",         CultureInfo.InvariantCulture));
-        result[1].NullableDateTimeField.Should().Be(DateTime.Parse("2011-04-08", CultureInfo.InvariantCulture));
+        Assert.Equal(2, result.Count);
+        Assert.Null(result[0].NullableDateTimeField);
+        Assert.Equal(DateTime.Parse("2006-02-28", CultureInfo.InvariantCulture), result[0].DateTimeField);
+        Assert.Equal(DateTime.Parse("2010-03-01", CultureInfo.InvariantCulture), result[1].DateTimeField);
+        Assert.Equal(DateTime.Parse("2011-04-08", CultureInfo.InvariantCulture), result[1].NullableDateTimeField);
     }
 
     [Fact]
@@ -108,12 +107,12 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(1);
-        result[0].StringField.Should().Be("value1");
-        result[0].IntField.Should().Be(999);
+        Assert.Single(result);
+        Assert.Equal("value1", result[0].StringField);
+        Assert.Equal(999,      result[0].IntField);
 
         // make sure child got generated
-        result.Should().OnlyContain(r => r.Child != null);
+        Assert.All(result, r => Assert.NotNull(r.Child));
     }
 
     [Fact]
@@ -130,10 +129,10 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(3);
-        result[0].Id.Should().Be(0);
-        result[1].Id.Should().Be(1);
-        result[2].Id.Should().Be(2);
+        Assert.Equal(3, result.Count);
+        Assert.Equal(0, result[0].Id);
+        Assert.Equal(1, result[1].Id);
+        Assert.Equal(2, result[2].Id);
     }
 
     [Fact]
@@ -150,11 +149,11 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(3);
-        result.Should().OnlyContain(r => r.StringField == null);
-        result[0].IntField.Should().Be(10);
-        result[1].IntField.Should().Be(11);
-        result[2].IntField.Should().Be(12);
+        Assert.Equal(3, result.Count);
+        Assert.All(result, r => Assert.NotNull(r.StringField));
+        Assert.Equal(10, result[0].IntField);
+        Assert.Equal(11, result[1].IntField);
+        Assert.Equal(12, result[2].IntField);
     }
 
     [Fact]
@@ -172,12 +171,12 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(3);
-        result[0].Child.Name.Should().Be("child1");
-        result[1].Child.Name.Should()
-            .NotBe("child1"); // noting that in the converted for child2 we'd use a new faker instance
-        result[1].Child.Name.Should().NotBeNull();
-        result[2].Child.Should().BeNull();
+        Assert.Equal(3,        result.Count);
+        Assert.Equal("child1", result[0].Child.Name);
+        // noting that in the converted for child2 we'd use a new faker instance
+        Assert.NotEqual("child1", result[1].Child.Name);
+        Assert.NotNull(result[1].Child.Name);
+        Assert.Null(result[2].Child);
     }
 
     [Fact]
@@ -195,8 +194,8 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(1);
-        result[0].StringField.Should().BeEmpty();
+        Assert.Single(result);
+        Assert.Empty(result[0].StringField);
     }
 
     [Fact]
@@ -216,11 +215,11 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(2);
-        result[0].Space_Field.Should().Be("test");
-        result[0].Date_Space_Field.Should().BeNull();
-        result[1].Space_Field.Should().BeNull();
-        result[1].Date_Space_Field.Should().Be(DateTime.Parse("2002-09-08", CultureInfo.InvariantCulture));
+        Assert.Equal(2,      result.Count);
+        Assert.Equal("test", result[0].Space_Field);
+        Assert.Null(result[0].Date_Space_Field);
+        Assert.Null(result[1].Space_Field);
+        Assert.Equal(DateTime.Parse("2002-09-08", CultureInfo.InvariantCulture), result[1].Date_Space_Field);
     }
 
     [Fact]
@@ -237,8 +236,8 @@ public class TemplateFixture
 
         var result = faker.GenerateWithTemplate(testData);
 
-        result.Should().HaveCount(1);
-        result[0].StringField.Should().Be("test");
+        Assert.Single(result);
+        Assert.Equal("test", result[0].StringField);
     }
 
     private static Func<Type, string, (bool Handled, object? Result)> ChildConverter()

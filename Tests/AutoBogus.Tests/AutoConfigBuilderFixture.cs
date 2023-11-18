@@ -32,7 +32,7 @@ public class AutoConfigBuilderFixture
         {
             var locale = _faker.Random.String();
             _builder.WithLocale<ITestBuilder>(locale, null!);
-            _config.Locale.Should().Be(locale);
+            Assert.Equal(locale, _config.Locale);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ public class AutoConfigBuilderFixture
         {
             _config.Locale = _faker.Random.String();
             _builder.WithLocale<ITestBuilder>(null, null!);
-            _config.Locale.Should().Be(AutoConfig.DefaultLocale);
+            Assert.Equal(AutoConfig.DefaultLocale, _config.Locale);
         }
     }
 
@@ -52,7 +52,7 @@ public class AutoConfigBuilderFixture
         {
             var count = _faker.Random.Int();
             _builder.WithRepeatCount<ITestBuilder>(_ => count, null!);
-            _config.RepeatCount.Invoke(null!).Should().Be(count);
+            Assert.Equal(count, _config.RepeatCount.Invoke(null!));
         }
 
         [Fact]
@@ -60,7 +60,7 @@ public class AutoConfigBuilderFixture
         {
             var count = AutoConfig.DefaultRepeatCount.Invoke(null!);
             _builder.WithRepeatCount<ITestBuilder>(null, null!);
-            _config.RepeatCount.Invoke(null!).Should().Be(count);
+            Assert.Equal(count, _config.RepeatCount.Invoke(null!));
         }
     }
 
@@ -72,7 +72,7 @@ public class AutoConfigBuilderFixture
         {
             var depth = _faker.Random.Int();
             _builder.WithRecursiveDepth<ITestBuilder>(_ => depth, null!);
-            _config.RecursiveDepth.Invoke(null!).Should().Be(depth);
+            Assert.Equal(depth, _config.RecursiveDepth.Invoke(null!));
         }
 
         [Fact]
@@ -80,7 +80,7 @@ public class AutoConfigBuilderFixture
         {
             var depth = AutoConfig.DefaultRecursiveDepth.Invoke(null!);
             _builder.WithRecursiveDepth<ITestBuilder>(null, null!);
-            _config.RecursiveDepth.Invoke(null!).Should().Be(depth);
+            Assert.Equal(depth, _config.RecursiveDepth.Invoke(null!));
         }
     }
 
@@ -92,7 +92,7 @@ public class AutoConfigBuilderFixture
         {
             var depth = _faker.Random.Int();
             _builder.WithTreeDepth<ITestBuilder>(_ => depth, null!);
-            _config.TreeDepth.Invoke(null!).Should().Be(depth);
+            Assert.Equal(depth, _config.TreeDepth.Invoke(null!));
         }
 
         [Fact]
@@ -100,7 +100,7 @@ public class AutoConfigBuilderFixture
         {
             var depth = AutoConfig.DefaultTreeDepth.Invoke(null!);
             _builder.WithTreeDepth<ITestBuilder>(null, null!);
-            _config.TreeDepth.Invoke(null!).Should().Be(depth);
+            Assert.Equal(depth, _config.TreeDepth.Invoke(null!));
         }
     }
 
@@ -112,7 +112,7 @@ public class AutoConfigBuilderFixture
         {
             var binder = new NSubstituteBinder();
             _builder.WithBinder<ITestBuilder>(binder, null!);
-            _config.Binder.Should().Be(binder);
+            Assert.Equal(binder, _config.Binder);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ public class AutoConfigBuilderFixture
         {
             _config.Binder = new NSubstituteBinder();
             _builder.WithBinder<ITestBuilder>(null, null!);
-            _config.Binder.Should().BeOfType<AutoBinder>();
+            Assert.IsType<AutoBinder>(_config.Binder);
         }
     }
 
@@ -132,7 +132,7 @@ public class AutoConfigBuilderFixture
         {
             var fakerHub = new Faker();
             _builder.WithFakerHub<ITestBuilder>(fakerHub, null!);
-            _config.FakerHub.Should().Be(fakerHub);
+            Assert.Equal(fakerHub, _config.FakerHub);
         }
     }
 
@@ -147,7 +147,7 @@ public class AutoConfigBuilderFixture
 
             _config.SkipTypes.Add(type1);
             _builder.WithSkip<ITestBuilder>(type2, null!);
-            _config.SkipTypes.Should().ContainSingle();
+            Assert.Single(_config.SkipTypes);
         }
 
         [Fact]
@@ -173,7 +173,7 @@ public class AutoConfigBuilderFixture
 
             _config.SkipPaths.Add(member);
             _builder.WithSkip<ITestBuilder>(type, "Value", null!);
-            _config.SkipPaths.Should().ContainSingle();
+            Assert.Single(_config.SkipPaths);
         }
 
         [Fact]
@@ -204,7 +204,7 @@ public class AutoConfigBuilderFixture
 
             _config.SkipPaths.Add(member);
             _builder.WithSkip<ITestBuilder, TestSkip>("Value", null!);
-            _config.SkipPaths.Should().ContainSingle();
+            Assert.Single(_config.SkipPaths);
         }
 
         [Fact]
@@ -231,7 +231,7 @@ public class AutoConfigBuilderFixture
         public void Should_Not_Add_Null_Override()
         {
             _builder.WithOverride<ITestBuilder>(null, null!);
-            _config.Overrides.Should().BeEmpty();
+            Assert.Empty(_config.Overrides);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ public class AutoConfigBuilderFixture
 
             _config.Overrides.Add(generatorOverride);
             _builder.WithOverride<ITestBuilder>(generatorOverride, null!);
-            _config.Overrides.Should().ContainSingle();
+            Assert.Single(_config.Overrides);
         }
 
         [Fact]

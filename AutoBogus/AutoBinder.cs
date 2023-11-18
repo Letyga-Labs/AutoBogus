@@ -1,7 +1,9 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using AutoBogus.Errors;
-using AutoBogus.Population;
+using AutoBogus.Generation;
 using AutoBogus.Util;
+using Bogus.Platform;
 using Binder = Bogus.Binder;
 
 namespace AutoBogus;
@@ -36,7 +38,7 @@ public class AutoBinder : Binder, IAutoBinder
         // If a constructor is found generate values for each of the parameters
         var generatedConstructorArguments = constructor
             .GetParameters()
-            .Select(p => GenerateValue(type, p.ParameterType, p.Name, context))
+            .Select(it => Generator.Generate(context, type, it.ParameterType, it.Name))
             .ToArray();
 
         var instance = (TType)constructor.Invoke(generatedConstructorArguments);
@@ -73,7 +75,7 @@ public class AutoBinder : Binder, IAutoBinder
         var type = typeof(TType);
 
         // Iterate the members and bind a generated value
-        var membersToPopulate = GetMembersToPopulate(type, members);
+        var membersToPopulate = GetMembersToPopulate(type, members).Select(it => new AutoMember(it)).ToList();
 
         foreach (var member in membersToPopulate)
         {
@@ -81,7 +83,7 @@ public class AutoBinder : Binder, IAutoBinder
             {
                 context.TypesStack.Push(member.Type);
 
-                var value = GenerateValue(type, member.Type, member.Name, context);
+                var value = Generator.Generate(context, type, member.Type, member.Name);
                 member.PopulateWithNewValue(instance, value);
 
                 context.TypesStack.Pop();
@@ -141,55 +143,53 @@ public class AutoBinder : Binder, IAutoBinder
         return count < recursiveDepth;
     }
 
-    private IEnumerable<AutoMember> GetMembersToPopulate(
+    /// <summary>
+    ///     Mostly repeats <see cref="Binder.GetMembers"/> logic but additionaly
+    ///     allowes Dictionary or Collection typed readonly properties, as they can be filled
+    ///     via their Add methods.
+    /// </summary>
+    /// <returns>Members of type <paramref name="type"/> which should be populated.</returns>
+    protected virtual IEnumerable<MemberInfo> GetMembersToPopulate(
         Type                     type,
-        IEnumerable<MemberInfo>? methodsSelectedByClient)
+        IEnumerable<MemberInfo>? membersSelectedByClient)
     {
+        ArgumentNullException.ThrowIfNull(type);
+
         // If a list of members is provided, no others should be populated
-        if (methodsSelectedByClient != null)
+        if (membersSelectedByClient != null)
         {
-            return methodsSelectedByClient.Select(member => new AutoMember(member));
+            return membersSelectedByClient;
         }
 
-        // Get the baseline members resolved by Bogus
-        var autoMembers = GetMembers(type).Select(m => new AutoMember(m.Value)).ToList();
-
-        foreach (var member in type.GetMembers(BindingFlags))
-        {
-            // Then check if any other members can be populated
-            var autoMember = new AutoMember(member);
-
-            if (autoMembers.Exists(baseMember => autoMember.Name == baseMember.Name))
+        var candidates = type
+            .GetAllMembers(BindingFlags)
+            .Select(it => UseBaseTypeDeclaredPropertyInfo(type, it))
+            .Where(it =>
             {
-                continue;
-            }
+                // no compiler generated stuff
+                if (it.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any())
+                {
+                    return false;
+                }
 
-            // A readonly dictionary or collection member can use the Add() method
-            if (autoMember.IsReadOnly && ReflectionHelper.IsDictionary(autoMember.Type))
-            {
-                autoMembers.Add(autoMember);
-            }
-            else if (autoMember.IsReadOnly && ReflectionHelper.IsCollection(autoMember.Type))
-            {
-                autoMembers.Add(autoMember);
-            }
-        }
+                return it switch
+                {
+                    PropertyInfo property =>
+                        property.CanWrite ||
+                        ReflectionHelper.IsDictionary(property.PropertyType) ||
+                        ReflectionHelper.IsCollection(property.PropertyType),
 
-        return autoMembers;
-    }
+                    FieldInfo field => !field.IsPrivate,
 
-    private object GenerateValue(
-        Type                parentType,
-        Type                generateType,
-        string?             generateName,
-        AutoGenerateContext context)
-    {
-        context.ParentType   = parentType;
-        context.GenerateType = generateType;
-        context.GenerateName = generateName;
+                    _ => false,
+                };
+            });
 
-        var generator = AutoGeneratorFactory.GetGenerator(context);
-        var value     = generator.Generate(context);
-        return value;
+        var deduplicatedByName = candidates
+            .GroupBy(it => it.Name)
+            .ToDictionary(it => it.Key, it => it.First())
+            .Values;
+
+        return deduplicatedByName;
     }
 }

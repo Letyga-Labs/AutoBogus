@@ -98,7 +98,7 @@ public static class AutoConfigBuilderExtensions
     /// <returns>The given configuration builder instance.</returns>
     public static IAutoFakerDefaultConfigBuilder WithSkip<TType>(
         this IAutoFakerDefaultConfigBuilder builder,
-        Expression<Func<TType, object?>>     member)
+        Expression<Func<TType, object?>>    member)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(member);
@@ -115,7 +115,7 @@ public static class AutoConfigBuilderExtensions
     /// <param name="member">The member to skip.</param>
     /// <returns>The given configuration builder instance.</returns>
     public static IAutoGenerateConfigBuilder WithSkip<TType>(
-        this IAutoGenerateConfigBuilder builder,
+        this IAutoGenerateConfigBuilder  builder,
         Expression<Func<TType, object?>> member)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -133,7 +133,7 @@ public static class AutoConfigBuilderExtensions
     /// <param name="member">The member to skip.</param>
     /// <returns>The given configuration builder instance.</returns>
     public static IAutoFakerConfigBuilder WithSkip<TType>(
-        this IAutoFakerConfigBuilder    builder,
+        this IAutoFakerConfigBuilder     builder,
         Expression<Func<TType, object?>> member)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -202,7 +202,7 @@ public static class AutoConfigBuilderExtensions
     /// <returns>The given configuration builder instance.</returns>
     public static IAutoFakerDefaultConfigBuilder WithOverride<TType, TValue>(
         this IAutoFakerDefaultConfigBuilder       builder,
-        Expression<Func<TType, object?>>           member,
+        Expression<Func<TType, object?>>          member,
         Func<AutoGenerateOverrideContext, TValue> generator)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -225,7 +225,7 @@ public static class AutoConfigBuilderExtensions
     /// <returns>The given configuration builder instance.</returns>
     public static IAutoGenerateConfigBuilder WithOverride<TType, TValue>(
         this IAutoGenerateConfigBuilder           builder,
-        Expression<Func<TType, object?>>           member,
+        Expression<Func<TType, object?>>          member,
         Func<AutoGenerateOverrideContext, TValue> generator)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -248,7 +248,7 @@ public static class AutoConfigBuilderExtensions
     /// <returns>The given configuration builder instance.</returns>
     public static IAutoFakerConfigBuilder WithOverride<TType, TValue>(
         this IAutoFakerConfigBuilder              builder,
-        Expression<Func<TType, object?>>           member,
+        Expression<Func<TType, object?>>          member,
         Func<AutoGenerateOverrideContext, TValue> generator)
     {
         ArgumentNullException.ThrowIfNull(builder);

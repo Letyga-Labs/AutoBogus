@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using AutoBogus.Generation;
 
 namespace AutoBogus;
 
@@ -17,12 +18,13 @@ public static class AutoGenerateContextExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        // Set the generate type for the current request
-        context.GenerateType = typeof(TType);
+        var result = (TType)Generator.Generate(
+            context,
+            parentType: null,
+            generateType: typeof(TType),
+            generateName: null);
 
-        // Get the type generator and return a value
-        var generator = AutoGeneratorFactory.GetGenerator(context);
-        return (TType)generator.Generate(context);
+        return result;
     }
 
     /// <summary>
@@ -37,7 +39,8 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(context);
 
         var items = new List<TType>();
-        GenerateMany(context, count, items, unique: false);
+        Generator.GenerateMany(context, items, unique: false, count);
+
         return items;
     }
 
@@ -53,7 +56,8 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(context);
 
         var items = new List<TType>();
-        GenerateMany(context, count, items, unique: true);
+        Generator.GenerateMany(context, items, unique: true, count);
+
         return items;
     }
 
@@ -69,55 +73,5 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(instance);
 
         context.Binder.PopulateInstance<TType>(instance, context);
-    }
-
-    internal static void GenerateMany<TType>(
-        AutoGenerateContext context,
-        int?                count,
-        List<TType>         items,
-        bool                unique,
-        int                 attempt  = 1,
-        Func<TType>?        generate = null)
-    {
-        // Apply any defaults
-        count    ??= context.Config.RepeatCount.Invoke(context);
-        generate ??= context.Generate<TType>;
-
-        // Generate a list of items
-        var required = count - items.Count;
-
-        for (var index = 0; index < required; index++)
-        {
-            var item = generate.Invoke();
-
-            // Ensure the generated value is not null (which means the type couldn't be generated)
-            if (item != null)
-            {
-                items.Add(item);
-            }
-        }
-
-        if (!unique)
-        {
-            return;
-        }
-
-        // Remove any duplicates and generate more to match the required count
-        var filtered = items.Distinct().ToList();
-
-        if (filtered.Count >= count)
-        {
-            return;
-        }
-
-        // To maintain the items reference, clear and reapply the filtered list
-        items.Clear();
-        items.AddRange(filtered);
-
-        // Only continue to generate more if the attempts threshold is not reached
-        if (attempt < AutoConfig.GenerateAttemptsThreshold)
-        {
-            GenerateMany(context, count, items, unique, attempt + 1, generate);
-        }
     }
 }

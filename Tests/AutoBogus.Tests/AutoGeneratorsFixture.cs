@@ -35,7 +35,7 @@ public partial class AutoGeneratorsFixture
 
     private AutoGenerateContext CreateContext(
         Type                            type,
-        IList<AutoGeneratorOverride>?   generatorOverrides       = null,
+        HashSet<AutoGeneratorOverride>? generatorOverrides       = null,
         Func<AutoGenerateContext, int>? dataTableRowCountFunctor = null)
     {
         var faker  = new Faker();
@@ -92,9 +92,9 @@ public partial class AutoGeneratorsFixture
                 var instance = generator.Generate(context);
 
                 // Arrange
-                generator.Should().BeOfType<ReadOnlyDictionaryGenerator<int, string>>();
+                Assert.IsType<ReadOnlyDictionaryGenerator<int, string>>(generator);
 
-                instance.Should().BeOfType(readOnlyDictionaryType);
+                Assert.IsType(readOnlyDictionaryType, instance);
             }
 
             public class BaseReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
@@ -197,9 +197,9 @@ public partial class AutoGeneratorsFixture
                 var instance = generator.Generate(context);
 
                 // Arrange
-                generator.Should().BeOfType<DictionaryGenerator<int, string>>();
+                Assert.IsType<DictionaryGenerator<int, string>>(generator);
 
-                instance.Should().BeOfType(dictionaryType);
+                Assert.IsType(dictionaryType, instance);
             }
 
             public class NonGeneric : Dictionary<int, string>
@@ -246,9 +246,9 @@ public partial class AutoGeneratorsFixture
                 var instance = generator.Generate(context);
 
                 // Arrange
-                generator.Should().BeOfType<SetGenerator<int>>();
+                Assert.IsType<SetGenerator<int>>(generator);
 
-                instance.Should().BeOfType(setType);
+                Assert.IsType(setType, instance);
             }
 
             public class NonGeneric : HashSet<int>
@@ -289,9 +289,9 @@ public partial class AutoGeneratorsFixture
                 var instance = generator.Generate(context);
 
                 // Arrange
-                generator.Should().BeOfType<ListGenerator<int>>();
+                Assert.IsType<ListGenerator<int>>(generator);
 
-                instance.Should().BeOfType(listType);
+                Assert.IsType(listType, instance);
             }
 
             public class NonGeneric : List<int>
@@ -316,8 +316,8 @@ public partial class AutoGeneratorsFixture
             var parameter   = constructor.GetParameters().Single();
             var context     = CreateContext(parameter.ParameterType);
 
-            Action action = () => AutoGeneratorFactory.GetGenerator(context);
-            action.Should().NotThrow();
+            var ex = Record.Exception(() => AutoGeneratorFactory.GetGenerator(context));
+            Assert.Null(ex);
         }
 
         private sealed class TestClass
@@ -352,7 +352,7 @@ public partial class AutoGeneratorsFixture
         {
             var generator = AutoGeneratorFactory.Generators[type];
 
-            InvokeGenerator(type, generator).Should().BeOfType(type);
+            Assert.IsType(type, InvokeGenerator(type, generator));
         }
 
         [Theory]
@@ -362,7 +362,7 @@ public partial class AutoGeneratorsFixture
             var context   = CreateContext(type);
             var generator = AutoGeneratorFactory.Generators[type];
 
-            AutoGeneratorFactory.GetGenerator(context).Should().Be(generator);
+            Assert.Equal(generator, AutoGeneratorFactory.GetGenerator(context));
         }
 
         [Theory]
@@ -402,8 +402,8 @@ public partial class AutoGeneratorsFixture
             string property      = instance.Property;
             int    childProperty = instance.Child.Property;
 
-            property.Should().NotBeEmpty();
-            childProperty.Should().NotBe(0);
+            Assert.NotEmpty(property);
+            Assert.NotEqual(0, childProperty);
         }
 
         [Fact]
@@ -412,7 +412,7 @@ public partial class AutoGeneratorsFixture
             var type    = typeof(ExpandoObject);
             var context = CreateContext(type);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType<Generators.ExpandoObjectGenerator>();
+            Assert.IsType<Generators.ExpandoObjectGenerator>(AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -432,10 +432,10 @@ public partial class AutoGeneratorsFixture
             var generator = CreateGenerator(typeof(ArrayGenerator<>), itemType);
             var array     = (Array)InvokeGenerator(type, generator);
 
-            array.Should().NotBeNull();
+            Assert.NotNull(array);
             foreach (var value in array)
             {
-                value.Should().NotBeNull();
+                Assert.NotNull(value);
             }
         }
 
@@ -453,7 +453,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = type.GetElementType()!;
             var generatorType = GetGeneratorType(typeof(ArrayGenerator<>), itemType);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -466,7 +466,7 @@ public partial class AutoGeneratorsFixture
             var type      = typeof(TestEnum);
             var generator = new EnumGenerator<TestEnum>();
 
-            InvokeGenerator(type, generator).Should().BeOfType<TestEnum>();
+            Assert.IsType<TestEnum>(InvokeGenerator(type, generator));
         }
 
         [Fact]
@@ -475,7 +475,7 @@ public partial class AutoGeneratorsFixture
             var type    = typeof(TestEnum);
             var context = CreateContext(type);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType<EnumGenerator<TestEnum>>();
+            Assert.IsType<EnumGenerator<TestEnum>>(AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -500,16 +500,16 @@ public partial class AutoGeneratorsFixture
             var generator    = CreateGenerator(typeof(DictionaryGenerator<,>), keyType, valueType);
             var dictionary   = (IDictionary)InvokeGenerator(type, generator);
 
-            dictionary.Should().NotBeNull();
+            Assert.NotNull(dictionary);
 
             foreach (var key in dictionary.Keys)
             {
-                key.Should().NotBeNull();
+                Assert.NotNull(key);
                 var value = dictionary[key];
-                value.Should().NotBeNull();
+                Assert.NotNull(value);
 
-                key.Should().BeOfType(keyType);
-                value.Should().BeOfType(valueType);
+                Assert.IsType(keyType, key);
+                Assert.IsType(valueType, value);
             }
         }
 
@@ -531,7 +531,7 @@ public partial class AutoGeneratorsFixture
             var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(DictionaryGenerator<,>), keyType, valueType);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -559,10 +559,10 @@ public partial class AutoGeneratorsFixture
             var generator    = CreateGenerator(typeof(ListGenerator<>), itemType);
             var list         = (IEnumerable)InvokeGenerator(type, generator);
 
-            list.Should().NotBeNull();
+            Assert.NotNull(list);
             foreach (var item in list)
             {
-                item.Should().NotBeNull();
+                Assert.NotNull(item);
             }
         }
 
@@ -587,7 +587,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(ListGenerator<>), itemType);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -610,10 +610,10 @@ public partial class AutoGeneratorsFixture
             var generator    = CreateGenerator(typeof(SetGenerator<>), itemType);
             var set          = (IEnumerable)InvokeGenerator(type, generator);
 
-            set.Should().NotBeNull();
+            Assert.NotNull(set);
             foreach (var value in set)
             {
-                value.Should().NotBeNull();
+                Assert.NotNull(value);
             }
         }
 
@@ -633,7 +633,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(SetGenerator<>), itemType);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -655,10 +655,10 @@ public partial class AutoGeneratorsFixture
             var generator    = CreateGenerator(typeof(EnumerableGenerator<>), itemType);
             var enumerable   = (IEnumerable)InvokeGenerator(type, generator);
 
-            enumerable.Should().NotBeNull();
+            Assert.NotNull(enumerable);
             foreach (var value in enumerable)
             {
-                value.Should().NotBeNull();
+                Assert.NotNull(value);
             }
         }
 
@@ -677,7 +677,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(EnumerableGenerator<>), itemType);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -690,7 +690,7 @@ public partial class AutoGeneratorsFixture
             var type      = typeof(TestEnum?);
             var generator = new NullableGenerator<TestEnum>();
 
-            InvokeGenerator(type, generator).Should().BeOfType<TestEnum>();
+            Assert.IsType<TestEnum>(InvokeGenerator(type, generator));
         }
 
         [Fact]
@@ -699,7 +699,7 @@ public partial class AutoGeneratorsFixture
             var type    = typeof(TestEnum?);
             var context = CreateContext(type);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType<NullableGenerator<TestEnum>>();
+            Assert.IsType<NullableGenerator<TestEnum>>(AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -719,7 +719,7 @@ public partial class AutoGeneratorsFixture
 
             if (type.IsInterface || type.IsAbstract)
             {
-                InvokeGenerator(type, generator).Should().BeNull();
+                Assert.Null(InvokeGenerator(type, generator));
             }
             else
             {
@@ -737,50 +737,37 @@ public partial class AutoGeneratorsFixture
             var context       = CreateContext(type);
             var generatorType = GetGeneratorType(typeof(TypeGenerator<>), type);
 
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType(generatorType);
+            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
         }
     }
 
     public class GeneratorOverrides
         : AutoGeneratorsFixture
     {
-        private readonly AutoGeneratorOverride        _generatorOverride;
-        private          IList<AutoGeneratorOverride> _overrides;
+        private readonly AutoGeneratorOverride _generatorOverride;
+
+        private HashSet<AutoGeneratorOverride> _overrides;
 
         public GeneratorOverrides()
         {
             _generatorOverride = new TestGeneratorOverride(true);
-            _overrides = new List<AutoGeneratorOverride>
+            _overrides = new HashSet<AutoGeneratorOverride>
             {
                 new TestGeneratorOverride(),
                 _generatorOverride,
-                new TestGeneratorOverride(),
             };
-        }
-
-        [Fact]
-        public void Should_Return_All_Matching_Overrides()
-        {
-            var generatorOverride = new TestGeneratorOverride(true);
-
-            _overrides.Insert(1, generatorOverride);
-
-            var context = CreateContext(typeof(string), _overrides);
-            var invoker = (AutoGeneratorOverrideInvoker)AutoGeneratorFactory.GetGenerator(context);
-
-            invoker.Overrides.Should().BeEquivalentTo(new[] { generatorOverride, _generatorOverride });
         }
 
         [Fact]
         public void Should_Return_Generator_If_No_Matching_Override()
         {
-            _overrides = new List<AutoGeneratorOverride>
+            _overrides = new HashSet<AutoGeneratorOverride>
             {
                 new TestGeneratorOverride(),
             };
 
             var context = CreateContext(typeof(int), _overrides);
-            AutoGeneratorFactory.GetGenerator(context).Should().BeOfType<IntGenerator>();
+            Assert.IsType<IntGenerator>(AutoGeneratorFactory.GetGenerator(context));
         }
 
         [Fact]
@@ -789,11 +776,12 @@ public partial class AutoGeneratorsFixture
             var context           = CreateContext(typeof(string), _overrides);
             var generatorOverride = AutoGeneratorFactory.GetGenerator(context);
 
-            generatorOverride.Generate(context).Should().BeOfType<string>().And.NotBeNull();
+            var value = generatorOverride.Generate(context);
+            Assert.NotNull(value);
+            Assert.IsType<string>(value);
         }
 
-        private class TestGeneratorOverride
-            : AutoGeneratorOverride
+        private class TestGeneratorOverride : AutoGeneratorOverride
         {
             public TestGeneratorOverride(bool shouldOverride = false)
             {

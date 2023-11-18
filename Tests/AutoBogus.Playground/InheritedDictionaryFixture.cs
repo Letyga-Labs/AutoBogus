@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -11,8 +10,8 @@ public class InheritedDictionaryFixture
     {
         var obj = AutoFaker.Generate<Obj>();
 
-        obj.Should().NotBeNull();
-        obj.Properties.Should().NotBeNull();
+        Assert.NotNull(obj);
+        Assert.NotNull(obj.Properties);
     }
 
     [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
-using System.Reflection;
+using AutoBogus.Generation;
 using Bogus;
 
 namespace AutoBogus;
@@ -13,7 +13,12 @@ namespace AutoBogus;
 public class AutoFaker<TType> : Faker<TType>
     where TType : class
 {
+    private readonly Func<Faker, TType> _defaultCreateAction;
+
     private AutoConfig? _config;
+
+    private bool _createInitialized;
+    private bool _finishInitialized;
 
     /// <summary>
     ///     Instantiates an instance of the <see cref="AutoFaker{TType}" /> class.
@@ -27,40 +32,35 @@ public class AutoFaker<TType> : Faker<TType>
 
         // Ensure the default create action is cleared
         // This is so we can check whether it has been set externally
-        DefaultCreateAction           = CreateActions[currentRuleSet];
+        _defaultCreateAction          = CreateActions[currentRuleSet];
         CreateActions[currentRuleSet] = null;
     }
 
     /// <summary>
     ///     The <see cref="IAutoBinder" /> instance to use for the generation request.
     /// </summary>
-    public IAutoBinder? Binder { get; set; }
+    public IAutoBinder? Binder { get; private set; }
 
-    internal AutoConfig Config
+    private AutoConfig Config
     {
         get => _config!;
         set
         {
-            _config = value;
-
-            Locale = _config.Locale;
-            Binder = _config.Binder;
+            Locale = value.Locale;
+            Binder = value.Binder;
 
             // Also pass the binder set up to the underlying Faker
-            binder = _config.Binder;
+            binder = value.Binder;
 
             // Apply a configured faker if set
-            if (_config.FakerHub != null)
+            if (value.FakerHub != null)
             {
-                FakerHub = _config.FakerHub;
+                FakerHub = value.FakerHub;
             }
+
+            _config = value;
         }
     }
-
-    private bool CreateInitialized { get; set; }
-    private bool FinishInitialized { get; set; }
-
-    private Func<Faker, TType> DefaultCreateAction { get; }
 
     /// <summary>
     ///     Configures the current faker instance.
@@ -71,7 +71,6 @@ public class AutoFaker<TType> : Faker<TType>
     {
         var config  = new AutoConfig(AutoFaker.DefaultConfig);
         var builder = new AutoConfigBuilder(config);
-
         configure?.Invoke(builder);
 
         Config = config;
@@ -163,57 +162,19 @@ public class AutoFaker<TType> : Faker<TType>
     private void PrepareCreate(AutoGenerateContext context)
     {
         // Check a create handler hasn't previously been set or configured externally
-        if (CreateInitialized || CreateActions[currentRuleSet] != null)
+        if (_createInitialized || CreateActions[currentRuleSet] != null)
         {
             return;
         }
 
-        CreateActions[currentRuleSet] = faker =>
-        {
-            // Only auto create if the 'default' rule set is defined for generation
-            // This is because any specific rule sets are expected to handle the full creation
-            if (!context.RuleSets.Contains(currentRuleSet))
-            {
-                return DefaultCreateAction.Invoke(faker);
-            }
+        CreateActions[currentRuleSet] = faker => GenerateUnfinishedValueByBogus(context, faker);
 
-            var type = typeof(TType);
-
-            // Set the current type being generated
-            context.ParentType   = null;
-            context.GenerateType = type;
-            context.GenerateName = null;
-
-            // Get the members that should not be set during construction
-            var memberNames = GetRuleSetsMemberNames(context);
-
-            foreach (var memberName in TypeProperties.Keys)
-            {
-                if (!memberNames.Contains(memberName))
-                {
-                    continue;
-                }
-
-                var path     = SkipConfig.MakePathForMember(type, memberName);
-                var existing = context.Config.SkipPaths.Any(s => s == path);
-
-                if (!existing)
-                {
-                    context.Config.SkipPaths.Add(path);
-                }
-            }
-
-            // Create a blank instance. It will be populated in the FinalizeAction registered
-            // by PrepareFinish (context.Binder.PopulateInstance<TType>).
-            return context.Binder.CreateInstance<TType>(context);
-        };
-
-        CreateInitialized = true;
+        _createInitialized = true;
     }
 
     private void PrepareFinish(AutoGenerateContext context)
     {
-        if (FinishInitialized)
+        if (_finishInitialized)
         {
             return;
         }
@@ -222,60 +183,92 @@ public class AutoFaker<TType> : Faker<TType>
         FinalizeActions.TryGetValue(currentRuleSet, out var finishWith);
 
         // Add an internal finish to auto populate any remaining values
-        FinishWith((faker, instance) =>
-        {
-            ArgumentNullException.ThrowIfNull(instance);
+        FinishWith((faker, instance) => FinishInstancePopulatingUnfilledMembers(context, faker, instance, finishWith));
 
-            // If dynamic objects are supported, populate as a dictionary
-            var type = instance.GetType();
-
-            if (type == typeof(ExpandoObject))
-            {
-                // Configure the context
-                context.ParentType   = null;
-                context.GenerateType = type;
-                context.GenerateName = null;
-
-                context.Instance = instance;
-
-                // Get the expando generator and populate the instance
-                var generator = AutoGeneratorFactory.GetGenerator(context);
-                generator.Generate(context);
-
-                // Clear the context instance
-                context.Instance = null;
-
-                return;
-            }
-
-            // Otherwise continue with a standard populate
-            // Extract the unpopulated member infos
-            var members     = new List<MemberInfo>();
-            var memberNames = GetRuleSetsMemberNames(context);
-
-            foreach (var member in TypeProperties)
-            {
-                if (!memberNames.Contains(member.Key))
-                {
-                    members.Add(member.Value);
-                }
-            }
-
-            // Finalize the instance population
-            context.Binder.PopulateInstance<TType>(instance, context, members);
-
-            // Ensure the default finish with is invoke
-            finishWith?.Action(faker, instance);
-        });
-
-        FinishInitialized = true;
+        _finishInitialized = true;
     }
 
+    private TType GenerateUnfinishedValueByBogus(AutoGenerateContext context, Faker faker)
+    {
+        // Only auto create if the 'default' rule set is defined for generation
+        // because any specific rule sets are expected to handle the full creation
+        if (!context.RuleSets.Contains(currentRuleSet))
+        {
+            return _defaultCreateAction(faker);
+        }
+
+        var type = typeof(TType);
+
+        // Set the current type being generated
+        context.ParentType   = null;
+        context.GenerateType = type;
+        context.GenerateName = null;
+
+        // Get the members that should not be set during construction
+        var memberNames = GetRuleSetsMemberNames(context);
+        foreach (var memberName in TypeProperties.Keys)
+        {
+            if (memberNames.Contains(memberName))
+            {
+                var path = SkipConfig.MakePathForMember(type, memberName);
+                context.Config.SkipPaths.Add(path);
+            }
+        }
+
+        // Let Bogus create an instance according to registered rules.
+        // Remaining unfilled members will be populated in the FinalizeAction registered
+        // by PrepareFinish (context.Binder.PopulateInstance<TType>).
+        var unfinishedInstance = context.Binder.CreateInstance<TType>(context);
+
+        return unfinishedInstance;
+    }
+
+    private void FinishInstancePopulatingUnfilledMembers(
+        AutoGenerateContext    context,
+        Faker                  faker,
+        TType                  instance,
+        FinalizeAction<TType>? finishWith)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+
+        var type = instance.GetType();
+
+        // If dynamic objects are supported, populate as a dictionary
+        if (type == typeof(ExpandoObject))
+        {
+            // Get the expando generator and populate the instance
+            _ = Generator.Generate(
+                context,
+                parentType: null,
+                generateType: type,
+                generateName: null,
+                instance: instance);
+
+            // Clear the context instance
+            context.Instance = null;
+        }
+        else
+        {
+            // Finalize the instance population by AutoBinder
+            var memberNames = GetRuleSetsMemberNames(context);
+            var members = TypeProperties
+                .Where(it => !memberNames.Contains(it.Key))
+                .Select(it => it.Value)
+                .ToList();
+
+            context.Binder.PopulateInstance<TType>(instance, context, members);
+        }
+
+        // Ensure the standard Bogus finish action is invoked
+        finishWith?.Action(faker, instance);
+    }
+
+    /// <summary>
+    ///     Get the member names from all the rule sets being used to generate the instance.
+    /// </summary>
     private List<string> GetRuleSetsMemberNames(AutoGenerateContext context)
     {
-        // Get the member names from all the rule sets being used to generate the instance
         var members = new List<string>();
-
         foreach (var ruleSetName in context.RuleSets)
         {
             if (Actions.TryGetValue(ruleSetName, out var ruleSet))

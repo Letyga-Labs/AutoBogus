@@ -59,7 +59,7 @@ public class AutoFakerFixture
             list.Add(instance);
         }
 
-        list.Should().HaveCount(count);
+        Assert.Equal(count, list.Count);
     }
 
     public static void AssertGenerateMany(IEnumerable<Order> instances)
@@ -74,7 +74,7 @@ public class AutoFakerFixture
             list.Add(instance);
         }
 
-        list.Should().HaveCount(count);
+        Assert.Equal(count, list.Count);
     }
 
     private Action<TBuilder> CreateConfigure<TBuilder>(AutoConfig assertConfig, Action<TBuilder>? configure = null)
@@ -83,7 +83,7 @@ public class AutoFakerFixture
         {
             configure?.Invoke(builder);
             var instance = builder as AutoConfigBuilder;
-            instance!.Config.Should().NotBe(assertConfig);
+            Assert.NotEqual(assertConfig, instance!.Config);
         };
     }
 
@@ -98,7 +98,7 @@ public class AutoFakerFixture
                 config = ((AutoConfigBuilder)builder).Config;
             });
 
-            config.Should().Be(AutoFaker.DefaultConfig);
+            Assert.Equal(AutoFaker.DefaultConfig, config);
         }
     }
 
@@ -109,7 +109,7 @@ public class AutoFakerFixture
         public void Should_Configure_Child_Config()
         {
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(AutoFaker.DefaultConfig);
-            AutoFaker.Create(configure).Should().BeOfType<AutoFaker>();
+            Assert.IsType<AutoFaker>(AutoFaker.Create(configure));
         }
     }
 
@@ -262,8 +262,8 @@ public class AutoFakerFixture
             string property      = instance.Property;
             int    childProperty = instance.Child.Property;
 
-            property.Should().NotBeEmpty();
-            childProperty.Should().NotBe(0);
+            Assert.NotEmpty(property);
+            Assert.NotEqual(0, childProperty);
         }
 
         [Fact]
@@ -277,8 +277,8 @@ public class AutoFakerFixture
             _faker.Populate(order);
 
             order.Should().BeGeneratedWithMocks();
-            order.Id.Should().Be(id);
-            order.Calculator.Should().Be(calculator);
+            Assert.Equal(id, order.Id);
+            Assert.Equal(calculator, order.Calculator);
         }
 
         [Fact]
@@ -303,7 +303,7 @@ public class AutoFakerFixture
                 .Generate();
 
             order.Should().BeGeneratedWithoutMocks();
-            order.Code.Should().Be(code);
+            Assert.Equal(code, order.Code);
         }
 
         [Fact]
@@ -328,7 +328,7 @@ public class AutoFakerFixture
                 .Generate();
 
             order.Should().BeGeneratedWithoutMocks();
-            instance.Should().Be(order);
+            Assert.Equal(order, instance);
         }
 
         [Fact]
@@ -354,7 +354,7 @@ public class AutoFakerFixture
             var expectedValue = random2.Int();
 
             // Assert
-            instance.Value.Should().Be(expectedValue);
+            Assert.Equal(expectedValue, instance.Value);
         }
     }
 
@@ -409,8 +409,8 @@ public class AutoFakerFixture
                     .WithSkip<Guid?>();
             });
 
-            instance.Calculator.Should().BeNull();
-            instance.Code.Should().BeNull();
+            Assert.Null(instance.Calculator);
+            Assert.Null(instance.Code);
         }
 
         [Fact]
@@ -423,7 +423,7 @@ public class AutoFakerFixture
                     .WithSkip<OrderItem>(i => i.Discounts);
             });
 
-            instance.Discounts.Should().BeNull();
+            Assert.Null(instance.Discounts);
             instance.Items.Should().OnlyContain(i => i.Discounts == null);
         }
     }
@@ -434,13 +434,13 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Not_Generate_Interface_Type()
         {
-            AutoFaker.Generate<ITestInterface>().Should().BeNull();
+            Assert.Null(AutoFaker.Generate<ITestInterface>());
         }
 
         [Fact]
         public void Should_Not_Generate_Abstract_Class_Type()
         {
-            AutoFaker.Generate<TestAbstractClass>().Should().BeNull();
+            Assert.Null(AutoFaker.Generate<TestAbstractClass>());
         }
     }
 
@@ -460,10 +460,10 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Recursive_Types()
         {
-            _instance.Child.Should().NotBeNull();
-            _instance.Child.Child.Should().NotBeNull();
-            _instance.Child.Child.Child.Should().NotBeNull();
-            _instance.Child.Child.Child.Child.Should().BeNull();
+            Assert.NotNull(_instance.Child);
+            Assert.NotNull(_instance.Child.Child);
+            Assert.NotNull(_instance.Child.Child.Child);
+            Assert.Null(_instance.Child.Child.Child.Child);
         }
 
         [Fact]
@@ -474,19 +474,19 @@ public class AutoFakerFixture
             var children2 = children1.SelectMany(c => c.Children).ToList();
             var children3 = children2.Where(c => c.Children != null).ToList();
 
-            children.Should().HaveCount(3);
-            children1.Should().HaveCount(9);
-            children2.Should().HaveCount(27);
-            children3.Should().HaveCount(0);
+            Assert.Equal(3, children.Count());
+            Assert.Equal(9, children1.Count);
+            Assert.Equal(27, children2.Count);
+            Assert.Empty(children3);
         }
 
         [Fact]
         public void Should_Generate_Recursive_Sub_Types()
         {
-            _instance.Sub.Should().NotBeNull();
-            _instance.Sub.Value.Sub.Should().NotBeNull();
-            _instance.Sub.Value.Sub.Value.Sub.Should().NotBeNull();
-            _instance.Sub.Value.Sub.Value.Sub.Value.Sub.Should().BeNull();
+            Assert.NotNull(_instance.Sub);
+            Assert.NotNull(_instance.Sub.Value.Sub);
+            Assert.NotNull(_instance.Sub.Value.Sub.Value.Sub);
+            Assert.Null(_instance.Sub.Value.Sub.Value.Sub.Value.Sub);
         }
     }
 

@@ -56,12 +56,12 @@ public partial class AutoGeneratorsFixture
             // Assert
             if (shouldSucceed)
             {
-                success.Should().BeTrue();
-                generator.Should().NotBeNull();
+                Assert.True(success);
+                Assert.NotNull(generator);
             }
             else
             {
-                success.Should().BeFalse();
+                Assert.False(success);
             }
         }
 
@@ -82,16 +82,16 @@ public partial class AutoGeneratorsFixture
             var result = generator!.Generate(context);
 
             // Assert
-            result.Should().BeOfType(dataSetType);
+            Assert.IsType(dataSetType, result);
 
             var dataSet = (DataSet)result;
 
-            dataSet.Tables.Should().NotBeEmpty();
+            Assert.NotEmpty(dataSet.Tables);
 
             foreach (var table in dataSet.Tables.OfType<DataTable>())
             {
-                table.Columns.Should().NotBeEmpty();
-                table.Rows.Should().NotBeEmpty();
+                Assert.NotEmpty(table.Columns);
+                Assert.NotEmpty(table.Rows);
             }
         }
 
@@ -134,17 +134,17 @@ public partial class AutoGeneratorsFixture
             var result = generator!.Generate(context);
 
             // Assert
-            result.Should().BeOfType(dataSetType);
+            Assert.IsType(dataSetType, result);
 
             var dataSet = (DataSet)result;
 
-            dataSet.Tables.Should().NotBeEmpty();
+            Assert.NotEmpty(dataSet.Tables);
 
             foreach (var table in dataSet.Tables.OfType<DataTable>())
             {
-                table.Columns.Should().NotBeEmpty();
+                Assert.NotEmpty(table.Columns);
 
-                table.Rows.Should().HaveCount(rowCountByTable[table]);
+                Assert.Equal(rowCountByTable[table], table.Rows.Count);
             }
         }
 
@@ -262,12 +262,12 @@ public partial class AutoGeneratorsFixture
             // Assert
             if (shouldSucceed)
             {
-                success.Should().BeTrue();
-                generator.Should().NotBeNull();
+                Assert.True(success);
+                Assert.NotNull(generator);
             }
             else
             {
-                success.Should().BeFalse();
+                Assert.False(success);
             }
         }
 
@@ -288,12 +288,12 @@ public partial class AutoGeneratorsFixture
             var result = generator!.Generate(context);
 
             // Assert
-            result.Should().BeOfType(dataTableType);
+            Assert.IsType(dataTableType, result);
 
             var dataTable = (DataTable)result;
 
-            dataTable.Columns.Should().NotBeEmpty();
-            dataTable.Rows.Should().NotBeEmpty();
+            Assert.NotEmpty(dataTable.Columns);
+            Assert.NotEmpty(dataTable.Rows);
         }
 
         [SkippableTheory]
@@ -317,12 +317,12 @@ public partial class AutoGeneratorsFixture
             var result = generator!.Generate(context);
 
             // Assert
-            result.Should().BeOfType(dataTableType);
+            Assert.IsType(dataTableType, result);
 
             var dataTable = (DataTable)result;
 
-            dataTable.Columns.Should().NotBeEmpty();
-            dataTable.Rows.Should().HaveCount(RowCount);
+            Assert.NotEmpty(dataTable.Columns);
+            Assert.Equal(RowCount, dataTable.Rows.Count);
         }
 
         internal class TypedDataTable1 : TypedTableBase<TypedDataRow1>

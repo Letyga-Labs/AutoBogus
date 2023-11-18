@@ -12,10 +12,10 @@ public class ImmutableDictionaryFixture
     {
         var obj = AutoFaker.Generate<Obj>();
 
-        obj.Should().NotBeNull();
+        Assert.NotNull(obj);
         obj.SomeStringProperty.Should().NotBeNullOrWhiteSpace();
-        obj.SomeReadOnlyDictionary.Should().NotBeEmpty();
-        obj.SomeImmutableDictionary.Should().BeNull();
+        Assert.NotEmpty(obj.SomeReadOnlyDictionary);
+        Assert.Null(obj.SomeImmutableDictionary);
     }
 
     private class Obj

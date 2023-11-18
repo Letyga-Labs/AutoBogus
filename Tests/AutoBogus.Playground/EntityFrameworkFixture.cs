@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -11,7 +10,7 @@ public class EntityFrameworkFixture
     public void TestAutoFaker()
     {
         var parent = AutoFaker.Generate<Parent>(builder => builder.WithTreeDepth(2));
-        parent.Should().NotBeNull();
+        Assert.NotNull(parent);
     }
 
     public class Parent

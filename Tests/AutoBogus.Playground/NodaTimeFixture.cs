@@ -1,5 +1,4 @@
 using Bogus;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -42,7 +41,7 @@ public static class NodaTimeFixture
                 .RuleFor(x => x.Time, _ => _validDate)
                 .Generate();
 
-            created.Should().NotBeNull();
+            Assert.NotNull(created);
         }
 
         [Fact]
@@ -52,7 +51,7 @@ public static class NodaTimeFixture
             fake.Generate();
             var created = fake.Generate();
 
-            created.Should().NotBeNull();
+            Assert.NotNull(created);
         }
     }
 }

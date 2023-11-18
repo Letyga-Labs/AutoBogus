@@ -1,5 +1,4 @@
 using AutoBogus.Tests.Models.Simple;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Tests;
@@ -12,9 +11,9 @@ public class AutoGeneratorOverridesFixture
         AutoFaker.Generate<OverrideClass>(builder =>
         {
             builder
-                .WithOverride(new TestOverride(false, context => context.Instance.Should().BeNull()))
-                .WithOverride(new TestOverride(true,  context => context.Instance.Should().NotBeNull()))
-                .WithOverride(new TestOverride(false, context => context.Instance.Should().NotBeNull()));
+                .WithOverride(new TestOverride(false, context => Assert.Null(context.Instance)))
+                .WithOverride(new TestOverride(true,  context => Assert.NotNull(context.Instance)))
+                .WithOverride(new TestOverride(false, context => Assert.NotNull(context.Instance)));
         });
     }
 
@@ -35,9 +34,10 @@ public class AutoGeneratorOverridesFixture
             });
         });
 
-        result.Id.Value.Should().Be(value);
-        result.Name.Should().NotBeNull();
-        result.Amounts.Should().NotBeEmpty();
+        Assert.Equal(value, result.Id.Value);
+        Assert.NotNull(result.Name);
+        Assert.NotNull(result.Amounts);
+        Assert.NotEmpty(result.Amounts);
     }
 
     private sealed class TestOverride : AutoGeneratorOverride

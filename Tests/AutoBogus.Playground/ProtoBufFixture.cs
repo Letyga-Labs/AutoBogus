@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Google.Protobuf.Collections;
 using Xunit;
 
@@ -10,8 +9,8 @@ public class ProtoBufFixture
     public void Should_Populate_Field()
     {
         var protobuf = AutoFaker.Generate<Protobuf>();
-        protobuf.Field.Should().NotBeEmpty();
-        protobuf.MapField.Should().NotBeEmpty();
+        Assert.NotEmpty(protobuf.Field);
+        Assert.NotEmpty(protobuf.MapField);
     }
 
     private class Protobuf

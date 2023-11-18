@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -17,14 +16,14 @@ public class CollectionsFixture
         var c7 = AutoFaker.Generate<IReadOnlyList<string>>();
         var c8 = AutoFaker.Generate<ISet<string>>();
 
-        c1.Should().NotBeEmpty();
-        c2.Should().NotBeEmpty();
-        c3.Should().NotBeEmpty();
-        c4.Should().NotBeEmpty();
-        c5.Should().NotBeEmpty();
-        c6.Should().NotBeEmpty();
-        c7.Should().NotBeEmpty();
-        c8.Should().NotBeEmpty();
+        Assert.NotEmpty(c1);
+        Assert.NotEmpty(c2);
+        Assert.NotEmpty(c3);
+        Assert.NotEmpty(c4);
+        Assert.NotEmpty(c5);
+        Assert.NotEmpty(c6);
+        Assert.NotEmpty(c7);
+        Assert.NotEmpty(c8);
     }
 
     [Fact]
@@ -32,14 +31,14 @@ public class CollectionsFixture
     {
         var collections = AutoFaker.Generate<Collections>();
 
-        collections.C1.Should().NotBeEmpty();
-        collections.C2.Should().NotBeEmpty();
-        collections.C3.Should().NotBeEmpty();
-        collections.C4.Should().NotBeEmpty();
-        collections.C5.Should().NotBeEmpty();
-        collections.C6.Should().NotBeEmpty();
-        collections.C7.Should().NotBeEmpty();
-        collections.C8.Should().NotBeEmpty();
+        Assert.NotEmpty(collections.C1);
+        Assert.NotEmpty(collections.C2);
+        Assert.NotEmpty(collections.C3);
+        Assert.NotEmpty(collections.C4);
+        Assert.NotEmpty(collections.C5);
+        Assert.NotEmpty(collections.C6);
+        Assert.NotEmpty(collections.C7);
+        Assert.NotEmpty(collections.C8);
     }
 
     [Fact]
@@ -81,14 +80,14 @@ public class CollectionsFixture
 
         var collections = faker.Generate();
 
-        collections.C1.Should().NotBeEmpty();
-        collections.C2.Should().NotBeEmpty();
-        collections.C3.Should().NotBeEmpty();
-        collections.C4.Should().NotBeEmpty();
-        collections.C5.Should().NotBeEmpty();
-        collections.C6.Should().NotBeEmpty();
-        collections.C7.Should().NotBeEmpty();
-        collections.C8.Should().NotBeEmpty();
+        Assert.NotEmpty(collections.C1);
+        Assert.NotEmpty(collections.C2);
+        Assert.NotEmpty(collections.C3);
+        Assert.NotEmpty(collections.C4);
+        Assert.NotEmpty(collections.C5);
+        Assert.NotEmpty(collections.C6);
+        Assert.NotEmpty(collections.C7);
+        Assert.NotEmpty(collections.C8);
     }
 
     private class Collections

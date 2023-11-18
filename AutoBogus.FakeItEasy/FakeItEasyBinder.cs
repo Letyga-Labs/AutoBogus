@@ -6,12 +6,12 @@ namespace AutoBogus.FakeItEasy;
 /// <summary>
 ///     A class that enables FakeItEasy binding for interface and abstract types.
 /// </summary>
-public class FakeItEasyBinder : AutoBinder
+public sealed class FakeItEasyBinder : AutoBinder
 {
     private static readonly MethodInfo _factory =
         typeof(A).GetMethod("Fake", Array.Empty<Type>())
         ?? throw new InvalidOperationException(
-            "Cannot find method `Fake` on class `FakeItEasy.A`. Did an API changed unnoticeably?");
+            "Could not find method `Fake` on class `FakeItEasy.A`. Did an API changed unnoticeably?");
 
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.

@@ -19,10 +19,10 @@ public class SeedFixture
         var entity2 = faker2.Generate();
         var entity3 = faker3.Generate();
 
-        entity2.Name.Should().Be(entity1.Name);
+        Assert.Equal(entity1.Name, entity2.Name);
         entity2.DeprecationDate.Should().BeCloseTo(entity1.DeprecationDate, new TimeSpan(500));
 
-        entity3.Name.Should().NotBe(entity2.Name);
+        Assert.NotEqual(entity2.Name, entity3.Name);
         entity3.DeprecationDate.Should().NotBeCloseTo(entity2.DeprecationDate, new TimeSpan(500));
     }
 
@@ -43,8 +43,8 @@ public class SeedFixture
         // Check output using LINQPad
         var author = authorFaker.Generate();
 
-        author.FirstName.Should().Be("functionalities");
-        author.LastName.Should().Be("throughput");
+        Assert.Equal("functionalities", author.FirstName);
+        Assert.Equal("throughput", author.LastName);
     }
 
     public class Book

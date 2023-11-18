@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using Xunit;
 
@@ -17,9 +16,10 @@ public static class XeroFixture
                 {
                     builder.WithTreeDepth(1);
                 });
+
             var created = fake.Generate();
 
-            created.Should().NotBeNull();
+            Assert.NotNull(created);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Dynamic;
+using AutoBogus.Generation;
 
 namespace AutoBogus.Generators;
 
@@ -22,15 +23,14 @@ internal sealed class ExpandoObjectGenerator : IAutoGenerator
             // Configure the context
             var type = property.Value!.GetType();
 
-            context.ParentType   = context.GenerateType;
-            context.GenerateType = type;
-            context.GenerateName = property.Key;
+            var value = Generator.Generate(
+                context,
+                parentType: context.GenerateType,
+                generateType: type,
+                generateName: property.Key,
+                instance: type == typeof(ExpandoObject) ? property.Value : null);
 
-            context.Instance = type == typeof(ExpandoObject) ? property.Value : null;
-
-            // Generate the property values
-            var generator = AutoGeneratorFactory.GetGenerator(context);
-            target[property.Key] = generator.Generate(context);
+            target[property.Key] = value;
         }
 
         // Reset the instance context

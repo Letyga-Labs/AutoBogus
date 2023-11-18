@@ -1,6 +1,5 @@
 using AutoBogus.Conventions;
 using AutoBogus.Playground.Model;
-using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -55,14 +54,14 @@ public abstract class ServiceFixture
     [Fact]
     public void Should_Set_Timestamp()
     {
-        _item.Timestamp.Should().NotBeNull();
+        Assert.NotNull(_item.Timestamp);
     }
 
     [Fact]
     public void Should_Set_Product_Notes()
     {
         var product = AutoFaker.Generate<TestProduct>();
-        product.GetNotes().Should().NotBeEmpty();
+        Assert.NotEmpty(product.GetNotes());
     }
 
     [Fact]
@@ -73,7 +72,7 @@ public abstract class ServiceFixture
             builder.WithSkip<Exception>();
         });
 
-        product.Error.Should().BeNull();
+        Assert.Null(product.Error);
     }
 
     [Fact]
@@ -84,7 +83,7 @@ public abstract class ServiceFixture
             builder.WithSkip<TestProduct>("Notes");
         });
 
-        product.GetNotes().Should().BeEmpty();
+        Assert.Empty(product.GetNotes());
     }
 
     [Fact]
@@ -98,7 +97,7 @@ public abstract class ServiceFixture
     [Fact]
     public void Service_Get_Should_Return_Item()
     {
-        _service.Get(_item.Id).Should().Be(_item);
+        Assert.Equal(_item, _service.Get(_item.Id));
     }
 
     [Fact]
@@ -112,7 +111,7 @@ public abstract class ServiceFixture
     [Fact]
     public void Service_GetAll_Should_Return_Items()
     {
-        _service.GetAll().Should().BeSameAs(_items);
+        Assert.Same(_items, _service.GetAll());
     }
 
     [Fact]
@@ -140,32 +139,32 @@ public abstract class ServiceFixture
 
         _repository.GetFiltered(Service.PendingFilter).Returns(items);
 
-        _service.GetPending().Should().BeSameAs(items);
+        Assert.Same(items, _service.GetPending());
 
-        items[0].ProcessedBy.Email.Should().NotContain("@");
-        items[0].SupplierEmail.Should().NotContain("@");
-        items[0].ProductInt.Code.SerialNumber.Should().Be(item1Override.Code);
-        items[0].ProductString.Code.SerialNumber.Should().Be(item1Override.Code);
+        Assert.DoesNotContain(items[0].ProcessedBy.Email, "@", StringComparison.Ordinal);
+        Assert.DoesNotContain(items[0].SupplierEmail,     "@", StringComparison.Ordinal);
+        Assert.Equal(item1Override.Code, items[0].ProductInt.Code.SerialNumber);
+        Assert.Equal(item1Override.Code, items[0].ProductString.Code.SerialNumber);
 
-        items[1].ProcessedBy.Email.Should().NotContain("@");
-        items[1].SupplierEmail.Should().NotContain("@");
-        items[1].ProductInt.Code.SerialNumber.Should().Be(item2Override.Code);
-        items[1].ProductString.Code.SerialNumber.Should().Be(item2Override.Code);
+        Assert.DoesNotContain(items[1].ProcessedBy.Email, "@", StringComparison.Ordinal);
+        Assert.DoesNotContain(items[1].SupplierEmail,     "@", StringComparison.Ordinal);
+        Assert.Equal(item2Override.Code, items[1].ProductInt.Code.SerialNumber);
+        Assert.Equal(item2Override.Code, items[1].ProductString.Code.SerialNumber);
 
-        items[2].ProcessedBy.Should().BeNull();
-        items[2].SupplierEmail.Should().NotContain("@");
-        items[2].ProductInt.Code.SerialNumber.Should().BeNull();
-        items[2].ProductString.Code.SerialNumber.Should().BeNull();
+        Assert.Null(items[2].ProcessedBy);
+        Assert.DoesNotContain(items[2].SupplierEmail, "@", StringComparison.Ordinal);
+        Assert.Null(items[2].ProductInt.Code.SerialNumber);
+        Assert.Null(items[2].ProductString.Code.SerialNumber);
 
-        items[3].ProcessedBy.Email.Should().Contain("@");
-        items[3].SupplierEmail.Should().Contain("@");
-        items[3].ProductInt.Code.SerialNumber.Should().BeNull();
-        items[3].ProductString.Code.SerialNumber.Should().BeNull();
+        Assert.Contains(items[3].ProcessedBy.Email, "@", StringComparison.Ordinal);
+        Assert.Contains(items[3].SupplierEmail,     "@", StringComparison.Ordinal);
+        Assert.Null(items[3].ProductInt.Code.SerialNumber);
+        Assert.Null(items[3].ProductString.Code.SerialNumber);
 
-        items[4].ProcessedBy.Email.Should().NotContain("@");
-        items[4].SupplierEmail.Should().NotContain("@");
-        items[4].ProductInt.Code.SerialNumber.Should().BeNull();
-        items[4].ProductString.Code.SerialNumber.Should().BeNull();
+        Assert.DoesNotContain(items[4].ProcessedBy.Email, "@", StringComparison.Ordinal);
+        Assert.DoesNotContain(items[4].SupplierEmail,     "@", StringComparison.Ordinal);
+        Assert.Null(items[4].ProductInt.Code.SerialNumber);
+        Assert.Null(items[4].ProductString.Code.SerialNumber);
     }
 
     private class TestProduct

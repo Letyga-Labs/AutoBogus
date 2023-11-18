@@ -300,12 +300,7 @@ internal sealed class AutoConfigBuilder :
 
     internal TBuilder WithSkip<TBuilder>(Type type, TBuilder builder)
     {
-        var existing = Config.SkipTypes.Any(it => it == type);
-        if (!existing)
-        {
-            Config.SkipTypes.Add(type);
-        }
-
+        Config.SkipTypes.Add(type);
         return builder;
     }
 
@@ -316,13 +311,8 @@ internal sealed class AutoConfigBuilder :
             return builder;
         }
 
-        var path     = SkipConfig.MakePathForMember(type, memberName);
-        var existing = Config.SkipPaths.Any(it => it == path);
-
-        if (!existing)
-        {
-            Config.SkipPaths.Add(path);
-        }
+        var path = SkipConfig.MakePathForMember(type, memberName);
+        Config.SkipPaths.Add(path);
 
         return builder;
     }
@@ -339,11 +329,7 @@ internal sealed class AutoConfigBuilder :
             return builder;
         }
 
-        var existing = Config.Overrides.Any(it => it == generatorOverride);
-        if (!existing)
-        {
-            Config.Overrides.Add(generatorOverride);
-        }
+        Config.Overrides.Add(generatorOverride);
 
         return builder;
     }

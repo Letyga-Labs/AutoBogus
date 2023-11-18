@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Dynamic;
 using System.Net;
+using AutoBogus.Generation;
 using AutoBogus.Generators;
 using AutoBogus.Util;
 
@@ -31,12 +32,17 @@ internal static class AutoGeneratorFactory
         [typeof(ushort)]         = new UShortGenerator(),
     };
 
+    /// <summary>
+    /// Should be obtained only in <see cref="Generator"/>.
+    /// Internal visiblity is only for tests.
+    /// </summary>
+    /// <returns>Resolved generator for the given generation context.</returns>
     internal static IAutoGenerator GetGenerator(AutoGenerateContext context)
     {
         var generator = ResolveGenerator(context);
 
         // Check if any overrides are available for this generate request
-        var overrides = context.Overrides.Where(o => o.CanOverride(context)).ToList();
+        var overrides = context.Overrides.Where(it => it.CanOverride(context)).ToList();
 
         if (overrides.Any())
         {
@@ -46,6 +52,10 @@ internal static class AutoGeneratorFactory
         return generator;
     }
 
+    /// <summary>
+    /// Internal visiblity is only for tests.
+    /// </summary>
+    /// <returns>Resolved generator for the given generation context.</returns>
     internal static IAutoGenerator ResolveGenerator(AutoGenerateContext context)
     {
         var type = context.GenerateType;

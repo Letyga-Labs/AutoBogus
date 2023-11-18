@@ -28,12 +28,12 @@ public class NSubstituteBinderFixture
     [Fact]
     public void Should_Create_Interface_Mock()
     {
-        _faker.Generate<ITestInterface>().Should().NotBeNull();
+        Assert.NotNull(_faker.Generate<ITestInterface>());
     }
 
     [Fact]
     public void Should_Create_Abstract_Mock()
     {
-        _faker.Generate<TestAbstractClass>().Should().NotBeNull();
+        Assert.NotNull(_faker.Generate<TestAbstractClass>());
     }
 }

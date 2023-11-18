@@ -1,5 +1,4 @@
 using AutoBogus.Conventions;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Tests;
@@ -17,7 +16,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        instance.Email.Should().Contain("@");
+        Assert.Contains(instance.Email, "@", StringComparison.Ordinal);
     }
 
     [Fact]
@@ -29,7 +28,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        instance.AnotherEmail.Should().Contain("@");
+        Assert.Contains(instance.AnotherEmail, "@", StringComparison.Ordinal);
     }
 
     [Fact]
@@ -41,7 +40,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        instance.Email.Should().NotContain("@");
+        Assert.DoesNotContain(instance.Email, "@", StringComparison.Ordinal);
     }
 
     [Fact]
@@ -55,7 +54,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        instance.Email.Should().Be("EMAIL");
+        Assert.Equal("EMAIL", instance.Email);
     }
 
     [Fact]
@@ -69,7 +68,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        instance.Email.Should().Be("EMAIL");
+        Assert.Equal("EMAIL", instance.Email);
     }
 
     private class TestClass
