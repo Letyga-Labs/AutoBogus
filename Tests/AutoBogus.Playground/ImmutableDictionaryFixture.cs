@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -13,7 +12,7 @@ public class ImmutableDictionaryFixture
         var obj = AutoFaker.Generate<Obj>();
 
         Assert.NotNull(obj);
-        obj.SomeStringProperty.Should().NotBeNullOrWhiteSpace();
+        Assert.False(string.IsNullOrWhiteSpace(obj.SomeStringProperty));
         Assert.NotEmpty(obj.SomeReadOnlyDictionary);
         Assert.Null(obj.SomeImmutableDictionary);
     }

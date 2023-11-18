@@ -5,7 +5,6 @@ using System.Dynamic;
 using AutoBogus.Generators;
 using AutoBogus.Tests.Models.Simple;
 using Bogus;
-using FluentAssertions;
 using Xunit;
 using DataSet = System.Data.DataSet;
 
@@ -369,14 +368,11 @@ public partial class AutoGeneratorsFixture
         [MemberData(nameof(GetDataSetAndDataTableTypes))]
         public void GetGenerator_Should_Return_Generator_For_DataSets_And_DataTables(Type dataType, Type generatorType)
         {
-            // Arrange
             var context = CreateContext(dataType);
 
-            // Act
             var generator = AutoGeneratorFactory.GetGenerator(context);
 
-            // Assert
-            generator.Should().BeAssignableTo(generatorType);
+            Assert.IsAssignableFrom(generatorType, generator);
         }
     }
 
@@ -723,7 +719,7 @@ public partial class AutoGeneratorsFixture
             }
             else
             {
-                InvokeGenerator(type, generator).Should().BeAssignableTo(type);
+                Assert.IsAssignableFrom(type, InvokeGenerator(type, generator));
             }
         }
 

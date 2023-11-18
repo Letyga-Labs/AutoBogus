@@ -1,5 +1,4 @@
 using AutoBogus.Templating;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -19,35 +18,36 @@ public class TemplateFixture
                 2  | Bob       | Clark
                 """);
 
-        persons.Should().BeEquivalentTo(
-            new[]
+        Assert.False(string.IsNullOrWhiteSpace(persons[0].Status));
+        Assert.False(string.IsNullOrWhiteSpace(persons[1].Status));
+        Assert.False(string.IsNullOrWhiteSpace(persons[2].Status));
+
+        var expected = new List<Person>
+        {
+            new()
             {
-                new
-                {
-                    Id        = 0,
-                    FirstName = "John",
-                    LastName  = "Smith",
-                    Status    = default(string),
-                },
-                new
-                {
-                    Id        = 1,
-                    FirstName = "Jane",
-                    LastName  = "Jones",
-                    Status    = default(string),
-                },
-                new
-                {
-                    Id        = 2,
-                    FirstName = "Bob",
-                    LastName  = "Clark",
-                    Status    = default(string),
-                },
+                Id        = 0,
+                FirstName = "John",
+                LastName  = "Smith",
+                Status    = persons[0].Status,
             },
-            options => options
-                .Using<string>(context => context.Subject.Should().NotBeNull())
-                .When(info => info.Path == "Status")
-        );
+            new()
+            {
+                Id        = 1,
+                FirstName = "Jane",
+                LastName  = "Jones",
+                Status    = persons[1].Status,
+            },
+            new()
+            {
+                Id        = 2,
+                FirstName = "Bob",
+                LastName  = "Clark",
+                Status    = persons[2].Status,
+            },
+        };
+
+        Assert.Equal(expected, persons);
     }
 
     private class Person

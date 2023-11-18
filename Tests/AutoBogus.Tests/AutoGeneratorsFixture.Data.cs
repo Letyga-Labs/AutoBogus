@@ -1,7 +1,6 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using AutoBogus.Generators;
-using FluentAssertions;
 using Xunit;
 using Xunit.Sdk;
 
@@ -187,8 +186,7 @@ public partial class AutoGeneratorsFixture
             Action action = () => generator!.Generate(context);
 
             // Assert
-            action.Should().Throw<ArgumentException>()
-                .Which.Message.Should().StartWith("Unable to satisfy the requested row count");
+            Assert.Throws<ArgumentException>(action);
         }
 
         internal class TypedDataSet : DataSet

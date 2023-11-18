@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using AutoBogus.NSubstitute;
 using Bogus;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Tests;
@@ -158,7 +157,13 @@ public class AutoConfigBuilderFixture
 
             _config.SkipTypes.Add(type1);
             _builder.WithSkip<ITestBuilder>(type2, null!);
-            _config.SkipTypes.Should().BeEquivalentTo(new[] { type1, type2 });
+
+            var expected = new HashSet<Type>
+            {
+                type1,
+                type2,
+            };
+            Assert.Equal(expected, _config.SkipTypes);
         }
     }
 
@@ -184,7 +189,13 @@ public class AutoConfigBuilderFixture
 
             _config.SkipPaths.Add(path);
             _builder.WithSkip<ITestBuilder>(type, "Value", null!);
-            _config.SkipPaths.Should().BeEquivalentTo(path, $"{type.FullName}.Value");
+
+            var expected = new HashSet<string>
+            {
+                path,
+                $"{type.FullName}.Value",
+            };
+            Assert.Equal(expected, _config.SkipPaths);
         }
 
         private sealed class TestSkip
@@ -215,7 +226,13 @@ public class AutoConfigBuilderFixture
 
             _config.SkipPaths.Add(path);
             _builder.WithSkip<ITestBuilder, TestSkip>("Value", null!);
-            _config.SkipPaths.Should().BeEquivalentTo(path, $"{type.FullName}.Value");
+
+            var expected = new HashSet<string>
+            {
+                path,
+                $"{type.FullName}.Value",
+            };
+            Assert.Equal(expected, _config.SkipPaths);
         }
 
         private sealed class TestSkip
@@ -252,7 +269,14 @@ public class AutoConfigBuilderFixture
 
             _config.Overrides.Add(generatorOverride1);
             _builder.WithOverride<ITestBuilder>(generatorOverride2, null!);
-            _config.Overrides.Should().BeEquivalentTo(new[] { generatorOverride1, generatorOverride2 });
+
+            var expected = new HashSet<AutoGeneratorOverride>
+            {
+                generatorOverride1,
+                generatorOverride2,
+            };
+
+            Assert.Equal(expected, _config.Overrides);
         }
 
         private class TestGeneratorOverride

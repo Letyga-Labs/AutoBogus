@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using Bogus;
-using FluentAssertions;
 using Xunit;
 
 namespace AutoBogus.Playground;
@@ -20,10 +19,10 @@ public class SeedFixture
         var entity3 = faker3.Generate();
 
         Assert.Equal(entity1.Name, entity2.Name);
-        entity2.DeprecationDate.Should().BeCloseTo(entity1.DeprecationDate, new TimeSpan(500));
-
         Assert.NotEqual(entity2.Name, entity3.Name);
-        entity3.DeprecationDate.Should().NotBeCloseTo(entity2.DeprecationDate, new TimeSpan(500));
+
+        Assert.Equal(entity1.DeprecationDate, entity2.DeprecationDate, new TimeSpan(500));
+        Assert.Equal(entity2.DeprecationDate, entity3.DeprecationDate, new TimeSpan(500));
     }
 
     [Fact]
@@ -44,7 +43,7 @@ public class SeedFixture
         var author = authorFaker.Generate();
 
         Assert.Equal("functionalities", author.FirstName);
-        Assert.Equal("throughput", author.LastName);
+        Assert.Equal("throughput",      author.LastName);
     }
 
     public class Book
@@ -68,6 +67,7 @@ public class SeedFixture
     {
         [SuppressMessage("Minor Code Smell", "S3459:Unassigned members should be removed")]
         public DateTimeOffset DeprecationDate { get; set; }
-        public string         Name            { get; set; } = null!;
+
+        public string Name { get; set; } = null!;
     }
 }

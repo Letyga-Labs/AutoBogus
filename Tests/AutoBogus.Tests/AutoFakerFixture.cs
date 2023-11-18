@@ -381,7 +381,7 @@ public class AutoFakerFixture
 
             var instance2 = faker.Generate<TestObject>();
 
-            instance1.Should().BeEquivalentTo(instance2);
+            Assert.Equivalent(instance2, instance1);
         }
 
         [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private")]
@@ -424,7 +424,8 @@ public class AutoFakerFixture
             });
 
             Assert.Null(instance.Discounts);
-            instance.Items.Should().OnlyContain(i => i.Discounts == null);
+            Assert.NotNull(instance.Items);
+            Assert.All(instance.Items, it => Assert.Null(it.Discounts));
         }
     }
 
