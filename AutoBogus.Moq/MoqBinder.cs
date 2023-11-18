@@ -1,5 +1,4 @@
 using System.Reflection;
-using AutoBogus.Util;
 using Moq;
 
 namespace AutoBogus.Moq;
@@ -7,8 +6,7 @@ namespace AutoBogus.Moq;
 /// <summary>
 ///     A class that enables Moq binding for interface and abstract types.
 /// </summary>
-public class MoqBinder
-    : AutoBinder
+public class MoqBinder : AutoBinder
 {
     private static readonly MethodInfo _factory =
         typeof(Mock).GetMethod("Of", Array.Empty<Type>()) ??
@@ -25,7 +23,7 @@ public class MoqBinder
     {
         var type = typeof(TType);
 
-        if (ReflectionHelper.IsInterface(type) || ReflectionHelper.IsAbstract(type))
+        if (type.IsInterface || type.IsAbstract)
         {
             // Take the cached factory method and make it generic based on the requested type
             // Because this method supports struct and class types, and Moq only supports class types we need to put this 'hack' into place

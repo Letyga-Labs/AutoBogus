@@ -180,35 +180,6 @@ public class AutoFakerFixture
         }
     }
 
-    public class Generate_Instance_Faker
-        : AutoFakerFixture
-    {
-        private readonly IAutoFaker _faker;
-
-        public Generate_Instance_Faker()
-        {
-            var faker = (AutoFaker)AutoFaker.Create();
-            _faker  = faker;
-        }
-
-        [Fact]
-        public void Should_Generate_Complex_Type()
-        {
-            var configure = CreateConfigure<IAutoFakerConfigBuilder>(AutoFaker.DefaultConfig);
-            _faker.Generate<Order, TestFaker>(configure).Should().BeGeneratedWithoutMocks();
-        }
-
-        [Fact]
-        public void Should_Generate_Many_Complex_Types()
-        {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
-            var configure = CreateConfigure<IAutoFakerConfigBuilder>(AutoFaker.DefaultConfig);
-            var instances = _faker.Generate<Order, TestFaker>(count, configure);
-
-            AssertGenerateMany(instances);
-        }
-    }
-
     public class Generate_Static
         : AutoFakerFixture
     {
@@ -257,27 +228,6 @@ public class AutoFakerFixture
             var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(AutoFaker.DefaultConfig);
             var instances = AutoFaker.Generate<Order>(count, configure);
-
-            AssertGenerateMany(instances);
-        }
-    }
-
-    public class Generate_Static_Faker
-        : AutoFakerFixture
-    {
-        [Fact]
-        public void Should_Generate_Complex_Type()
-        {
-            var configure = CreateConfigure<IAutoFakerConfigBuilder>(AutoFaker.DefaultConfig);
-            AutoFaker.Generate<Order, TestFaker>(configure).Should().BeGeneratedWithoutMocks();
-        }
-
-        [Fact]
-        public void Should_Generate_Many_Complex_Types()
-        {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
-            var configure = CreateConfigure<IAutoFakerConfigBuilder>(AutoFaker.DefaultConfig);
-            var instances = AutoFaker.Generate<Order, TestFaker>(count, configure);
 
             AssertGenerateMany(instances);
         }

@@ -1,8 +1,12 @@
 namespace AutoBogus;
 
-internal sealed class AutoGeneratorMemberOverride<TType, TValue>
-    : AutoGeneratorOverride
+internal sealed class AutoGeneratorMemberOverride<TType, TValue> : AutoGeneratorOverride
 {
+    private readonly Type   _type;
+    private readonly string _memberName;
+
+    private readonly Func<AutoGenerateOverrideContext, TValue> _generator;
+
     internal AutoGeneratorMemberOverride(string memberName, Func<AutoGenerateOverrideContext, TValue> generator)
     {
         if (string.IsNullOrWhiteSpace(memberName))
@@ -12,24 +16,19 @@ internal sealed class AutoGeneratorMemberOverride<TType, TValue>
 
         ArgumentNullException.ThrowIfNull(generator);
 
-        Type       = typeof(TType);
-        MemberName = memberName;
-        Generator  = generator;
+        _type       = typeof(TType);
+        _memberName = memberName;
+        _generator  = generator;
     }
-
-    private Type   Type       { get; }
-    private string MemberName { get; }
-
-    private Func<AutoGenerateOverrideContext, TValue> Generator { get; }
 
     public override bool CanOverride(AutoGenerateContext context)
     {
-        return context.ParentType == Type &&
-               MemberName.Equals(context.GenerateName, StringComparison.OrdinalIgnoreCase);
+        return context.ParentType == _type &&
+               _memberName.Equals(context.GenerateName, StringComparison.OrdinalIgnoreCase);
     }
 
     public override void Generate(AutoGenerateOverrideContext context)
     {
-        context.Instance = Generator.Invoke(context);
+        context.Instance = _generator.Invoke(context);
     }
 }

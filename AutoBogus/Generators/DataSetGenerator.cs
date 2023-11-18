@@ -6,8 +6,7 @@ namespace AutoBogus.Generators;
 [SuppressMessage(
     "IDisposableAnalyzers.Correctness",
     "IDISP005:Return type should indicate that the value should be disposed")]
-internal abstract class DataSetGenerator
-    : IAutoGenerator
+internal abstract class DataSetGenerator : IAutoGenerator
 {
     public static bool TryCreateGenerator(Type dataSetType, [NotNullWhen(true)] out DataSetGenerator? generator)
     {

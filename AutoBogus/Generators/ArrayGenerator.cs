@@ -1,7 +1,6 @@
 ﻿namespace AutoBogus.Generators;
 
-internal sealed class ArrayGenerator<TType>
-    : IAutoGenerator
+internal sealed class ArrayGenerator<TType> : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {

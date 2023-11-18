@@ -1,7 +1,6 @@
 ﻿namespace AutoBogus.Generators;
 
-internal sealed class StringGenerator
-    : IAutoGenerator
+internal sealed class StringGenerator : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {

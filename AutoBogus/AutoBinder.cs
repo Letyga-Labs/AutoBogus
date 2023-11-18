@@ -1,5 +1,6 @@
-using System.Collections;
 using System.Reflection;
+using AutoBogus.Errors;
+using AutoBogus.Population;
 using AutoBogus.Util;
 using Binder = Bogus.Binder;
 
@@ -8,8 +9,7 @@ namespace AutoBogus;
 /// <summary>
 ///     A class for binding generated instances.
 /// </summary>
-public class AutoBinder
-    : Binder, IAutoBinder
+public class AutoBinder : Binder, IAutoBinder
 {
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.
@@ -22,24 +22,25 @@ public class AutoBinder
         ArgumentNullException.ThrowIfNull(context);
 
         var type        = typeof(TType);
-        var constructor = GetConstructor<TType>();
+        var constructor = GetConstructorForNewInstanceCreation<TType>();
 
         if (constructor == null)
         {
-            return default!;
+            throw new CouldNotFindAppropriateConstructorException(
+                $"""
+                 No public constructor has been found on type {type}.
+                 AutoFaker must have access to some public constructor of type in order to create an instance of it.
+                 """);
         }
 
         // If a constructor is found generate values for each of the parameters
-        var parameters = constructor
+        var generatedConstructorArguments = constructor
             .GetParameters()
-            .Select(p =>
-            {
-                var parameterGenerator = GetParameterGenerator(type, p, context);
-                return parameterGenerator.Generate(context);
-            })
+            .Select(p => GenerateValue(type, p.ParameterType, p.Name, context))
             .ToArray();
 
-        var instance = (TType)constructor.Invoke(parameters);
+        var instance = (TType)constructor.Invoke(generatedConstructorArguments);
+
         return instance;
     }
 
@@ -64,7 +65,6 @@ public class AutoBinder
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        // We can only populate non-null instances
         if (instance == null)
         {
             return;
@@ -73,82 +73,23 @@ public class AutoBinder
         var type = typeof(TType);
 
         // Iterate the members and bind a generated value
-        var autoMembers = GetMembersToPopulate(type, members);
+        var membersToPopulate = GetMembersToPopulate(type, members);
 
-        foreach (var member in autoMembers)
+        foreach (var member in membersToPopulate)
         {
-            // Check if the member has a skip config or the type has already been generated as a parent
-            // If so skip this generation otherwise track it for use later in the object tree
-            if (ShouldSkip(member.Type, $"{type.FullName}.{member.Name}", context))
+            if (ShouldPopulateMember(member.Type, member.Name, context))
             {
-                continue;
+                context.TypesStack.Push(member.Type);
+
+                var value = GenerateValue(type, member.Type, member.Name, context);
+                member.PopulateWithNewValue(instance, value);
+
+                context.TypesStack.Pop();
             }
-
-            context.ParentType   = type;
-            context.GenerateType = member.Type;
-            context.GenerateName = member.Name;
-
-            context.TypesStack.Push(member.Type);
-
-            // Generate a random value and bind it to the instance
-            var generator = AutoGeneratorFactory.GetGenerator(context);
-            var value     = generator.Generate(context);
-
-            try
-            {
-                if (!member.IsReadOnly)
-                {
-                    member.Setter.Invoke(instance, value);
-                }
-                else if (ReflectionHelper.IsDictionary(member.Type))
-                {
-                    PopulateDictionary(value, instance, member);
-                }
-                else if (ReflectionHelper.IsCollection(member.Type))
-                {
-                    PopulateCollection(value, instance, member);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
-            // Remove the current type from the type stack so siblings can be created
-            context.TypesStack.Pop();
         }
     }
 
-    private bool ShouldSkip(Type type, string path, AutoGenerateContext context)
-    {
-        // Skip if the type is found
-        if (context.Config.SkipTypes.Contains(type))
-        {
-            return true;
-        }
-
-        // Skip if the path is found
-        if (context.Config.SkipPaths.Contains(path))
-        {
-            return true;
-        }
-
-        // check if tree depth is reached
-        var treeDepth = context.Config.TreeDepth.Invoke(context);
-
-        if (treeDepth.HasValue && context.TypesStack.Count >= treeDepth)
-        {
-            return true;
-        }
-
-        // Finally check if the recursive depth has been reached
-        var count          = context.TypesStack.Count(t => t == type);
-        var recursiveDepth = context.Config.RecursiveDepth.Invoke(context);
-
-        return count >= recursiveDepth;
-    }
-
-    private ConstructorInfo? GetConstructor<TType>()
+    protected virtual ConstructorInfo? GetConstructorForNewInstanceCreation<TType>()
     {
         var type         = typeof(TType);
         var constructors = type.GetConstructors();
@@ -156,53 +97,58 @@ public class AutoBinder
         // For dictionaries and enumerables locate a constructor that is used for populating as well
         if (ReflectionHelper.IsDictionary(type))
         {
-            return ResolveTypedConstructor(typeof(IDictionary<,>), constructors);
+            return ReflectionHelper.ResolveTypedConstructor(typeof(IDictionary<,>), constructors);
         }
 
         if (ReflectionHelper.IsEnumerable(type))
         {
-            return ResolveTypedConstructor(typeof(IEnumerable<>), constructors);
+            return ReflectionHelper.ResolveTypedConstructor(typeof(IEnumerable<>), constructors);
         }
 
         // Attempt to find a default constructor
         // If one is not found, simply use the first in the list
-        var defaultConstructor = (from c in constructors
-            let p = c.GetParameters()
-            where p.Length == 0
-            select c).SingleOrDefault();
+        var defaultConstructor = constructors.SingleOrDefault(it => it.GetParameters().Length == 0);
 
         return defaultConstructor ?? constructors.FirstOrDefault();
     }
 
-    private ConstructorInfo? ResolveTypedConstructor(Type type, IEnumerable<ConstructorInfo> constructors)
+    /// <summary>
+    /// Check if the member has a skip config or the type has already been generated as a parent.
+    /// If so skip this generation otherwise track it for use later in the object tree.
+    /// </summary>
+    /// <returns>true of <paramref name="memberName"/> should be populated, false otherwise.</returns>
+    protected virtual bool ShouldPopulateMember(Type type, string memberName, AutoGenerateContext context)
     {
-        // Find the first constructor that matches the passed generic definition
-        var result = constructors.SingleOrDefault(constructor =>
+        ArgumentNullException.ThrowIfNull(context);
+
+        if (SkipConfig.ShouldSkip(context, type, memberName))
         {
-            var paramType = constructor.GetParameters().SingleOrDefault()?.ParameterType;
-            return paramType != null
-                   && ReflectionHelper.IsGenericType(paramType)
-                   && ReflectionHelper.GetGenericTypeDefinition(paramType) == type;
-        });
+            return false;
+        }
 
-        return result;
+        // check if tree depth is reached
+        var treeDepth = context.Config.TreeDepth.Invoke(context);
+
+        if (treeDepth.HasValue && context.TypesStack.Count >= treeDepth)
+        {
+            return false;
+        }
+
+        // Finally check if the recursive depth has been reached
+        var count          = context.TypesStack.Count(t => t == type);
+        var recursiveDepth = context.Config.RecursiveDepth.Invoke(context);
+
+        return count < recursiveDepth;
     }
 
-    private IAutoGenerator GetParameterGenerator(Type type, ParameterInfo parameter, AutoGenerateContext context)
-    {
-        context.ParentType   = type;
-        context.GenerateType = parameter.ParameterType;
-        context.GenerateName = parameter.Name;
-
-        return AutoGeneratorFactory.GetGenerator(context);
-    }
-
-    private IEnumerable<AutoMember> GetMembersToPopulate(Type type, IEnumerable<MemberInfo>? members)
+    private IEnumerable<AutoMember> GetMembersToPopulate(
+        Type                     type,
+        IEnumerable<MemberInfo>? methodsSelectedByClient)
     {
         // If a list of members is provided, no others should be populated
-        if (members != null)
+        if (methodsSelectedByClient != null)
         {
-            return members.Select(member => new AutoMember(member));
+            return methodsSelectedByClient.Select(member => new AutoMember(member));
         }
 
         // Get the baseline members resolved by Bogus
@@ -232,69 +178,18 @@ public class AutoBinder
         return autoMembers;
     }
 
-    private void PopulateDictionary(object value, object parent, AutoMember member)
+    private object GenerateValue(
+        Type                parentType,
+        Type                generateType,
+        string?             generateName,
+        AutoGenerateContext context)
     {
-        var instance  = member.Getter(parent);
-        var argTypes  = GetAddMethodArgumentTypes(member.Type);
-        var addMethod = GetAddMethod(member.Type, argTypes);
+        context.ParentType   = parentType;
+        context.GenerateType = generateType;
+        context.GenerateName = generateName;
 
-        if (instance == null || addMethod == null || value is not IDictionary dictionary)
-        {
-            return;
-        }
-
-        foreach (var key in dictionary.Keys)
-        {
-            addMethod.Invoke(instance, new[] { key, dictionary[key], });
-        }
-    }
-
-    private void PopulateCollection(object value, object parent, AutoMember member)
-    {
-        var instance  = member.Getter(parent);
-        var argTypes  = GetAddMethodArgumentTypes(member.Type);
-        var addMethod = GetAddMethod(member.Type, argTypes);
-
-        if (instance == null || addMethod == null || value is not ICollection collection)
-        {
-            return;
-        }
-
-        foreach (var item in collection)
-        {
-            addMethod.Invoke(instance, new[] { item, });
-        }
-    }
-
-    private MethodInfo? GetAddMethod(Type type, Type[] argTypes)
-    {
-        // First try directly on the type
-        var method = type.GetMethod("Add", argTypes);
-
-        if (method != null)
-        {
-            return method;
-        }
-
-        // Then traverse the type interfaces
-        var results = type
-            .GetInterfaces()
-            .Select(it => GetAddMethod(it, argTypes))
-            .FirstOrDefault(it => it != null);
-
-        return results;
-    }
-
-    private Type[] GetAddMethodArgumentTypes(Type type)
-    {
-        var types = new[] { typeof(object), };
-
-        if (ReflectionHelper.IsGenericType(type))
-        {
-            var generics = ReflectionHelper.GetGenericArguments(type);
-            types = generics.ToArray();
-        }
-
-        return types;
+        var generator = AutoGeneratorFactory.GetGenerator(context);
+        var value     = generator.Generate(context);
+        return value;
     }
 }

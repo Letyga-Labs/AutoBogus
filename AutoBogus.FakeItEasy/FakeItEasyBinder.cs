@@ -1,5 +1,4 @@
 using System.Reflection;
-using AutoBogus.Util;
 using FakeItEasy;
 
 namespace AutoBogus.FakeItEasy;
@@ -7,8 +6,7 @@ namespace AutoBogus.FakeItEasy;
 /// <summary>
 ///     A class that enables FakeItEasy binding for interface and abstract types.
 /// </summary>
-public class FakeItEasyBinder
-    : AutoBinder
+public class FakeItEasyBinder : AutoBinder
 {
     private static readonly MethodInfo _factory =
         typeof(A).GetMethod("Fake", Array.Empty<Type>())
@@ -25,7 +23,7 @@ public class FakeItEasyBinder
     {
         var type = typeof(TType);
 
-        if (ReflectionHelper.IsInterface(type) || ReflectionHelper.IsAbstract(type))
+        if (type.IsInterface || type.IsAbstract)
         {
             // Take the cached factory method and make it generic based on the requested type
             // Because this method supports struct and class types, and FakeItEasy only supports class types we need to put this 'hack' into place

@@ -268,16 +268,4 @@ public class AutoConfigBuilderFixture
             }
         }
     }
-
-    public class WithArgs
-        : AutoConfigBuilderFixture
-    {
-        [Fact]
-        public void Should_Set_Args()
-        {
-            var args = new object[] { _faker.Random.Int(), _faker.Random.String(), };
-            _builder.WithArgs<ITestBuilder>(args, null!);
-            _builder.Args.Should().BeSameAs(args);
-        }
-    }
 }

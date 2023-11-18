@@ -33,7 +33,6 @@ public sealed class AutoFaker : IAutoFaker
     {
         var config  = new AutoConfig(DefaultConfig);
         var builder = new AutoConfigBuilder(config);
-
         configure?.Invoke(builder);
 
         return new AutoFaker(config);
@@ -64,38 +63,6 @@ public sealed class AutoFaker : IAutoFaker
         return faker.Generate<TType>(count);
     }
 
-    /// <summary>
-    ///     Generates an instance of type <typeparamref name="TType" /> based on the <typeparamref name="TFaker" />.
-    /// </summary>
-    /// <typeparam name="TType">The type of instance to generate.</typeparam>
-    /// <typeparam name="TFaker">The type of faker instance to use.</typeparam>
-    /// <param name="configure">A handler to build the generate request configuration.</param>
-    /// <returns>The generated instance.</returns>
-    public static TType Generate<TType, TFaker>(Action<IAutoFakerConfigBuilder>? configure = null)
-        where TType : class
-        where TFaker : AutoFaker<TType>
-    {
-        var faker = Create();
-        return faker.Generate<TType, TFaker>(configure);
-    }
-
-    /// <summary>
-    ///     Generates a collection of instances of type <typeparamref name="TType" /> based on the
-    ///     <typeparamref name="TFaker" />.
-    /// </summary>
-    /// <typeparam name="TType">The type of instance to generate.</typeparam>
-    /// <typeparam name="TFaker">The type of faker instance to use.</typeparam>
-    /// <param name="count">The number of instances to generate.</param>
-    /// <param name="configure">A handler to build the generate request configuration.</param>
-    /// <returns>The generated collection of instances.</returns>
-    public static List<TType> Generate<TType, TFaker>(int count, Action<IAutoFakerConfigBuilder>? configure = null)
-        where TType : class
-        where TFaker : AutoFaker<TType>
-    {
-        var faker = Create();
-        return faker.Generate<TType, TFaker>(count, configure);
-    }
-
     TType IAutoFaker.Generate<TType>(Action<IAutoGenerateConfigBuilder>? configure)
     {
         var context = CreateContext(configure);
@@ -108,44 +75,12 @@ public sealed class AutoFaker : IAutoFaker
         return context.GenerateMany<TType>(count);
     }
 
-    TType IAutoFaker.Generate<TType, TFaker>(Action<IAutoFakerConfigBuilder>? configure)
-    {
-        var faker = CreateFaker<TType, TFaker>(configure);
-        return faker.Generate();
-    }
-
-    List<TType> IAutoFaker.Generate<TType, TFaker>(int count, Action<IAutoFakerConfigBuilder>? configure)
-    {
-        var faker = CreateFaker<TType, TFaker>(configure);
-        return faker.Generate(count);
-    }
-
     private AutoGenerateContext CreateContext(Action<IAutoGenerateConfigBuilder>? configure)
     {
         var config  = new AutoConfig(Config);
         var builder = new AutoConfigBuilder(config);
-
         configure?.Invoke(builder);
 
         return new AutoGenerateContext(config);
-    }
-
-    private AutoFaker<TType> CreateFaker<TType, TFaker>(Action<IAutoFakerConfigBuilder>? configure)
-        where TType : class
-        where TFaker : AutoFaker<TType>
-    {
-        // Invoke the config builder
-        var config  = new AutoConfig(Config);
-        var builder = new AutoConfigBuilder(config);
-
-        configure?.Invoke(builder);
-
-        // Dynamically create the faker instance
-        var type  = typeof(TFaker);
-        var faker = (AutoFaker<TType>)Activator.CreateInstance(type, builder.Args)!;
-
-        faker.Config = builder.Config;
-
-        return faker;
     }
 }

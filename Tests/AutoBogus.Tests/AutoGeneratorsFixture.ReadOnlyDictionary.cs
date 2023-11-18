@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using AutoBogus.Generators;
 using AutoBogus.Tests.Models.Simple;
-using AutoBogus.Util;
 using FluentAssertions;
 using Xunit;
 
@@ -17,7 +16,9 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(ReadOnlyDictionary<int, string>))]
         public void Generate_Should_Return_Dictionary(Type type)
         {
-            var genericTypes = ReflectionHelper.GetGenericArguments(type);
+            ArgumentNullException.ThrowIfNull(type);
+
+            var genericTypes = type.GetGenericArguments();
             var keyType      = genericTypes[0];
             var valueType    = genericTypes[1];
             var generator    = CreateGenerator(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
@@ -43,8 +44,10 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(ReadOnlyDictionary<int, TestClass>))]
         public void GetGenerator_Should_Return_ReadOnlyDictionaryGenerator(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var context       = CreateContext(type);
-            var genericTypes  = ReflectionHelper.GetGenericArguments(type);
+            var genericTypes  = type.GetGenericArguments();
             var keyType       = genericTypes[0];
             var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);

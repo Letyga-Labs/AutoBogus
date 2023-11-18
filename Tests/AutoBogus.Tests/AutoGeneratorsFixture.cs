@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using AutoBogus.Generators;
 using AutoBogus.Tests.Models.Simple;
-using AutoBogus.Util;
 using Bogus;
 using FluentAssertions;
 using Xunit;
@@ -493,7 +492,9 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(SortedList<int, TestClass>))]
         public void Generate_Should_Return_Dictionary(Type type)
         {
-            var genericTypes = ReflectionHelper.GetGenericArguments(type);
+            ArgumentNullException.ThrowIfNull(type);
+
+            var genericTypes = type.GetGenericArguments();
             var keyType      = genericTypes[0];
             var valueType    = genericTypes[1];
             var generator    = CreateGenerator(typeof(DictionaryGenerator<,>), keyType, valueType);
@@ -522,8 +523,10 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(SortedList<int, TestClass>))]
         public void GetGenerator_Should_Return_DictionaryGenerator(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var context       = CreateContext(type);
-            var genericTypes  = ReflectionHelper.GetGenericArguments(type);
+            var genericTypes  = type.GetGenericArguments();
             var keyType       = genericTypes[0];
             var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(DictionaryGenerator<,>), keyType, valueType);
@@ -549,7 +552,9 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(List<TestClass>))]
         public void Generate_Should_Return_List(Type type)
         {
-            var genericTypes = ReflectionHelper.GetGenericArguments(type);
+            ArgumentNullException.ThrowIfNull(type);
+
+            var genericTypes = type.GetGenericArguments();
             var itemType     = genericTypes[0];
             var generator    = CreateGenerator(typeof(ListGenerator<>), itemType);
             var list         = (IEnumerable)InvokeGenerator(type, generator);
@@ -575,8 +580,10 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(List<TestClass>))]
         public void GetGenerator_Should_Return_ListGenerator(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var context       = CreateContext(type);
-            var genericTypes  = ReflectionHelper.GetGenericArguments(type);
+            var genericTypes  = type.GetGenericArguments();
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(ListGenerator<>), itemType);
 
@@ -596,7 +603,9 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(HashSet<TestClass>))]
         public void Generate_Should_Return_Set(Type type)
         {
-            var genericTypes = ReflectionHelper.GetGenericArguments(type);
+            ArgumentNullException.ThrowIfNull(type);
+
+            var genericTypes = type.GetGenericArguments();
             var itemType     = genericTypes[0];
             var generator    = CreateGenerator(typeof(SetGenerator<>), itemType);
             var set          = (IEnumerable)InvokeGenerator(type, generator);
@@ -617,8 +626,10 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(HashSet<TestClass>))]
         public void GetGenerator_Should_Return_SetGenerator(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var context       = CreateContext(type);
-            var genericTypes  = ReflectionHelper.GetGenericArguments(type);
+            var genericTypes  = type.GetGenericArguments();
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(SetGenerator<>), itemType);
 
@@ -637,7 +648,9 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(IEnumerable<TestAbstractClass>))]
         public void Generate_Should_Return_Enumerable(Type type)
         {
-            var genericTypes = ReflectionHelper.GetGenericArguments(type);
+            ArgumentNullException.ThrowIfNull(type);
+
+            var genericTypes = type.GetGenericArguments();
             var itemType     = genericTypes[0];
             var generator    = CreateGenerator(typeof(EnumerableGenerator<>), itemType);
             var enumerable   = (IEnumerable)InvokeGenerator(type, generator);
@@ -657,8 +670,10 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(IEnumerable<TestAbstractClass>))]
         public void GetGenerator_Should_Return_EnumerableGenerator(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var context       = CreateContext(type);
-            var genericTypes  = ReflectionHelper.GetGenericArguments(type);
+            var genericTypes  = type.GetGenericArguments();
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(EnumerableGenerator<>), itemType);
 
@@ -698,9 +713,11 @@ public partial class AutoGeneratorsFixture
         [InlineData(typeof(TestAbstractClass))]
         public void Generate_Should_Return_Value(Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+
             var generator = CreateGenerator(typeof(TypeGenerator<>), type);
 
-            if (ReflectionHelper.IsInterface(type) || ReflectionHelper.IsAbstract(type))
+            if (type.IsInterface || type.IsAbstract)
             {
                 InvokeGenerator(type, generator).Should().BeNull();
             }

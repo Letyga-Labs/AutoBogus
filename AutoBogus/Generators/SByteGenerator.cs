@@ -1,7 +1,6 @@
 ﻿namespace AutoBogus.Generators;
 
-internal sealed class SByteGenerator
-    : IAutoGenerator
+internal sealed class SByteGenerator : IAutoGenerator
 {
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {

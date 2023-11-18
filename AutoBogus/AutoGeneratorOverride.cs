@@ -20,6 +20,8 @@ public abstract class AutoGeneratorOverride
     /// <summary>
     ///     Generates an override instance of a given type.
     /// </summary>
-    /// <param name="context">The <see cref="AutoGenerateOverrideContext" /> instance for the current generate request.</param>
+    /// <param name="context">
+    ///     The <see cref="AutoGenerateOverrideContext" /> instance for the current generate request.
+    /// </param>
     public abstract void Generate(AutoGenerateOverrideContext context);
 }

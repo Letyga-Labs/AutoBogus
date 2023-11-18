@@ -1,24 +1,26 @@
 namespace AutoBogus;
 
-internal sealed class AutoGeneratorTypeOverride<TType>
-    : AutoGeneratorOverride
+internal sealed class AutoGeneratorTypeOverride<TType> : AutoGeneratorOverride
 {
+    private readonly Type _type;
+
+    private readonly Func<AutoGenerateOverrideContext, TType> _generator;
+
     internal AutoGeneratorTypeOverride(Func<AutoGenerateOverrideContext, TType> generator)
     {
-        Type      = typeof(TType);
-        Generator = generator ?? throw new ArgumentNullException(nameof(generator));
-    }
+        ArgumentNullException.ThrowIfNull(generator);
 
-    private Type                                     Type      { get; }
-    private Func<AutoGenerateOverrideContext, TType> Generator { get; }
+        _type      = typeof(TType);
+        _generator = generator;
+    }
 
     public override bool CanOverride(AutoGenerateContext context)
     {
-        return context.GenerateType == Type;
+        return context.GenerateType == _type;
     }
 
     public override void Generate(AutoGenerateOverrideContext context)
     {
-        context.Instance = Generator.Invoke(context);
+        context.Instance = _generator.Invoke(context);
     }
 }

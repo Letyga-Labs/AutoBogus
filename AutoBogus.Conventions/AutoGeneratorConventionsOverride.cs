@@ -2,8 +2,7 @@ using System.Diagnostics;
 
 namespace AutoBogus.Conventions;
 
-internal sealed class AutoGeneratorConventionsOverride
-    : AutoGeneratorOverride
+internal sealed class AutoGeneratorConventionsOverride : AutoGeneratorOverride
 {
     internal AutoGeneratorConventionsOverride(AutoConventionConfig config)
     {

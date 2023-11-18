@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Dynamic;
 using System.Net;
 using AutoBogus.Generators;
 using AutoBogus.Util;
@@ -9,25 +10,25 @@ internal static class AutoGeneratorFactory
 {
     internal static readonly IDictionary<Type, IAutoGenerator> Generators = new Dictionary<Type, IAutoGenerator>
     {
-        { typeof(bool), new BoolGenerator() },
-        { typeof(byte), new ByteGenerator() },
-        { typeof(char), new CharGenerator() },
-        { typeof(DateTime), new DateTimeGenerator() },
-        { typeof(DateTimeOffset), new DateTimeOffsetGenerator() },
-        { typeof(decimal), new DecimalGenerator() },
-        { typeof(double), new DoubleGenerator() },
-        { typeof(float), new FloatGenerator() },
-        { typeof(Guid), new GuidGenerator() },
-        { typeof(int), new IntGenerator() },
-        { typeof(IPAddress), new IpAddressGenerator() },
-        { typeof(long), new LongGenerator() },
-        { typeof(sbyte), new SByteGenerator() },
-        { typeof(short), new ShortGenerator() },
-        { typeof(string), new StringGenerator() },
-        { typeof(uint), new UIntGenerator() },
-        { typeof(ulong), new ULongGenerator() },
-        { typeof(Uri), new UriGenerator() },
-        { typeof(ushort), new UShortGenerator() },
+        [typeof(bool)]           = new BoolGenerator(),
+        [typeof(byte)]           = new ByteGenerator(),
+        [typeof(char)]           = new CharGenerator(),
+        [typeof(DateTime)]       = new DateTimeGenerator(),
+        [typeof(DateTimeOffset)] = new DateTimeOffsetGenerator(),
+        [typeof(decimal)]        = new DecimalGenerator(),
+        [typeof(double)]         = new DoubleGenerator(),
+        [typeof(float)]          = new FloatGenerator(),
+        [typeof(Guid)]           = new GuidGenerator(),
+        [typeof(int)]            = new IntGenerator(),
+        [typeof(IPAddress)]      = new IpAddressGenerator(),
+        [typeof(long)]           = new LongGenerator(),
+        [typeof(sbyte)]          = new SByteGenerator(),
+        [typeof(short)]          = new ShortGenerator(),
+        [typeof(string)]         = new StringGenerator(),
+        [typeof(uint)]           = new UIntGenerator(),
+        [typeof(ulong)]          = new ULongGenerator(),
+        [typeof(Uri)]            = new UriGenerator(),
+        [typeof(ushort)]         = new UShortGenerator(),
     };
 
     internal static IAutoGenerator GetGenerator(AutoGenerateContext context)
@@ -49,17 +50,18 @@ internal static class AutoGeneratorFactory
     {
         var type = context.GenerateType;
 
+        Debug.Assert(type != null, nameof(type) + " != null");
+
         // Need check if the type is an in/out parameter and adjusted accordingly
-        if (type != null && type.IsByRef)
+        if (type.IsByRef)
         {
             type = type.GetElementType();
+            Debug.Assert(type != null, nameof(type) + " != null");
         }
-
-        Debug.Assert(type != null, nameof(type) + " != null");
 
         // Check if an expando object needs to generator
         // This actually means an existing dictionary needs to be populated
-        if (ReflectionHelper.IsExpandoObject(type))
+        if (type == typeof(ExpandoObject))
         {
             return new ExpandoObjectGenerator();
         }
@@ -82,14 +84,14 @@ internal static class AutoGeneratorFactory
             return dataSetGenerator;
         }
 
-        if (ReflectionHelper.IsEnum(type))
+        if (type.IsEnum)
         {
             return CreateGenericGenerator(typeof(EnumGenerator<>), type);
         }
 
-        if (ReflectionHelper.IsNullable(type))
+        if (ReflectionHelper.IsValueNullable(type))
         {
-            type = ReflectionHelper.GetGenericArguments(type).Single();
+            type = type.GetGenericArguments().Single();
             return CreateGenericGenerator(typeof(NullableGenerator<>), type);
         }
 
@@ -98,7 +100,7 @@ internal static class AutoGeneratorFactory
         if (genericCollectionType != null)
         {
             // For generic types we need to interrogate the inner types
-            var generics = ReflectionHelper.GetGenericArguments(genericCollectionType);
+            var generics = genericCollectionType.GetGenericArguments();
 
             if (ReflectionHelper.IsReadOnlyDictionary(genericCollectionType))
             {

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Dynamic;
 using System.Reflection;
-using AutoBogus.Util;
 using Bogus;
 
 namespace AutoBogus;
@@ -10,8 +10,7 @@ namespace AutoBogus;
 /// </summary>
 /// <typeparam name="TType">The type of instance to generate.</typeparam>
 [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name")]
-public class AutoFaker<TType>
-    : Faker<TType>
+public class AutoFaker<TType> : Faker<TType>
     where TType : class
 {
     private AutoConfig? _config;
@@ -195,7 +194,7 @@ public class AutoFaker<TType>
                     continue;
                 }
 
-                var path     = $"{type.FullName}.{memberName}";
+                var path     = SkipConfig.MakePathForMember(type, memberName);
                 var existing = context.Config.SkipPaths.Any(s => s == path);
 
                 if (!existing)
@@ -230,7 +229,7 @@ public class AutoFaker<TType>
             // If dynamic objects are supported, populate as a dictionary
             var type = instance.GetType();
 
-            if (ReflectionHelper.IsExpandoObject(type))
+            if (type == typeof(ExpandoObject))
             {
                 // Configure the context
                 context.ParentType   = null;

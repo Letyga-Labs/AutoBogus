@@ -3,8 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AutoBogus.Generators;
 
-internal abstract class DataTableGenerator
-    : IAutoGenerator
+internal abstract class DataTableGenerator : IAutoGenerator
 {
     public static bool IsTypedDataTableType(Type? type, [NotNullWhen(true)] out Type? rowType)
     {

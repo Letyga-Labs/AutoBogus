@@ -126,14 +126,11 @@ public abstract class ServiceFixture
     [Fact]
     public void Service_GetPending_Should_Return_Items()
     {
-        var id            = _faker.Generate<Guid>();
         var item          = AutoFaker.Generate<Item>();
         var item1Override = new ProductCodeOverride();
         var item2Override = new ProductCodeOverride();
         var items = new List<Item>
         {
-            _faker.Generate<Item, ItemFaker>(builder => builder.WithArgs(id).WithOverride(item1Override)),
-            AutoFaker.Generate<Item, ItemFaker>(builder => builder.WithArgs(id).WithOverride(item2Override)),
             AutoFaker.Generate<Item>(builder => builder.WithSkip<Item>(i => i.ProcessedBy)),
             AutoFaker.Generate<Item>(builder => builder.WithConventions(c => c.Email.Aliases("SupplierEmail"))),
         };

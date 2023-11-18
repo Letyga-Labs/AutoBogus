@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using AutoBogus.Util;
+using System.Reflection;
 
 namespace AutoBogus;
 
@@ -275,7 +275,7 @@ public static class AutoConfigBuilderExtensions
 
         var memberInfo = expression.Member;
 
-        if (ReflectionHelper.IsField(memberInfo) || ReflectionHelper.IsProperty(memberInfo))
+        if (memberInfo is FieldInfo || memberInfo is PropertyInfo)
         {
             return memberInfo.Name;
         }

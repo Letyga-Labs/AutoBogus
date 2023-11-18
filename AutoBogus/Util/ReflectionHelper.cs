@@ -1,74 +1,14 @@
 using System.Reflection;
-#if !NETSTANDARD1_3
-using System.Dynamic;
-#endif
 
 namespace AutoBogus.Util;
 
 internal static class ReflectionHelper
 {
-    internal static bool IsEnum(Type type)
-    {
-        var typeInfo = type.GetTypeInfo();
-        return typeInfo.IsEnum;
-    }
-
-    internal static bool IsAbstract(Type type)
-    {
-        var typeInfo = type.GetTypeInfo();
-        return typeInfo.IsAbstract;
-    }
-
-    internal static bool IsInterface(Type type)
-    {
-        var typeInfo = type.GetTypeInfo();
-        return typeInfo.IsInterface;
-    }
-
-    internal static bool IsGenericType(Type type)
-    {
-        var typeInfo = type.GetTypeInfo();
-        return typeInfo.IsGenericType;
-    }
-
-    internal static bool IsExpandoObject(Type? type)
-    {
-        return type == typeof(ExpandoObject);
-    }
-
-    internal static bool IsAssignableFrom(Type baseType, Type type)
-    {
-        var baseTypeInfo = baseType.GetTypeInfo();
-        var typeInfo     = type.GetTypeInfo();
-
-        return baseTypeInfo.IsAssignableFrom(typeInfo);
-    }
-
-    internal static bool IsField(MemberInfo member)
-    {
-        return member is FieldInfo;
-    }
-
-    internal static bool IsProperty(MemberInfo member)
-    {
-        return member is PropertyInfo;
-    }
-
-    internal static Type[] GetGenericArguments(Type type)
-    {
-        return type.GetGenericArguments();
-    }
-
-    internal static Type GetGenericTypeDefinition(Type type)
-    {
-        return type.GetGenericTypeDefinition();
-    }
-
     internal static Type? GetGenericCollectionType(Type type)
     {
-        var interfaces = type.GetInterfaces().Where(IsGenericType);
+        var interfaces = type.GetInterfaces().Where(type1 => type1.IsGenericType);
 
-        if (IsInterface(type))
+        if (type.IsInterface)
         {
             interfaces = interfaces.Concat(new[] { type, });
         }
@@ -80,7 +20,7 @@ internal static class ReflectionHelper
         Type? collectionType         = null;
         Type? enumerableType         = null;
 
-        foreach (var interfaceType in interfaces.Where(IsGenericType))
+        foreach (var interfaceType in interfaces.Where(type1 => type1.IsGenericType))
         {
             if (IsDictionary(interfaceType))
             {
@@ -168,22 +108,67 @@ internal static class ReflectionHelper
         return IsGenericTypeDefinition(baseType, type);
     }
 
-    internal static bool IsNullable(Type type)
+    internal static bool IsValueNullable(Type type)
     {
         return IsGenericTypeDefinition(typeof(Nullable<>), type);
     }
 
+    internal static MethodInfo? FindMethod(Type type, string methodName, Type[] parameterTypes)
+    {
+        // First try directly on the type
+        var method = type.GetMethod(methodName, parameterTypes);
+
+        if (method != null)
+        {
+            return method;
+        }
+
+        // Then traverse the type interfaces
+        foreach (var baseInterface in type.GetInterfaces())
+        {
+            var result = FindMethod(baseInterface, methodName, parameterTypes);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Find the first constructor that matches the passed generic definition.
+    /// </summary>
+    /// <returns>Constructor if found, null otherwise.</returns>
+    internal static ConstructorInfo? ResolveTypedConstructor(Type type, IEnumerable<ConstructorInfo> constructors)
+    {
+        var result = constructors.SingleOrDefault(constructor =>
+        {
+            var parameters = constructor.GetParameters();
+            if (parameters.Length != 1)
+            {
+                return false;
+            }
+
+            var paramType = parameters[0].ParameterType;
+
+            return paramType.IsGenericType && paramType.GetGenericTypeDefinition() == type;
+        });
+
+        return result;
+    }
+
     private static bool IsGenericTypeDefinition(Type baseType, Type type)
     {
-        if (!IsGenericType(type))
+        if (!type.IsGenericType)
         {
             return false;
         }
 
-        var definition = GetGenericTypeDefinition(type);
+        var definition = type.GetGenericTypeDefinition();
 
         // Do an assignable query first
-        if (IsAssignableFrom(baseType, definition))
+        if (baseType.IsAssignableFrom(definition))
         {
             return true;
         }

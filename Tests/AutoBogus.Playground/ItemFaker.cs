@@ -2,8 +2,7 @@
 
 namespace AutoBogus.Playground;
 
-public sealed class ItemFaker
-    : AutoFaker<Item>
+public sealed class ItemFaker : AutoFaker<Item>
 {
     public ItemFaker(Guid id)
     {

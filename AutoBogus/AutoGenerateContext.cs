@@ -25,12 +25,12 @@ public sealed class AutoGenerateContext
     /// <summary>
     ///     The parent type of the type associated with the current generate request.
     /// </summary>
-    public Type? ParentType { get; set; }
+    public Type? ParentType { get; internal set; }
 
     /// <summary>
     ///     The type associated with the current generate request.
     /// </summary>
-    public Type? GenerateType { get; internal set; }
+    public Type GenerateType { get; internal set; } = null!;
 
     /// <summary>
     ///     The name associated with the current generate request.

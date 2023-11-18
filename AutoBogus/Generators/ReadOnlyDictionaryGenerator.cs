@@ -14,7 +14,7 @@ internal sealed class ReadOnlyDictionaryGenerator<TKey, TValue> : IAutoGenerator
 
         Debug.Assert(generateType != null, nameof(generateType) + " != null");
 
-        if (ReflectionHelper.IsInterface(generateType))
+        if (generateType.IsInterface)
         {
             generateType = typeof(Dictionary<TKey, TValue>);
         }

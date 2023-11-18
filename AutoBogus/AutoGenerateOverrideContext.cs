@@ -10,11 +10,6 @@ public sealed class AutoGenerateOverrideContext
     internal AutoGenerateOverrideContext(AutoGenerateContext generateContext)
     {
         GenerateContext = generateContext;
-
-        GenerateType = GenerateContext.GenerateType;
-        GenerateName = GenerateContext.GenerateName;
-        Faker        = GenerateContext.Faker;
-        RuleSets     = GenerateContext.RuleSets;
     }
 
     /// <summary>
@@ -25,22 +20,22 @@ public sealed class AutoGenerateOverrideContext
     /// <summary>
     ///     The type associated with the current generate request.
     /// </summary>
-    public Type? GenerateType { get; }
+    public Type GenerateType => GenerateContext.GenerateType;
 
     /// <summary>
     ///     The name associated with the current generate request.
     /// </summary>
-    public string? GenerateName { get; }
+    public string? GenerateName => GenerateContext.GenerateName;
 
     /// <summary>
     ///     The underlying <see cref="Bogus.Faker" /> instance used to generate random values.
     /// </summary>
-    public Faker Faker { get; }
+    public Faker Faker => GenerateContext.Faker;
 
     /// <summary>
     ///     The requested rule sets provided for the generate request.
     /// </summary>
-    public IEnumerable<string> RuleSets { get; }
+    public IEnumerable<string> RuleSets => GenerateContext.RuleSets;
 
     internal AutoGenerateContext GenerateContext { get; }
 }

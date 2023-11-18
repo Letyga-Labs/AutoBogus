@@ -2,7 +2,6 @@ using System.Collections;
 using System.Globalization;
 using System.Net;
 using System.Reflection;
-using AutoBogus.Util;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
@@ -10,8 +9,7 @@ using static System.Globalization.CultureInfo;
 
 namespace AutoBogus.Tests.Models;
 
-public sealed class GenerateAssertions
-    : ReferenceTypeAssertions<object, GenerateAssertions>
+public sealed class GenerateAssertions : ReferenceTypeAssertions<object, GenerateAssertions>
 {
     private readonly IDictionary<Func<Type, bool>, Func<string?, Type, object?, string?>> _assertions =
         new Dictionary<Func<Type, bool>, Func<string?, Type, object?, string?>>();
@@ -210,7 +208,7 @@ public sealed class GenerateAssertions
 
     private static bool IsEnum(Type type)
     {
-        return ReflectionHelper.IsEnum(type);
+        return type.IsEnum;
     }
 
     private static bool IsDictionary(Type type)
@@ -225,17 +223,17 @@ public sealed class GenerateAssertions
 
     private static bool IsNullable(Type type)
     {
-        return ReflectionHelper.IsGenericType(type) && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
     private static bool IsAbstract(Type type)
     {
-        return ReflectionHelper.IsAbstract(type);
+        return type.IsAbstract;
     }
 
     private static bool IsInterface(Type type)
     {
-        return ReflectionHelper.IsInterface(type);
+        return type.IsInterface;
     }
 
     private static string? AssertBool(string? path, Type type, object? value)
@@ -396,7 +394,7 @@ public sealed class GenerateAssertions
     private static bool IsType(Type type, Type baseType)
     {
         // We may need to do some generics magic to compare the types
-        if (!ReflectionHelper.IsGenericType(type) || !ReflectionHelper.IsGenericType(baseType))
+        if (!type.IsGenericType || !baseType.IsGenericType)
         {
             return baseType.IsAssignableFrom(type);
         }
@@ -418,16 +416,14 @@ public sealed class GenerateAssertions
         out Func<object?, object?> memberGetter)
     {
         // Extract the member type and getter action
-        if (ReflectionHelper.IsField(member))
+        if (member is FieldInfo fieldInfo)
         {
-            var fieldInfo = (FieldInfo)member;
-            memberType   = fieldInfo.FieldType;
+            memberType = fieldInfo.FieldType;
             memberGetter = fieldInfo.GetValue;
         }
-        else if (ReflectionHelper.IsProperty(member))
+        else if (member is PropertyInfo propertyInfo)
         {
-            var propertyInfo = (PropertyInfo)member;
-            memberType   = propertyInfo.PropertyType;
+            memberType = propertyInfo.PropertyType;
             memberGetter = propertyInfo.GetValue;
         }
         else
@@ -583,7 +579,7 @@ public sealed class GenerateAssertions
         {
             // Otherwise ensure we are not dealing with interface or abstract class
             // These types will result in an empty list by default because they cannot be generated
-            if (!ReflectionHelper.IsInterface(type) && !ReflectionHelper.IsAbstract(type))
+            if (!type.IsInterface && !type.IsAbstract)
             {
                 elementType ??= "value";
                 return $"Excepted {elementType} to not be empty for '{path}'.";
@@ -632,6 +628,6 @@ public sealed class GenerateAssertions
     {
         return type
             .GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-            .Where(m => ReflectionHelper.IsField(m) || ReflectionHelper.IsProperty(m));
+            .Where(m => m is FieldInfo || m is PropertyInfo);
     }
 }

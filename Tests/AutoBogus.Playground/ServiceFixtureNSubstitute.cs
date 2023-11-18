@@ -3,8 +3,7 @@ using Xunit.Abstractions;
 
 namespace AutoBogus.Playground;
 
-public class ServiceFixtureNSubstitute
-    : ServiceFixture
+public class ServiceFixtureNSubstitute : ServiceFixture
 {
     public ServiceFixtureNSubstitute(ITestOutputHelper output)
         : base(output, new NSubstituteBinder())

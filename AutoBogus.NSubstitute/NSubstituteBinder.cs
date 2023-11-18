@@ -1,4 +1,3 @@
-using AutoBogus.Util;
 using NSubstitute;
 
 namespace AutoBogus.NSubstitute;
@@ -6,8 +5,7 @@ namespace AutoBogus.NSubstitute;
 /// <summary>
 ///     A class that enables NSubstitute binding for interface and abstract types.
 /// </summary>
-public class NSubstituteBinder
-    : AutoBinder
+public class NSubstituteBinder : AutoBinder
 {
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.
@@ -19,7 +17,7 @@ public class NSubstituteBinder
     {
         var type = typeof(TType);
 
-        if (ReflectionHelper.IsInterface(type) || ReflectionHelper.IsAbstract(type))
+        if (type.IsInterface || type.IsAbstract)
         {
             return (TType)Substitute.For(new[] { type, }, Array.Empty<object>());
         }

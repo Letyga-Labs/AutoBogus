@@ -37,7 +37,7 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(context);
 
         var items = new List<TType>();
-        GenerateMany(context, count, items, false);
+        GenerateMany(context, count, items, unique: false);
         return items;
     }
 
@@ -53,7 +53,7 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(context);
 
         var items = new List<TType>();
-        GenerateMany(context, count, items, true);
+        GenerateMany(context, count, items, unique: true);
         return items;
     }
 

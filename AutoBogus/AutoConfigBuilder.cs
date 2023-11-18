@@ -14,8 +14,6 @@ internal sealed class AutoConfigBuilder :
 
     internal AutoConfig Config { get; }
 
-    internal object?[]? Args { get; private set; }
-
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithLocale(string locale)
     {
         return WithLocale<IAutoFakerConfigBuilder>(locale, this);
@@ -94,11 +92,6 @@ internal sealed class AutoConfigBuilder :
         AutoGeneratorOverride generatorOverride)
     {
         return WithOverride<IAutoFakerConfigBuilder>(generatorOverride, this);
-    }
-
-    IAutoFakerConfigBuilder IAutoFakerConfigBuilder.WithArgs(params object[] args)
-    {
-        return WithArgs<IAutoFakerConfigBuilder>(args, this);
     }
 
     IAutoFakerDefaultConfigBuilder IAutoConfigBuilder<IAutoFakerDefaultConfigBuilder>.WithLocale(string locale)
@@ -323,7 +316,7 @@ internal sealed class AutoConfigBuilder :
             return builder;
         }
 
-        var path     = $"{type.FullName}.{memberName}";
+        var path     = SkipConfig.MakePathForMember(type, memberName);
         var existing = Config.SkipPaths.Any(it => it == path);
 
         if (!existing)
@@ -352,12 +345,6 @@ internal sealed class AutoConfigBuilder :
             Config.Overrides.Add(generatorOverride);
         }
 
-        return builder;
-    }
-
-    internal TBuilder WithArgs<TBuilder>(object?[]? args, TBuilder builder)
-    {
-        Args = args;
         return builder;
     }
 }

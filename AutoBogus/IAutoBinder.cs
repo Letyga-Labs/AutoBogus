@@ -6,8 +6,7 @@ namespace AutoBogus;
 /// <summary>
 ///     An interface for binding generated instances.
 /// </summary>
-public interface IAutoBinder
-    : IBinder
+public interface IAutoBinder : IBinder
 {
     /// <summary>
     ///     Creates an instance of <typeparamref name="TType" />.

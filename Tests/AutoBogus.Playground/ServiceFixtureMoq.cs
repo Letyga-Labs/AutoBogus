@@ -3,8 +3,7 @@ using Xunit.Abstractions;
 
 namespace AutoBogus.Playground;
 
-public class ServiceFixtureMoq
-    : ServiceFixture
+public class ServiceFixtureMoq : ServiceFixture
 {
     public ServiceFixtureMoq(ITestOutputHelper output)
         : base(output, new MoqBinder())

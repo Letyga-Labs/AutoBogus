@@ -2,29 +2,32 @@ using System.Diagnostics;
 
 namespace AutoBogus;
 
-internal sealed class AutoGeneratorOverrideInvoker
-    : IAutoGenerator
+internal sealed class AutoGeneratorOverrideInvoker : IAutoGenerator
 {
-    internal AutoGeneratorOverrideInvoker(IAutoGenerator generator, IEnumerable<AutoGeneratorOverride> overrides)
+    private readonly IAutoGenerator                       _generator;
+    private readonly IReadOnlyList<AutoGeneratorOverride> _overrides;
+
+    internal AutoGeneratorOverrideInvoker(IAutoGenerator generator, IReadOnlyList<AutoGeneratorOverride> overrides)
     {
-        Generator = generator;
-        Overrides = overrides;
+        _generator = generator;
+        _overrides = overrides;
     }
 
-    internal IAutoGenerator Generator { get; }
-
-    internal IEnumerable<AutoGeneratorOverride> Overrides { get; }
+    /// <summary>
+    /// Visible for tests.
+    /// </summary>
+    internal IReadOnlyList<AutoGeneratorOverride> Overrides => _overrides;
 
     object IAutoGenerator.Generate(AutoGenerateContext context)
     {
         var overrideContext = new AutoGenerateOverrideContext(context);
 
-        foreach (var generatorOverride in Overrides)
+        foreach (var generatorOverride in _overrides)
         {
             // Check if an initialized instance is needed
             if (generatorOverride.Preinitialize && overrideContext.Instance == null)
             {
-                overrideContext.Instance = Generator.Generate(context);
+                overrideContext.Instance = _generator.Generate(context);
             }
 
             // Let each override apply updates to the instance
