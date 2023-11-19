@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Bogus;
 
 namespace AutoBogus;
@@ -5,6 +6,13 @@ namespace AutoBogus;
 /// <summary>
 ///     A class that provides context for a generate request.
 /// </summary>
+[DebuggerDisplay(
+    """
+    Generation target:
+    {GetGenerationTargetDebugView()}
+    Generation config:
+    {Config}
+    """)]
 public sealed class AutoGenerateContext
 {
     internal AutoGenerateContext(AutoConfig config)
@@ -56,4 +64,14 @@ public sealed class AutoGenerateContext
     internal IAutoBinder Binder => Config.Binder;
 
     internal IEnumerable<AutoGeneratorOverride> Overrides => Config.Overrides;
+
+    private string GetGenerationTargetDebugView()
+    {
+        return $"""
+                    {ParentType?.ToString() ?? "<unknown parent type>"} (
+                        {GenerateType} {GenerateName ?? "<unknown member name>"} instance =
+                            {Instance ?? "<instance value is not set yet>"}
+                    )
+                 """;
+    }
 }

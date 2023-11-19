@@ -39,12 +39,18 @@ internal sealed class Templator<T>
     ///     Creates a set of test data with number of rows matching that in the dataAsString data set
     ///     With fake values used unless the field is in the template.
     /// </summary>
-    /// <param name="template">
-    ///     Should be of form
-    ///     var testData  =
-    ///     "EmployeeId | DateOfBirth     \r\n" +
-    ///     "1          | 2000-01-01      \r\n".
-    /// </param>
+    /// <example>
+    /// <code>
+    /// const string testDataTemplate =
+    ///     """
+    ///     Id | FirstName | LastName | DateOfBirth
+    ///     0  | John      | Smith    | 2000-01-01
+    ///     1  | Jane      | Jones    | 1990-07-07
+    ///     2  | Bob       | Clark    | 1985-12-12
+    ///     """;
+    /// templator.GenerateFromTemplate(testDataTemplate);
+    /// </code>
+    /// </example>
     /// <returns>The generated data.</returns>
     public List<T> GenerateFromTemplate(string template)
     {
@@ -104,7 +110,7 @@ internal sealed class Templator<T>
     ///     and its values are then used for test data generation as template row values.
     /// </param>
     /// <returns>The generated data.</returns>
-    public List<T> GenerateFromTemplate(List<string> headers, List<T> testItems)
+    public List<T> GenerateFromTemplate(IReadOnlyList<string> headers, IReadOnlyList<T> testItems)
     {
         // note: Not the most efficient as it gets converted to a template string and then that gets parsed.
         var headersAsString = string.Join("|", headers);
@@ -259,9 +265,11 @@ internal sealed class Templator<T>
                 case TemplateValues.NullToken:
                     prop.SetValue(transaction, null, null);
                     break;
+
                 case TemplateValues.EmptyToken:
                     prop.SetValue(transaction, string.Empty, null);
                     break;
+
                 default:
                 {
                     if (_treatMissingAsNull && string.IsNullOrEmpty(value))

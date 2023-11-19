@@ -11,10 +11,12 @@ public class TemplateFixture
     public void Should_Handle_Strings()
     {
         const string testData =
-            " StringField  \r\n" +
-            " value1       \r\n" +
-            "              \r\n" +
-            " $empty$      \r\n";
+            """
+            StringField
+            value1
+                        
+            $empty$
+            """;
 
         var faker = new AutoFaker<Parent>();
 
@@ -99,8 +101,10 @@ public class TemplateFixture
     public void Should_Generate_Not_Specified_Fields()
     {
         const string testData =
-            " StringField  \r\n" +
-            " value1       \r\n";
+            """
+            StringField
+            value1
+            """;
 
         var faker = new AutoFaker<Parent>();
         faker.RuleFor(p => p.IntField, _ => 999);
@@ -119,10 +123,12 @@ public class TemplateFixture
     public void Should_AutoNumber_If_Specified()
     {
         const string testData =
-            " StringField  \r\n" +
-            " value1       \r\n" +
-            " value2       \r\n" +
-            " value3       \r\n";
+            """
+            StringField
+            value1
+            value2
+            value3
+            """;
 
         var faker = new AutoFaker<Parent>();
         faker.Identity(p => p.Id);
@@ -139,10 +145,12 @@ public class TemplateFixture
     public void Should_Ignore_If_Specified()
     {
         const string testData =
-            " IntField  \r\n" +
-            " 10       \r\n" +
-            " 11       \r\n" +
-            " 12       \r\n";
+            """
+            IntField
+            10
+            11
+            12
+            """;
 
         var faker = new AutoFaker<Parent>();
         faker.Ignore(p => p.StringField);
@@ -160,10 +168,12 @@ public class TemplateFixture
     public void Should_Use_Type_Converter_If_Specified()
     {
         const string testData =
-            " Child  \r\n" +
-            " Child1 \r\n" +
-            " Child2 \r\n" +
-            "        \r\n";
+            """
+            Child
+            Child1
+            Child2
+                  
+            """;
 
         var binder = new TemplateBinder().SetTypeConverter(ChildConverter());
 
@@ -183,8 +193,10 @@ public class TemplateFixture
     public void Should_Treat_Missing_As_Empty_If_Specified()
     {
         const string testData =
-            " StringField  \r\n" +
-            "        \r\n";
+            """
+            StringField
+                  
+            """;
 
         var binder = new TemplateBinder()
             .TreatMissingAsEmpty()
@@ -226,8 +238,10 @@ public class TemplateFixture
     public void Should_Handle_Space_After_NewLine()
     {
         const string testData =
-            " Id | StringField | \r\n " +
-            " 1  | test        | \r\n ";
+            """
+            Id | StringField |
+            1  | test        |
+            """;
 
         var binder = new TemplateBinder()
             .SetPropertyNameSpaceDelimiter("_");
@@ -265,10 +279,10 @@ public class TemplateFixture
                     instance = AutoFaker.Generate<Child>();
                 }
 
-                return (true, instance);
+                return (Handled: true, Result: instance);
             }
 
-            return (false, null);
+            return (Handled: false, Result: null);
         };
     }
 

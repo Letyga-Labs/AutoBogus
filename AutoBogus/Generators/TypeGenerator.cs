@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AutoBogus.Generators;
+﻿namespace AutoBogus.Generators;
 
 internal sealed class TypeGenerator<TType> : IAutoGenerator
 {
@@ -11,11 +9,13 @@ internal sealed class TypeGenerator<TType> : IAutoGenerator
         // This means the changes are applied to a different instance to the one created here
         object? instance = context.Binder.CreateInstance<TType>(context);
 
-        Debug.Assert(instance != null, nameof(instance) + " != null");
-
         // Populate the generated instance
-        context.Binder.PopulateInstance<TType>(instance, context);
+        // Instance may be null for Interface and Abstract Class types
+        if (instance != null)
+        {
+            context.Binder.PopulateInstance<TType>(instance, context);
+        }
 
-        return instance;
+        return instance!;
     }
 }

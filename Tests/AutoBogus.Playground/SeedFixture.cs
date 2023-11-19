@@ -21,8 +21,11 @@ public class SeedFixture
         Assert.Equal(entity1.Name, entity2.Name);
         Assert.NotEqual(entity2.Name, entity3.Name);
 
-        Assert.Equal(entity1.DeprecationDate, entity2.DeprecationDate, new TimeSpan(500));
-        Assert.Equal(entity2.DeprecationDate, entity3.DeprecationDate, new TimeSpan(500));
+        Assert.Equal(entity1.DeprecationDate, entity2.DeprecationDate, TimeSpan.FromMilliseconds(500));
+        Assert.NotEqual(
+            entity2.DeprecationDate,
+            entity3.DeprecationDate,
+            (a, b) => (a - b).Duration() < TimeSpan.FromMilliseconds(500));
     }
 
     [Fact]
@@ -42,6 +45,8 @@ public class SeedFixture
         // Check output using LINQPad
         var author = authorFaker.Generate();
 
+        Assert.Equal(0, author.Id);
+        Assert.Null(author.Books);
         Assert.Equal("functionalities", author.FirstName);
         Assert.Equal("throughput",      author.LastName);
     }

@@ -16,7 +16,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        Assert.Contains(instance.Email, "@", StringComparison.Ordinal);
+        Assert.Contains("@", instance.Email, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        Assert.Contains(instance.AnotherEmail, "@", StringComparison.Ordinal);
+        Assert.Contains("@", instance.AnotherEmail, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class AutoConventionsFixture
         });
 
         var instance = _faker.Generate<TestClass>();
-        Assert.DoesNotContain(instance.Email, "@", StringComparison.Ordinal);
+        Assert.DoesNotContain("@", instance.Email, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -73,8 +73,8 @@ public class AutoConventionsFixture
 
     private class TestClass
     {
-        public string Email        { get; } = null!;
-        public string AnotherEmail { get; } = null!;
+        public string Email        { get; set; } = null!;
+        public string AnotherEmail { get; set; } = null!;
     }
 
     private class TestGeneratorOverride

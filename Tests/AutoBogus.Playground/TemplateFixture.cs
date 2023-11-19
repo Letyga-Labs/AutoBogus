@@ -47,7 +47,7 @@ public class TemplateFixture
             },
         };
 
-        Assert.Equal(expected, persons);
+        Assert.Equivalent(expected, persons);
     }
 
     private class Person

@@ -19,6 +19,11 @@ public class AutoBinder : Binder, IAutoBinder
     /// <typeparam name="TType">The type of instance to create.</typeparam>
     /// <param name="context">The <see cref="AutoGenerateContext" /> instance for the generate request.</param>
     /// <returns>The created instance of <typeparamref name="TType" />.</returns>
+    /// <remarks>
+    ///     Historically, AutoBogus does not create instances for Interfaces and Abstract classes,
+    ///     leaving it with nulls. Additional packages (AutoBogus.NSubstitue, AutoBogus.Moq, AutoBogus.FakeItEasy)
+    ///     are provided, which create mocks for such types.
+    /// </remarks>
     public virtual TType CreateInstance<TType>(AutoGenerateContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -28,9 +33,14 @@ public class AutoBinder : Binder, IAutoBinder
 
         if (constructor == null)
         {
+            if (type.IsInterface || type.IsAbstract || type.IsValueType)
+            {
+                return default!;
+            }
+
             throw new CouldNotFindAppropriateConstructorException(
                 $"""
-                 No public constructor has been found on type {type}.
+                 No public constructor has been found on the type {type}.
                  AutoFaker must have access to some public constructor of type in order to create an instance of it.
                  """);
         }
@@ -79,7 +89,7 @@ public class AutoBinder : Binder, IAutoBinder
 
         foreach (var member in membersToPopulate)
         {
-            if (ShouldPopulateMember(member.Type, member.Name, context))
+            if (ShouldPopulateMember(type, member.Name, member.Type, context))
             {
                 context.TypesStack.Push(member.Type);
 
@@ -118,12 +128,20 @@ public class AutoBinder : Binder, IAutoBinder
     /// Check if the member has a skip config or the type has already been generated as a parent.
     /// If so skip this generation otherwise track it for use later in the object tree.
     /// </summary>
+    /// <param name="ownerType">Type of instance which member is to be populated.</param>
+    /// <param name="memberName">The name of the member.</param>
+    /// <param name="memberType">The type of the member.</param>
+    /// <param name="context">The generation context.</param>
     /// <returns>true of <paramref name="memberName"/> should be populated, false otherwise.</returns>
-    protected virtual bool ShouldPopulateMember(Type type, string memberName, AutoGenerateContext context)
+    protected virtual bool ShouldPopulateMember(
+        Type                ownerType,
+        string              memberName,
+        Type                memberType,
+        AutoGenerateContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        if (SkipConfig.ShouldSkip(context, type, memberName))
+        if (SkipConfig.ShouldSkip(context, ownerType, memberName, memberType))
         {
             return false;
         }
@@ -137,7 +155,7 @@ public class AutoBinder : Binder, IAutoBinder
         }
 
         // Finally check if the recursive depth has been reached
-        var count          = context.TypesStack.Count(t => t == type);
+        var count          = context.TypesStack.Count(t => t == memberType);
         var recursiveDepth = context.Config.RecursiveDepth.Invoke(context);
 
         return count < recursiveDepth;

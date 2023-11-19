@@ -51,4 +51,18 @@ internal sealed class AutoConfig
     internal Func<AutoGenerateContext, int?> TreeDepth         { get; set; }
 
     internal HashSet<AutoGeneratorOverride> Overrides { get; set; }
+
+    public override string ToString()
+    {
+        return $"""
+                {nameof(AutoConfig)} (
+                    {nameof(Locale)}    : {Locale}
+                    {nameof(Binder)}    : {Binder}
+                    {nameof(FakerHub)}  : {FakerHub}
+                    {nameof(SkipTypes)} : [{string.Join(", ", SkipTypes)}]
+                    {nameof(SkipPaths)} : [{string.Join(", ", SkipPaths)}]
+                    {nameof(Overrides)} : [{string.Join(", ", Overrides)}]
+                )
+                """;
+    }
 }

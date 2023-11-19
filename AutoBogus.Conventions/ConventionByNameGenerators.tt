@@ -5,7 +5,10 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Linq" #>
-using System.Diagnostics;
+#pragma warning disable SA1649
+#pragma warning disable SA1204
+#pragma warning disable SA1403
+#pragma warning disable SA1601
 
 namespace AutoBogus.Conventions.Generators
 {<#
@@ -70,7 +73,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.<#= generatorMethod.Name #>.Enabled &&
                    config.<#= generatorMethod.Name #>.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(<#= generateType #>);

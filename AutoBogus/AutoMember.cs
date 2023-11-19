@@ -35,4 +35,9 @@ internal sealed class AutoMember
 
     internal Func<object, object?>   Getter { get; }
     internal Action<object, object?> Setter { get; }
+
+    public override string ToString()
+    {
+        return $"{nameof(IsReadOnly)}: {IsReadOnly}, {nameof(Name)}: {Name}, {nameof(Type)}: {Type}";
+    }
 }

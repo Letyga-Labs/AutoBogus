@@ -10,7 +10,7 @@ public static class TemplateExtensions
     /// <summary>
     ///     Generate data using data values in template and AutoFaker for other values.
     /// </summary>
-    /// <typeparam name="TType">Type of the genetaed data.</typeparam>
+    /// <typeparam name="TType">Type of the generated data.</typeparam>
     /// <returns>Generated data.</returns>
     public static List<TType> GenerateWithTemplate<TType>(this AutoFaker<TType> src, string template)
         where TType : class
@@ -21,19 +21,21 @@ public static class TemplateExtensions
     }
 
     /// <summary>
-    ///     Generate data using the supplied rows but only those proprties who appear in headers list
+    ///     Generate data using the supplied rows but only those properties
+    ///     which appear in the <paramref name="headers"/> list.
     ///     Properties not in the headers list will use AutoFaker rules.
     /// </summary>
-    /// <typeparam name="TType">Type of the genetaed data.</typeparam>
+    /// <typeparam name="TType">Type of the generated data.</typeparam>
     /// <returns>Generated data.</returns>
     public static List<TType> GenerateWithTemplate<TType>(
         this AutoFaker<TType> src,
-        List<string>          headers,
-        List<TType>           rows)
+        IReadOnlyList<string> headers,
+        IReadOnlyList<TType>  rows)
         where TType : class
     {
         ArgumentNullException.ThrowIfNull(headers);
         ArgumentNullException.ThrowIfNull(rows);
+
         var templator = new Templator<TType>(src);
         var result    = templator.GenerateFromTemplate(headers, rows);
         return result;
@@ -42,7 +44,7 @@ public static class TemplateExtensions
     /// <summary>
     ///     Will autonumber the identity property.
     /// </summary>
-    /// <typeparam name="TType">TYpe of the generated data.</typeparam>
+    /// <typeparam name="TType">Type of the generated data.</typeparam>
     /// <typeparam name="TProperty">Type of property which is to be autonumbered.</typeparam>
     /// <param name="src">The AutoBinder instance being configured.</param>
     /// <param name="property">Expression denoting property which is to be autonumbered.</param>
@@ -72,7 +74,7 @@ public static class TemplateExtensions
     /// <summary>
     ///     Tells the generator not to generate a value, but to use the default value for the type.
     /// </summary>
-    /// <typeparam name="TType">TYpe of the generated data.</typeparam>
+    /// <typeparam name="TType">Type of the generated data.</typeparam>
     /// <typeparam name="TProperty">Type of property for which the default values is to be used.</typeparam>
     /// <param name="src">The AutoBinder instance being configured.</param>
     /// <param name="property">Expression denoting property for which the default value is to be used.</param>

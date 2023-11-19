@@ -42,7 +42,7 @@ public sealed class AutoConventionGeneratorConfig
         SetAliases(filtered);
     }
 
-    internal bool HasAlias(string name)
+    internal bool HasAlias(string? name)
     {
         return _aliases.Exists(alias => alias.Equals(name, StringComparison.OrdinalIgnoreCase));
     }

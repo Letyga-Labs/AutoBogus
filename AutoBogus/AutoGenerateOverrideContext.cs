@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Bogus;
 
 namespace AutoBogus;
@@ -5,11 +6,25 @@ namespace AutoBogus;
 /// <summary>
 ///     A class that provides context when overriding a generate request.
 /// </summary>
+[DebuggerDisplay(
+    """
+    Generation target:
+    {GetGenerationTargetDebugView()}
+    With selected override:
+        {Override}
+    Generation config:
+        {GenerateContext.Config}
+    """)]
 public sealed class AutoGenerateOverrideContext
 {
     internal AutoGenerateOverrideContext(AutoGenerateContext generateContext)
     {
         GenerateContext = generateContext;
+
+        GenerateType = GenerateContext.GenerateType;
+        GenerateName = GenerateContext.GenerateName;
+        Faker        = GenerateContext.Faker;
+        RuleSets     = GenerateContext.RuleSets;
     }
 
     /// <summary>
@@ -20,22 +35,34 @@ public sealed class AutoGenerateOverrideContext
     /// <summary>
     ///     The type associated with the current generate request.
     /// </summary>
-    public Type GenerateType => GenerateContext.GenerateType;
+    public Type GenerateType { get; }
 
     /// <summary>
     ///     The name associated with the current generate request.
     /// </summary>
-    public string? GenerateName => GenerateContext.GenerateName;
+    public string? GenerateName { get; }
 
     /// <summary>
-    ///     The underlying <see cref="Bogus.Faker" /> instance used to generate random values.
+    ///     The underlying <see cref="Bogus.Faker"/> instance used to generate random values.
     /// </summary>
-    public Faker Faker => GenerateContext.Faker;
+    public Faker Faker { get; }
 
     /// <summary>
     ///     The requested rule sets provided for the generate request.
     /// </summary>
-    public IEnumerable<string> RuleSets => GenerateContext.RuleSets;
+    public IEnumerable<string> RuleSets { get; }
 
     internal AutoGenerateContext GenerateContext { get; }
+
+    internal AutoGeneratorOverride Override { get; set; } = null!;
+
+    private string GetGenerationTargetDebugView()
+    {
+        return $"""
+                    {GenerateContext.ParentType?.ToString() ?? "<unknown parent type>"} (
+                        {GenerateType} {GenerateName ?? "<unknown member name>"} instance =
+                            {Instance ?? "<instance value is not set yet>"}
+                    )
+                """;
+    }
 }

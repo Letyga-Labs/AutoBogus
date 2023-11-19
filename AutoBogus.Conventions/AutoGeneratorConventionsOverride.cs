@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using AutoBogus.Conventions.Generators;
 
 namespace AutoBogus.Conventions;
 
@@ -7,6 +8,7 @@ internal sealed class AutoGeneratorConventionsOverride : AutoGeneratorOverride
     internal AutoGeneratorConventionsOverride(AutoConventionConfig config)
     {
         var generators = new List<IAutoConventionGenerator>();
+        generators.AddRange(ByNameGeneratorRegistry.Generators);
 
         Config     = config;
         Generators = generators;

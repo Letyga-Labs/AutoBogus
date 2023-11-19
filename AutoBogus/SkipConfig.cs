@@ -7,9 +7,13 @@ internal static class SkipConfig
         return $"{type.FullName}.{memberName}";
     }
 
-    public static bool ShouldSkip(AutoGenerateContext context, Type type, string memberName)
+    public static bool ShouldSkip(
+        AutoGenerateContext context,
+        Type                ownerType,
+        string              memberName,
+        Type                memberType)
     {
-        return context.Config.SkipTypes.Contains(type) ||
-               context.Config.SkipPaths.Contains(MakePathForMember(type, memberName));
+        return context.Config.SkipTypes.Contains(memberType) ||
+               context.Config.SkipPaths.Contains(MakePathForMember(ownerType, memberName));
     }
 }

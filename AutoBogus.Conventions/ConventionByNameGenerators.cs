@@ -3,8 +3,6 @@
 #pragma warning disable SA1403
 #pragma warning disable SA1601
 
-using System.Diagnostics;
-
 namespace AutoBogus.Conventions.Generators
 {
     // Address.BuildingNumber
@@ -12,7 +10,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.BuildingNumber.Enabled &&
                    config.BuildingNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -36,7 +33,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CardinalDirection.Enabled &&
                    config.CardinalDirection.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -60,7 +56,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.City.Enabled &&
                    config.City.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -84,7 +79,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CityPrefix.Enabled &&
                    config.CityPrefix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -108,7 +102,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CitySuffix.Enabled &&
                    config.CitySuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -132,7 +125,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Country.Enabled &&
                    config.Country.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -156,7 +148,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CountryCode.Enabled &&
                    config.CountryCode.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -180,7 +171,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.County.Enabled &&
                    config.County.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -204,7 +194,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Direction.Enabled &&
                    config.Direction.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -228,7 +217,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FullAddress.Enabled &&
                    config.FullAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -252,7 +240,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Latitude.Enabled &&
                    config.Latitude.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(double);
@@ -276,7 +263,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Longitude.Enabled &&
                    config.Longitude.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(double);
@@ -300,7 +286,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.OrdinalDirection.Enabled &&
                    config.OrdinalDirection.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -324,7 +309,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.SecondaryAddress.Enabled &&
                    config.SecondaryAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -348,7 +332,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.State.Enabled &&
                    config.State.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -372,7 +355,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StateAbbr.Enabled &&
                    config.StateAbbr.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -396,7 +378,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StreetAddress.Enabled &&
                    config.StreetAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -420,7 +401,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StreetName.Enabled &&
                    config.StreetName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -444,7 +424,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.StreetSuffix.Enabled &&
                    config.StreetSuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -468,7 +447,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ZipCode.Enabled &&
                    config.ZipCode.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -492,7 +470,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Color.Enabled &&
                    config.Color.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -516,7 +493,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Department.Enabled &&
                    config.Department.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -540,7 +516,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ean13.Enabled &&
                    config.Ean13.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -564,7 +539,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ean8.Enabled &&
                    config.Ean8.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -588,7 +562,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Price.Enabled &&
                    config.Price.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -612,7 +585,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Product.Enabled &&
                    config.Product.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -636,7 +608,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductAdjective.Enabled &&
                    config.ProductAdjective.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -660,7 +631,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductDescription.Enabled &&
                    config.ProductDescription.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -684,7 +654,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductMaterial.Enabled &&
                    config.ProductMaterial.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -708,7 +677,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ProductName.Enabled &&
                    config.ProductName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -732,7 +700,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Bs.Enabled &&
                    config.Bs.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -756,7 +723,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CatchPhrase.Enabled &&
                    config.CatchPhrase.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -780,7 +746,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CompanyName.Enabled &&
                    config.CompanyName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -804,7 +769,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CompanySuffix.Enabled &&
                    config.CompanySuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -828,7 +792,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Collation.Enabled &&
                    config.Collation.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -852,7 +815,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Column.Enabled &&
                    config.Column.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -876,7 +838,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Engine.Enabled &&
                    config.Engine.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -900,7 +861,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Type.Enabled &&
                    config.Type.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -924,7 +884,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Account.Enabled &&
                    config.Account.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -948,7 +907,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.AccountName.Enabled &&
                    config.AccountName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -972,7 +930,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Amount.Enabled &&
                    config.Amount.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(decimal);
@@ -996,7 +953,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Bic.Enabled &&
                    config.Bic.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1020,7 +976,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.BitcoinAddress.Enabled &&
                    config.BitcoinAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1044,7 +999,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CreditCardCvv.Enabled &&
                    config.CreditCardCvv.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1068,7 +1022,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CreditCardNumber.Enabled &&
                    config.CreditCardNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1092,7 +1045,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Currency.Enabled &&
                    config.Currency.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(Bogus.DataSets.Currency);
@@ -1116,7 +1068,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.EthereumAddress.Enabled &&
                    config.EthereumAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1140,7 +1091,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Iban.Enabled &&
                    config.Iban.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1164,7 +1114,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.LitecoinAddress.Enabled &&
                    config.LitecoinAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1188,7 +1137,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.RoutingNumber.Enabled &&
                    config.RoutingNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1212,7 +1160,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.TransactionType.Enabled &&
                    config.TransactionType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1236,7 +1183,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Avatar.Enabled &&
                    config.Avatar.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1260,7 +1206,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DomainName.Enabled &&
                    config.DomainName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1284,7 +1229,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DomainSuffix.Enabled &&
                    config.DomainSuffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1308,7 +1252,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DomainWord.Enabled &&
                    config.DomainWord.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1332,7 +1275,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Email.Enabled &&
                    config.Email.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1356,7 +1298,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ExampleEmail.Enabled &&
                    config.ExampleEmail.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1380,7 +1321,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ip.Enabled &&
                    config.Ip.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1404,7 +1344,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.IpAddress.Enabled &&
                    config.IpAddress.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(System.Net.IPAddress);
@@ -1428,7 +1367,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.IpEndPoint.Enabled &&
                    config.IpEndPoint.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(System.Net.IPEndPoint);
@@ -1452,7 +1390,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ipv6.Enabled &&
                    config.Ipv6.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1476,7 +1413,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ipv6Address.Enabled &&
                    config.Ipv6Address.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(System.Net.IPAddress);
@@ -1500,7 +1436,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Ipv6EndPoint.Enabled &&
                    config.Ipv6EndPoint.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(System.Net.IPEndPoint);
@@ -1524,7 +1459,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Mac.Enabled &&
                    config.Mac.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1548,7 +1482,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Password.Enabled &&
                    config.Password.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1572,7 +1505,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Port.Enabled &&
                    config.Port.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(int);
@@ -1596,7 +1528,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Protocol.Enabled &&
                    config.Protocol.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1620,7 +1551,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Url.Enabled &&
                    config.Url.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1644,7 +1574,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UrlRootedPath.Enabled &&
                    config.UrlRootedPath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1668,7 +1597,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UrlWithPath.Enabled &&
                    config.UrlWithPath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1692,7 +1620,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UserAgent.Enabled &&
                    config.UserAgent.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1716,7 +1643,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UserName.Enabled &&
                    config.UserName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1740,7 +1666,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.UserNameUnicode.Enabled &&
                    config.UserNameUnicode.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1764,7 +1689,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Genre.Enabled &&
                    config.Genre.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1788,7 +1712,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FindName.Enabled &&
                    config.FindName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1812,7 +1735,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FirstName.Enabled &&
                    config.FirstName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1836,7 +1758,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FullName.Enabled &&
                    config.FullName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1860,7 +1781,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobArea.Enabled &&
                    config.JobArea.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1884,7 +1804,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobDescriptor.Enabled &&
                    config.JobDescriptor.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1908,7 +1827,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobTitle.Enabled &&
                    config.JobTitle.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1932,7 +1850,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.JobType.Enabled &&
                    config.JobType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1956,7 +1873,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.LastName.Enabled &&
                    config.LastName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -1980,7 +1896,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Prefix.Enabled &&
                    config.Prefix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2004,7 +1919,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Suffix.Enabled &&
                    config.Suffix.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2028,7 +1942,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.PhoneNumber.Enabled &&
                    config.PhoneNumber.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2052,7 +1965,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.PhoneNumberFormat.Enabled &&
                    config.PhoneNumberFormat.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2076,7 +1988,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.AndroidId.Enabled &&
                    config.AndroidId.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2100,7 +2011,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.ApplePushToken.Enabled &&
                    config.ApplePushToken.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2124,7 +2034,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.BlackBerryPin.Enabled &&
                    config.BlackBerryPin.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2148,7 +2057,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CommonFileExt.Enabled &&
                    config.CommonFileExt.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2172,7 +2080,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CommonFileName.Enabled &&
                    config.CommonFileName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2196,7 +2103,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.CommonFileType.Enabled &&
                    config.CommonFileType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2220,7 +2126,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.DirectoryPath.Enabled &&
                    config.DirectoryPath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2244,7 +2149,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Exception.Enabled &&
                    config.Exception.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(System.Exception);
@@ -2268,7 +2172,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FileExt.Enabled &&
                    config.FileExt.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2292,7 +2195,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FileName.Enabled &&
                    config.FileName.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2316,7 +2218,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FilePath.Enabled &&
                    config.FilePath.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2340,7 +2241,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.FileType.Enabled &&
                    config.FileType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2364,7 +2264,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.MimeType.Enabled &&
                    config.MimeType.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2388,7 +2287,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Semver.Enabled &&
                    config.Semver.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2412,7 +2310,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Version.Enabled &&
                    config.Version.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(System.Version);
@@ -2436,7 +2333,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Fuel.Enabled &&
                    config.Fuel.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2460,7 +2356,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Manufacturer.Enabled &&
                    config.Manufacturer.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2484,7 +2379,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Model.Enabled &&
                    config.Model.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
@@ -2508,7 +2402,6 @@ namespace AutoBogus.Conventions.Generators
     {
         bool IAutoConventionGenerator.CanGenerate(AutoConventionConfig config, AutoGenerateContext context)
         {
-            Debug.Assert(context.GenerateName != null, "context.GenerateName != null");
             return config.Vin.Enabled &&
                    config.Vin.HasAlias(context.GenerateName) &&
                    context.GenerateType == typeof(string);
