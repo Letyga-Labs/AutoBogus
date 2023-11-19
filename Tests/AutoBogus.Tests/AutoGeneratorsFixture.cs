@@ -3,6 +3,7 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using AutoBogus.Generators;
+using AutoBogus.Internal;
 using AutoBogus.Tests.Models.Simple;
 using Bogus;
 using Xunit;
@@ -38,7 +39,7 @@ public partial class AutoGeneratorsFixture
         Func<AutoGenerateContext, int>? dataTableRowCountFunctor = null)
     {
         var faker  = new Faker();
-        var config = new AutoConfig();
+        var config = new AutoFakerConfig();
 
         if (generatorOverrides != null)
         {
@@ -79,14 +80,14 @@ public partial class AutoGeneratorsFixture
             public void Should_Handle_Subclasses(Type readOnlyDictionaryType)
             {
                 // Arrange
-                var config = new AutoConfig();
+                var config = new AutoFakerConfig();
 
                 var context = new AutoGenerateContext(config);
 
                 context.GenerateType = readOnlyDictionaryType;
 
                 // Act
-                var generator = AutoGeneratorFactory.ResolveGenerator(context);
+                var generator = GeneratorFactory.ResolveGenerator(context);
 
                 var instance = generator.Generate(context);
 
@@ -184,14 +185,14 @@ public partial class AutoGeneratorsFixture
             public void Should_Handle_Subclasses(Type dictionaryType)
             {
                 // Arrange
-                var config = new AutoConfig();
+                var config = new AutoFakerConfig();
 
                 var context = new AutoGenerateContext(config);
 
                 context.GenerateType = dictionaryType;
 
                 // Act
-                var generator = AutoGeneratorFactory.ResolveGenerator(context);
+                var generator = GeneratorFactory.ResolveGenerator(context);
 
                 var instance = generator.Generate(context);
 
@@ -233,14 +234,14 @@ public partial class AutoGeneratorsFixture
             public void Should_Handle_Subclasses(Type setType)
             {
                 // Arrange
-                var config = new AutoConfig();
+                var config = new AutoFakerConfig();
 
                 var context = new AutoGenerateContext(config);
 
                 context.GenerateType = setType;
 
                 // Act
-                var generator = AutoGeneratorFactory.ResolveGenerator(context);
+                var generator = GeneratorFactory.ResolveGenerator(context);
 
                 var instance = generator.Generate(context);
 
@@ -276,14 +277,14 @@ public partial class AutoGeneratorsFixture
             public void Should_Handle_Subclasses(Type listType)
             {
                 // Arrange
-                var config = new AutoConfig();
+                var config = new AutoFakerConfig();
 
                 var context = new AutoGenerateContext(config);
 
                 context.GenerateType = listType;
 
                 // Act
-                var generator = AutoGeneratorFactory.ResolveGenerator(context);
+                var generator = GeneratorFactory.ResolveGenerator(context);
 
                 var instance = generator.Generate(context);
 
@@ -315,7 +316,7 @@ public partial class AutoGeneratorsFixture
             var parameter   = constructor.GetParameters().Single();
             var context     = CreateContext(parameter.ParameterType);
 
-            var ex = Record.Exception(() => AutoGeneratorFactory.GetGenerator(context));
+            var ex = Record.Exception(() => GeneratorFactory.GetGenerator(context));
             Assert.Null(ex);
         }
 
@@ -332,7 +333,7 @@ public partial class AutoGeneratorsFixture
     {
         public static IEnumerable<object[]> GetRegisteredTypes()
         {
-            return AutoGeneratorFactory.Generators.Select(g => new object[] { g.Key, });
+            return GeneratorFactory.Generators.Select(g => new object[] { g.Key, });
         }
 
         [SuppressMessage("Design", "CA1024:Use properties where appropriate")]
@@ -349,7 +350,7 @@ public partial class AutoGeneratorsFixture
         [MemberData(nameof(GetRegisteredTypes))]
         public void Generate_Should_Return_Value(Type type)
         {
-            var generator = AutoGeneratorFactory.Generators[type];
+            var generator = GeneratorFactory.Generators[type];
 
             Assert.IsType(type, InvokeGenerator(type, generator));
         }
@@ -359,9 +360,9 @@ public partial class AutoGeneratorsFixture
         public void GetGenerator_Should_Return_Generator(Type type)
         {
             var context   = CreateContext(type);
-            var generator = AutoGeneratorFactory.Generators[type];
+            var generator = GeneratorFactory.Generators[type];
 
-            Assert.Equal(generator, AutoGeneratorFactory.GetGenerator(context));
+            Assert.Equal(generator, GeneratorFactory.GetGenerator(context));
         }
 
         [Theory]
@@ -370,7 +371,7 @@ public partial class AutoGeneratorsFixture
         {
             var context = CreateContext(dataType);
 
-            var generator = AutoGeneratorFactory.GetGenerator(context);
+            var generator = GeneratorFactory.GetGenerator(context);
 
             Assert.IsAssignableFrom(generatorType, generator);
         }
@@ -408,7 +409,7 @@ public partial class AutoGeneratorsFixture
             var type    = typeof(ExpandoObject);
             var context = CreateContext(type);
 
-            Assert.IsType<Generators.ExpandoObjectGenerator>(AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType<Generators.ExpandoObjectGenerator>(GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -449,7 +450,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = type.GetElementType()!;
             var generatorType = GetGeneratorType(typeof(ArrayGenerator<>), itemType);
 
-            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType(generatorType, GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -471,7 +472,7 @@ public partial class AutoGeneratorsFixture
             var type    = typeof(TestEnum);
             var context = CreateContext(type);
 
-            Assert.IsType<EnumGenerator<TestEnum>>(AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType<EnumGenerator<TestEnum>>(GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -527,7 +528,7 @@ public partial class AutoGeneratorsFixture
             var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(DictionaryGenerator<,>), keyType, valueType);
 
-            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType(generatorType, GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -583,7 +584,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(ListGenerator<>), itemType);
 
-            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType(generatorType, GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -629,7 +630,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(SetGenerator<>), itemType);
 
-            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType(generatorType, GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -673,7 +674,7 @@ public partial class AutoGeneratorsFixture
             var itemType      = genericTypes[0];
             var generatorType = GetGeneratorType(typeof(EnumerableGenerator<>), itemType);
 
-            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType(generatorType, GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -695,7 +696,7 @@ public partial class AutoGeneratorsFixture
             var type    = typeof(TestEnum?);
             var context = CreateContext(type);
 
-            Assert.IsType<NullableGenerator<TestEnum>>(AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType<NullableGenerator<TestEnum>>(GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -733,7 +734,7 @@ public partial class AutoGeneratorsFixture
             var context       = CreateContext(type);
             var generatorType = GetGeneratorType(typeof(TypeGenerator<>), type);
 
-            Assert.IsType(generatorType, AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType(generatorType, GeneratorFactory.GetGenerator(context));
         }
     }
 
@@ -763,14 +764,14 @@ public partial class AutoGeneratorsFixture
             };
 
             var context = CreateContext(typeof(int), _overrides);
-            Assert.IsType<IntGenerator>(AutoGeneratorFactory.GetGenerator(context));
+            Assert.IsType<IntGenerator>(GeneratorFactory.GetGenerator(context));
         }
 
         [Fact]
         public void Should_Invoke_Generator()
         {
             var context           = CreateContext(typeof(string), _overrides);
-            var generatorOverride = AutoGeneratorFactory.GetGenerator(context);
+            var generatorOverride = GeneratorFactory.GetGenerator(context);
 
             var value = generatorOverride.Generate(context);
             Assert.NotNull(value);

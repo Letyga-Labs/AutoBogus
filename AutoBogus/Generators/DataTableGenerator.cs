@@ -1,5 +1,6 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using AutoBogus.Internal;
 
 namespace AutoBogus.Generators;
 

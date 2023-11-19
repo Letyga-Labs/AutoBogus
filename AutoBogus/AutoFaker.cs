@@ -1,3 +1,5 @@
+using AutoBogus.Internal;
+
 namespace AutoBogus;
 
 /// <summary>
@@ -5,14 +7,14 @@ namespace AutoBogus;
 /// </summary>
 public sealed class AutoFaker : IAutoFaker
 {
-    internal static readonly AutoConfig DefaultConfig = new();
+    internal static readonly AutoFakerConfig DefaultConfig = new();
 
-    private AutoFaker(AutoConfig config)
+    private AutoFaker(AutoFakerConfig config)
     {
         Config = config;
     }
 
-    internal AutoConfig Config { get; }
+    internal AutoFakerConfig Config { get; }
 
     /// <summary>
     ///     Configures all faker instances and generate requests.
@@ -20,7 +22,7 @@ public sealed class AutoFaker : IAutoFaker
     /// <param name="configure">A handler to build the default faker configuration.</param>
     public static void Configure(Action<IAutoFakerDefaultConfigBuilder>? configure)
     {
-        var builder = new AutoConfigBuilder(DefaultConfig);
+        var builder = new AutoFakerConfigBuilder(DefaultConfig);
         configure?.Invoke(builder);
     }
 
@@ -31,8 +33,8 @@ public sealed class AutoFaker : IAutoFaker
     /// <returns>The configured <see cref="IAutoFaker" /> instance.</returns>
     public static IAutoFaker Create(Action<IAutoGenerateConfigBuilder>? configure = null)
     {
-        var config  = new AutoConfig(DefaultConfig);
-        var builder = new AutoConfigBuilder(config);
+        var config  = new AutoFakerConfig(DefaultConfig);
+        var builder = new AutoFakerConfigBuilder(config);
         configure?.Invoke(builder);
 
         return new AutoFaker(config);
@@ -77,8 +79,8 @@ public sealed class AutoFaker : IAutoFaker
 
     private AutoGenerateContext CreateContext(Action<IAutoGenerateConfigBuilder>? configure)
     {
-        var config  = new AutoConfig(Config);
-        var builder = new AutoConfigBuilder(config);
+        var config  = new AutoFakerConfig(Config);
+        var builder = new AutoFakerConfigBuilder(config);
         configure?.Invoke(builder);
 
         return new AutoGenerateContext(config);

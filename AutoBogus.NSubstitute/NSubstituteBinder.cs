@@ -13,7 +13,7 @@ public class NSubstituteBinder : AutoBinder
     /// <typeparam name="TType">The type of instance to create.</typeparam>
     /// <param name="context">The <see cref="AutoGenerateContext" /> instance for the generate request.</param>
     /// <returns>The created instance of <typeparamref name="TType" />.</returns>
-    public override TType CreateInstance<TType>(AutoGenerateContext context)
+    public override TType CreateUnpopulatedInstance<TType>(AutoGenerateContext context)
     {
         var type = typeof(TType);
 
@@ -22,6 +22,6 @@ public class NSubstituteBinder : AutoBinder
             return (TType)Substitute.For(new[] { type, }, Array.Empty<object>());
         }
 
-        return base.CreateInstance<TType>(context);
+        return base.CreateUnpopulatedInstance<TType>(context);
     }
 }

@@ -1,18 +1,18 @@
 using Bogus;
 
-namespace AutoBogus;
+namespace AutoBogus.Internal;
 
-internal sealed class AutoConfigBuilder :
+internal sealed class AutoFakerConfigBuilder :
     IAutoFakerDefaultConfigBuilder,
     IAutoGenerateConfigBuilder,
     IAutoFakerConfigBuilder
 {
-    internal AutoConfigBuilder(AutoConfig config)
+    internal AutoFakerConfigBuilder(AutoFakerConfig config)
     {
         Config = config;
     }
 
-    internal AutoConfig Config { get; }
+    internal AutoFakerConfig Config { get; }
 
     IAutoFakerConfigBuilder IAutoConfigBuilder<IAutoFakerConfigBuilder>.WithLocale(string locale)
     {
@@ -258,31 +258,31 @@ internal sealed class AutoConfigBuilder :
 
     internal TBuilder WithLocale<TBuilder>(string? locale, TBuilder builder)
     {
-        Config.Locale = locale ?? AutoConfig.DefaultLocale;
+        Config.Locale = locale ?? AutoFakerConfig.DefaultLocale;
         return builder;
     }
 
     internal TBuilder WithRepeatCount<TBuilder>(Func<AutoGenerateContext, int>? count, TBuilder builder)
     {
-        Config.RepeatCount = count ?? AutoConfig.DefaultRepeatCount;
+        Config.RepeatCount = count ?? AutoFakerConfig.DefaultRepeatCount;
         return builder;
     }
 
     internal TBuilder WithDataTableRowCount<TBuilder>(Func<AutoGenerateContext, int>? count, TBuilder builder)
     {
-        Config.DataTableRowCount = count ?? AutoConfig.DefaultDataTableRowCount;
+        Config.DataTableRowCount = count ?? AutoFakerConfig.DefaultDataTableRowCount;
         return builder;
     }
 
     internal TBuilder WithRecursiveDepth<TBuilder>(Func<AutoGenerateContext, int>? depth, TBuilder builder)
     {
-        Config.RecursiveDepth = depth ?? AutoConfig.DefaultRecursiveDepth;
+        Config.RecursiveDepth = depth ?? AutoFakerConfig.DefaultRecursiveDepth;
         return builder;
     }
 
     internal TBuilder WithTreeDepth<TBuilder>(Func<AutoGenerateContext, int?>? depth, TBuilder builder)
     {
-        Config.TreeDepth = depth ?? AutoConfig.DefaultTreeDepth;
+        Config.TreeDepth = depth ?? AutoFakerConfig.DefaultTreeDepth;
         return builder;
     }
 
@@ -311,7 +311,7 @@ internal sealed class AutoConfigBuilder :
             return builder;
         }
 
-        var path = SkipConfig.MakePathForMember(type, memberName);
+        var path = PopulationTargetFiltering.GetSkipPathOfMember(type, memberName);
         Config.SkipPaths.Add(path);
 
         return builder;

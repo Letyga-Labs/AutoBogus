@@ -1,10 +1,15 @@
 using System.Reflection;
 
-namespace AutoBogus;
+namespace AutoBogus.Internal;
 
-internal sealed class AutoMember
+/// <summary>
+/// Represents type member which can be populated with some generated values.
+/// It is, for example, some property or field which can be written to directly
+/// or contains populatable via <c>Add(...)</c> method calls collection.
+/// </summary>
+internal sealed class PopulationTarget
 {
-    internal AutoMember(MemberInfo memberInfo)
+    internal PopulationTarget(MemberInfo memberInfo)
     {
         Name = memberInfo.Name;
 

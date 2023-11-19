@@ -1,6 +1,9 @@
-﻿namespace AutoBogus.Generation;
+﻿namespace AutoBogus.Internal;
 
-internal static class Generator
+/// <summary>
+/// Contains all the isolated functionality for unpopulated values generation.
+/// </summary>
+internal static class Generation
 {
     public static object Generate(
         AutoGenerateContext context,
@@ -17,7 +20,7 @@ internal static class Generator
             context.Instance = instance;
         }
 
-        var generator = AutoGeneratorFactory.GetGenerator(context);
+        var generator = GeneratorFactory.GetGenerator(context);
         var value     = generator.Generate(context);
         return value;
     }
@@ -66,7 +69,7 @@ internal static class Generator
         items.AddRange(filtered);
 
         // Only continue to generate more if the attempts threshold is not reached
-        if (attempt < AutoConfig.GenerateAttemptsThreshold)
+        if (attempt < AutoFakerConfig.GenerateAttemptsThreshold)
         {
             GenerateMany(context, items, unique, count, attempt + 1, generate);
         }

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using AutoBogus.Generators;
+using AutoBogus.Internal;
 using AutoBogus.Tests.Models.Simple;
 using Xunit;
 
@@ -52,7 +53,7 @@ public partial class AutoGeneratorsFixture
             var valueType     = genericTypes[1];
             var generatorType = GetGeneratorType(typeof(ReadOnlyDictionaryGenerator<,>), keyType, valueType);
 
-            var generator = AutoGeneratorFactory.GetGenerator(context);
+            var generator = GeneratorFactory.GetGenerator(context);
 
             Assert.IsType(generatorType, generator);
         }

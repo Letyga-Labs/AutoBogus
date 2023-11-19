@@ -1,4 +1,6 @@
-﻿namespace AutoBogus.Generators;
+﻿using AutoBogus.Internal;
+
+namespace AutoBogus.Generators;
 
 internal sealed class TypeGenerator<TType> : IAutoGenerator
 {
@@ -7,7 +9,7 @@ internal sealed class TypeGenerator<TType> : IAutoGenerator
         // Note that all instances are converted to object to cater for boxing and struct population
         // When setting a value via reflection on a struct a copy is made
         // This means the changes are applied to a different instance to the one created here
-        object? instance = context.Binder.CreateInstance<TType>(context);
+        object? instance = context.Binder.CreateUnpopulatedInstance<TType>(context);
 
         // Populate the generated instance
         // Instance may be null for Interface and Abstract Class types

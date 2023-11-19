@@ -1,5 +1,9 @@
 ﻿namespace AutoBogus.Errors;
 
+/// <summary>
+/// States that the implementation could not find any appropriate constructor
+/// in order to create an unpopulated instance of the type.
+/// </summary>
 public sealed class CouldNotFindAppropriateConstructorException : Exception
 {
     public CouldNotFindAppropriateConstructorException()

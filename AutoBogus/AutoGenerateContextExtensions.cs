@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using AutoBogus.Generation;
+using AutoBogus.Internal;
 
 namespace AutoBogus;
 
@@ -18,7 +18,7 @@ public static class AutoGenerateContextExtensions
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var result = (TType)Generator.Generate(
+        var result = (TType)Generation.Generate(
             context,
             parentType: null,
             generateType: typeof(TType),
@@ -39,7 +39,7 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(context);
 
         var items = new List<TType>();
-        Generator.GenerateMany(context, items, unique: false, count);
+        Generation.GenerateMany(context, items, unique: false, count);
 
         return items;
     }
@@ -56,7 +56,7 @@ public static class AutoGenerateContextExtensions
         ArgumentNullException.ThrowIfNull(context);
 
         var items = new List<TType>();
-        Generator.GenerateMany(context, items, unique: true, count);
+        Generation.GenerateMany(context, items, unique: true, count);
 
         return items;
     }

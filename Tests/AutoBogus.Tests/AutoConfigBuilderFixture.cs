@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using AutoBogus.Internal;
 using AutoBogus.NSubstitute;
 using Bogus;
 using Xunit;
@@ -8,15 +9,15 @@ namespace AutoBogus.Tests;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public class AutoConfigBuilderFixture
 {
-    private readonly AutoConfigBuilder _builder;
-    private readonly AutoConfig        _config;
+    private readonly AutoFakerConfigBuilder _builder;
+    private readonly AutoFakerConfig        _config;
     private readonly Faker             _faker;
 
     public AutoConfigBuilderFixture()
     {
         _faker   = new Faker();
-        _config  = new AutoConfig();
-        _builder = new AutoConfigBuilder(_config);
+        _config  = new AutoFakerConfig();
+        _builder = new AutoFakerConfigBuilder(_config);
     }
 
     private interface ITestBuilder
@@ -39,7 +40,7 @@ public class AutoConfigBuilderFixture
         {
             _config.Locale = _faker.Random.String();
             _builder.WithLocale<ITestBuilder>(null, null!);
-            Assert.Equal(AutoConfig.DefaultLocale, _config.Locale);
+            Assert.Equal(AutoFakerConfig.DefaultLocale, _config.Locale);
         }
     }
 
@@ -57,7 +58,7 @@ public class AutoConfigBuilderFixture
         [Fact]
         public void Should_Set_Config_RepeatCount_To_Default_If_Null()
         {
-            var count = AutoConfig.DefaultRepeatCount.Invoke(null!);
+            var count = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
             _builder.WithRepeatCount<ITestBuilder>(null, null!);
             Assert.Equal(count, _config.RepeatCount.Invoke(null!));
         }
@@ -77,7 +78,7 @@ public class AutoConfigBuilderFixture
         [Fact]
         public void Should_Set_Config_RecursiveDepth_To_Default_If_Null()
         {
-            var depth = AutoConfig.DefaultRecursiveDepth.Invoke(null!);
+            var depth = AutoFakerConfig.DefaultRecursiveDepth.Invoke(null!);
             _builder.WithRecursiveDepth<ITestBuilder>(null, null!);
             Assert.Equal(depth, _config.RecursiveDepth.Invoke(null!));
         }
@@ -97,7 +98,7 @@ public class AutoConfigBuilderFixture
         [Fact]
         public void Should_Set_Config_TreeDepth_To_Default_If_Null()
         {
-            var depth = AutoConfig.DefaultTreeDepth.Invoke(null!);
+            var depth = AutoFakerConfig.DefaultTreeDepth.Invoke(null!);
             _builder.WithTreeDepth<ITestBuilder>(null, null!);
             Assert.Equal(depth, _config.TreeDepth.Invoke(null!));
         }

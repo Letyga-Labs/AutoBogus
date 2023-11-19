@@ -1,13 +1,15 @@
 using System.Diagnostics;
 using System.Dynamic;
 using System.Net;
-using AutoBogus.Generation;
 using AutoBogus.Generators;
 using AutoBogus.Util;
 
-namespace AutoBogus;
+namespace AutoBogus.Internal;
 
-internal static class AutoGeneratorFactory
+/// <summary>
+/// Contains, manages and provides all builtin fake value generators.
+/// </summary>
+internal static class GeneratorFactory
 {
     internal static readonly IDictionary<Type, IAutoGenerator> Generators = new Dictionary<Type, IAutoGenerator>
     {
@@ -33,7 +35,7 @@ internal static class AutoGeneratorFactory
     };
 
     /// <summary>
-    /// Should be obtained only in <see cref="Generator"/>.
+    /// Should be obtained only in <see cref="Generation"/>.
     /// Internal visiblity is only for tests.
     /// </summary>
     /// <returns>Resolved generator for the given generation context.</returns>
@@ -46,7 +48,7 @@ internal static class AutoGeneratorFactory
 
         if (overrides.Any())
         {
-            return new AutoGeneratorOverrideInvoker(generator, overrides);
+            return new CustomGeneratorProvidedByClientOverrides(generator, overrides);
         }
 
         return generator;

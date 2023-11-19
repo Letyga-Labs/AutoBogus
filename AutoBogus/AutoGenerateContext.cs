@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using AutoBogus.Internal;
 using Bogus;
 
 namespace AutoBogus;
@@ -15,12 +16,12 @@ namespace AutoBogus;
     """)]
 public sealed class AutoGenerateContext
 {
-    internal AutoGenerateContext(AutoConfig config)
+    internal AutoGenerateContext(AutoFakerConfig config)
         : this(config.FakerHub, config)
     {
     }
 
-    internal AutoGenerateContext(Faker? faker, AutoConfig config)
+    internal AutoGenerateContext(Faker? faker, AutoFakerConfig config)
     {
         Faker  = faker ?? new Faker(config.Locale);
         Config = config;
@@ -55,7 +56,7 @@ public sealed class AutoGenerateContext
     /// </summary>
     public IEnumerable<string> RuleSets { get; internal set; }
 
-    internal AutoConfig Config { get; }
+    internal AutoFakerConfig Config { get; }
 
     internal Stack<Type> TypesStack { get; }
 

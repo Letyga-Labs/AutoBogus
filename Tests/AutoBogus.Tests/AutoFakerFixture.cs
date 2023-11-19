@@ -2,6 +2,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Reflection;
+using AutoBogus.Internal;
 using AutoBogus.Tests.Models;
 using AutoBogus.Tests.Models.Complex;
 using AutoBogus.Tests.Models.Simple;
@@ -22,7 +23,7 @@ public class AutoFakerFixture
     [SuppressMessage("Design", "CA1024:Use properties where appropriate")]
     public static IEnumerable<object[]> GetTypes()
     {
-        foreach (var type in AutoGeneratorFactory.Generators.Keys)
+        foreach (var type in GeneratorFactory.Generators.Keys)
         {
             yield return new object[] { type, };
         }
@@ -48,7 +49,7 @@ public class AutoFakerFixture
     {
         ArgumentNullException.ThrowIfNull(methodInfo);
 
-        var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
+        var count     = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
         var method    = methodInfo.MakeGenericMethod(type);
         var instances = (IEnumerable)method.Invoke(faker, args)!;
 
@@ -66,7 +67,7 @@ public class AutoFakerFixture
     {
         ArgumentNullException.ThrowIfNull(instances);
 
-        var count = AutoConfig.DefaultRepeatCount.Invoke(null!);
+        var count = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
         var list  = new List<Order>();
         foreach (var instance in instances)
         {
@@ -77,12 +78,12 @@ public class AutoFakerFixture
         Assert.Equal(count, list.Count);
     }
 
-    private Action<TBuilder> CreateConfigure<TBuilder>(AutoConfig assertConfig, Action<TBuilder>? configure = null)
+    private Action<TBuilder> CreateConfigure<TBuilder>(AutoFakerConfig assertConfig, Action<TBuilder>? configure = null)
     {
         return builder =>
         {
             configure?.Invoke(builder);
-            var instance = builder as AutoConfigBuilder;
+            var instance = builder as AutoFakerConfigBuilder;
             Assert.NotEqual(assertConfig, instance!.Config);
         };
     }
@@ -92,10 +93,10 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Configure_Default_Config()
         {
-            AutoConfig? config = null;
+            AutoFakerConfig? config = null;
             AutoFaker.Configure(builder =>
             {
-                config = ((AutoConfigBuilder)builder).Config;
+                config = ((AutoFakerConfigBuilder)builder).Config;
             });
 
             Assert.Equal(AutoFaker.DefaultConfig, config);
@@ -132,7 +133,7 @@ public class AutoFakerFixture
             new[] { typeof(int), typeof(Action<IAutoGenerateConfigBuilder>), },
             null)!;
 
-        private readonly AutoConfig _config;
+        private readonly AutoFakerConfig _config;
 
         private readonly IAutoFaker _faker;
 
@@ -156,7 +157,7 @@ public class AutoFakerFixture
         [MemberData(nameof(GetTypes))]
         public void Should_Generate_Many_Types(Type type)
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
+            var count     = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(_config);
 
             AssertGenerateMany(type, _generateMany, _faker, count, configure);
@@ -172,7 +173,7 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Many_Complex_Types()
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
+            var count     = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(_config);
             var instances = _faker.Generate<Order>(count, configure);
 
@@ -209,7 +210,7 @@ public class AutoFakerFixture
         [MemberData(nameof(GetTypes))]
         public void Should_Generate_Many_Types(Type type)
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
+            var count     = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(AutoFaker.DefaultConfig);
 
             AssertGenerateMany(type, _generateMany, null, count, configure);
@@ -225,7 +226,7 @@ public class AutoFakerFixture
         [Fact]
         public void Should_Generate_Many_Complex_Types()
         {
-            var count     = AutoConfig.DefaultRepeatCount.Invoke(null!);
+            var count     = AutoFakerConfig.DefaultRepeatCount.Invoke(null!);
             var configure = CreateConfigure<IAutoGenerateConfigBuilder>(AutoFaker.DefaultConfig);
             var instances = AutoFaker.Generate<Order>(count, configure);
 
@@ -291,7 +292,7 @@ public class AutoFakerFixture
                 .CustomInstantiator(_ => new Order(default, default))
                 .Generate();
 
-            binder.DidNotReceive().CreateInstance<Order>(Arg.Any<AutoGenerateContext>());
+            binder.DidNotReceive().CreateUnpopulatedInstance<Order>(Arg.Any<AutoGenerateContext>());
         }
 
         [Fact]

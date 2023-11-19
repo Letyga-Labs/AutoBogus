@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using AutoBogus.Internal;
 
 namespace AutoBogus;
 
@@ -155,7 +156,7 @@ public static class AutoConfigBuilderExtensions
         Func<AutoGenerateOverrideContext, TType> generator)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        var generatorOverride = new AutoGeneratorTypeOverride<TType>(generator);
+        var generatorOverride = new ClientCustomOverrideOfTypeGeneration<TType>(generator);
         return builder.WithOverride(generatorOverride);
     }
 
@@ -171,7 +172,7 @@ public static class AutoConfigBuilderExtensions
         Func<AutoGenerateOverrideContext, TType> generator)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        var generatorOverride = new AutoGeneratorTypeOverride<TType>(generator);
+        var generatorOverride = new ClientCustomOverrideOfTypeGeneration<TType>(generator);
         return builder.WithOverride(generatorOverride);
     }
 
@@ -187,7 +188,7 @@ public static class AutoConfigBuilderExtensions
         Func<AutoGenerateOverrideContext, TType> generator)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        var generatorOverride = new AutoGeneratorTypeOverride<TType>(generator);
+        var generatorOverride = new ClientCustomOverrideOfTypeGeneration<TType>(generator);
         return builder.WithOverride(generatorOverride);
     }
 
@@ -209,7 +210,7 @@ public static class AutoConfigBuilderExtensions
         ArgumentNullException.ThrowIfNull(member);
 
         var memberName        = GetMemberName(member);
-        var generatorOverride = new AutoGeneratorMemberOverride<TType, TValue>(memberName, generator);
+        var generatorOverride = new ClientCustomOverrideOfMemberGeneration<TType, TValue>(memberName, generator);
 
         return builder.WithOverride(generatorOverride);
     }
@@ -232,7 +233,7 @@ public static class AutoConfigBuilderExtensions
         ArgumentNullException.ThrowIfNull(member);
 
         var memberName        = GetMemberName(member);
-        var generatorOverride = new AutoGeneratorMemberOverride<TType, TValue>(memberName, generator);
+        var generatorOverride = new ClientCustomOverrideOfMemberGeneration<TType, TValue>(memberName, generator);
 
         return builder.WithOverride(generatorOverride);
     }
@@ -255,7 +256,7 @@ public static class AutoConfigBuilderExtensions
         ArgumentNullException.ThrowIfNull(member);
 
         var memberName        = GetMemberName(member);
-        var generatorOverride = new AutoGeneratorMemberOverride<TType, TValue>(memberName, generator);
+        var generatorOverride = new ClientCustomOverrideOfMemberGeneration<TType, TValue>(memberName, generator);
 
         return builder.WithOverride(generatorOverride);
     }

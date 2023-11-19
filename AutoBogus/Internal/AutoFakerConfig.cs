@@ -1,8 +1,8 @@
 using Bogus;
 
-namespace AutoBogus;
+namespace AutoBogus.Internal;
 
-internal sealed class AutoConfig
+internal sealed class AutoFakerConfig
 {
     internal const string DefaultLocale             = "en";
     internal const int    GenerateAttemptsThreshold = 3;
@@ -12,7 +12,7 @@ internal sealed class AutoConfig
     internal static readonly Func<AutoGenerateContext, int>  DefaultRecursiveDepth    = _ => 2;
     internal static readonly Func<AutoGenerateContext, int?> DefaultTreeDepth         = _ => null;
 
-    internal AutoConfig()
+    internal AutoFakerConfig()
     {
         Locale            = DefaultLocale;
         RepeatCount       = DefaultRepeatCount;
@@ -25,7 +25,7 @@ internal sealed class AutoConfig
         Overrides         = new HashSet<AutoGeneratorOverride>();
     }
 
-    internal AutoConfig(AutoConfig config)
+    internal AutoFakerConfig(AutoFakerConfig config)
     {
         Locale            = config.Locale;
         RepeatCount       = config.RepeatCount;
@@ -55,7 +55,7 @@ internal sealed class AutoConfig
     public override string ToString()
     {
         return $"""
-                {nameof(AutoConfig)} (
+                {nameof(AutoFakerConfig)} (
                     {nameof(Locale)}    : {Locale}
                     {nameof(Binder)}    : {Binder}
                     {nameof(FakerHub)}  : {FakerHub}

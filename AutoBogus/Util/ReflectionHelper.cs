@@ -2,6 +2,9 @@ using System.Reflection;
 
 namespace AutoBogus.Util;
 
+/// <summary>
+/// A set of various general reflection utilities empowering AutoFaker.
+/// </summary>
 internal static class ReflectionHelper
 {
     internal static Type? GetGenericCollectionType(Type type)

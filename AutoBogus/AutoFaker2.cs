@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
-using AutoBogus.Generation;
+using AutoBogus.Internal;
 using Bogus;
 
 namespace AutoBogus;
@@ -15,7 +15,7 @@ public class AutoFaker<TType> : Faker<TType>
 {
     private readonly Func<Faker, TType> _defaultCreateAction;
 
-    private AutoConfig? _config;
+    private AutoFakerConfig? _config;
 
     private bool _createInitialized;
     private bool _finishInitialized;
@@ -26,7 +26,7 @@ public class AutoFaker<TType> : Faker<TType>
     /// <param name="locale">The locale to use for value generation.</param>
     /// <param name="binder">The <see cref="IAutoBinder" /> instance to use for the generation request.</param>
     public AutoFaker(string? locale = null, IAutoBinder? binder = null)
-        : base(locale ?? AutoConfig.DefaultLocale, binder)
+        : base(locale ?? AutoFakerConfig.DefaultLocale, binder)
     {
         Binder = binder;
 
@@ -41,7 +41,7 @@ public class AutoFaker<TType> : Faker<TType>
     /// </summary>
     public IAutoBinder? Binder { get; private set; }
 
-    private AutoConfig Config
+    private AutoFakerConfig Config
     {
         get => _config!;
         set
@@ -69,8 +69,8 @@ public class AutoFaker<TType> : Faker<TType>
     /// <returns>The current faker instance.</returns>
     public AutoFaker<TType> Configure(Action<IAutoGenerateConfigBuilder>? configure = null)
     {
-        var config  = new AutoConfig(AutoFaker.DefaultConfig);
-        var builder = new AutoConfigBuilder(config);
+        var config  = new AutoFakerConfig(AutoFaker.DefaultConfig);
+        var builder = new AutoFakerConfigBuilder(config);
         configure?.Invoke(builder);
 
         Config = config;
@@ -124,7 +124,7 @@ public class AutoFaker<TType> : Faker<TType>
 
     private AutoGenerateContext CreateContext(string? ruleSets)
     {
-        var config = new AutoConfig(_config ?? AutoFaker.DefaultConfig);
+        var config = new AutoFakerConfig(_config ?? AutoFaker.DefaultConfig);
 
         if (!string.IsNullOrWhiteSpace(Locale))
         {
@@ -210,7 +210,7 @@ public class AutoFaker<TType> : Faker<TType>
         {
             if (memberNames.Contains(memberName))
             {
-                var path = SkipConfig.MakePathForMember(type, memberName);
+                var path = PopulationTargetFiltering.GetSkipPathOfMember(type, memberName);
                 context.Config.SkipPaths.Add(path);
             }
         }
@@ -218,7 +218,7 @@ public class AutoFaker<TType> : Faker<TType>
         // Let Bogus create an instance according to registered rules.
         // Remaining unfilled members will be populated in the FinalizeAction registered
         // by PrepareFinish (context.Binder.PopulateInstance<TType>).
-        var unfinishedInstance = context.Binder.CreateInstance<TType>(context);
+        var unfinishedInstance = context.Binder.CreateUnpopulatedInstance<TType>(context);
 
         return unfinishedInstance;
     }
@@ -237,7 +237,7 @@ public class AutoFaker<TType> : Faker<TType>
         if (type == typeof(ExpandoObject))
         {
             // Get the expando generator and populate the instance
-            _ = Generator.Generate(
+            _ = Generation.Generate(
                 context,
                 parentType: null,
                 generateType: type,

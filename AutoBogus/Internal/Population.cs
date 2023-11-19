@@ -3,11 +3,14 @@ using System.Reflection;
 using AutoBogus.Errors;
 using AutoBogus.Util;
 
-namespace AutoBogus.Generation;
+namespace AutoBogus.Internal;
 
-internal static class PopulationExtensions
+/// <summary>
+/// Contains all the isolated functionality for members populating.
+/// </summary>
+internal static class Population
 {
-    public static void PopulateWithNewValue(this AutoMember member, object memberHolder, object newValue)
+    public static void PopulateWithNewValue(PopulationTarget member, object memberHolder, object newValue)
     {
         try
         {
@@ -17,7 +20,7 @@ internal static class PopulationExtensions
             }
             else if (ReflectionHelper.IsDictionary(member.Type))
             {
-                var newValues = newValue as IDictionary ?? throw new GeneratedValueIsOfWrongTypeException(
+                var newValues = newValue as IDictionary ?? throw new GeneratedValueCannotBeUsedForPopulationException(
                     $"""
                      The generated value for dictionaries stored in read only field must implement IDictionary
                      interface so that AutoFaker could enumerate through its items and add them to the populating target.
@@ -28,7 +31,7 @@ internal static class PopulationExtensions
             }
             else if (ReflectionHelper.IsCollection(member.Type))
             {
-                var newValues = newValue as ICollection ?? throw new GeneratedValueIsOfWrongTypeException(
+                var newValues = newValue as ICollection ?? throw new GeneratedValueCannotBeUsedForPopulationException(
                     $"""
                      The generated value for dictionaries stored in read only field must implement ICollection
                      interface so that AutoFaker could enumerate through its items and add them to the populating target.
@@ -44,7 +47,7 @@ internal static class PopulationExtensions
         }
     }
 
-    private static void PopulateDictionary(AutoMember member, object parent, IDictionary newValues)
+    private static void PopulateDictionary(PopulationTarget member, object parent, IDictionary newValues)
     {
         var instance = member.Getter(parent);
         switch (instance)
@@ -83,7 +86,7 @@ internal static class PopulationExtensions
         }
     }
 
-    private static void PopulateCollection(AutoMember member, object parent, ICollection newValues)
+    private static void PopulateCollection(PopulationTarget member, object parent, ICollection newValues)
     {
         var instance = member.Getter(parent);
         switch (instance)
@@ -122,7 +125,7 @@ internal static class PopulationExtensions
         }
     }
 
-    private static MethodInfo? GetAddMethod(AutoMember member)
+    private static MethodInfo? GetAddMethod(PopulationTarget member)
     {
         var argTypes = new[] { typeof(object), };
 

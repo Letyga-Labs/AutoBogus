@@ -1,4 +1,6 @@
-﻿namespace AutoBogus.Generators;
+﻿using AutoBogus.Internal;
+
+namespace AutoBogus.Generators;
 
 internal sealed class GuidGenerator : IAutoGenerator
 {

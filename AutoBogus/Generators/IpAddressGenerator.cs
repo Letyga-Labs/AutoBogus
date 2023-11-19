@@ -1,3 +1,5 @@
+using AutoBogus.Internal;
+
 namespace AutoBogus.Generators;
 
 internal sealed class IpAddressGenerator : IAutoGenerator

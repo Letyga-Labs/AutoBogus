@@ -1,13 +1,15 @@
-namespace AutoBogus;
+namespace AutoBogus.Internal;
 
-internal sealed class AutoGeneratorMemberOverride<TType, TValue> : AutoGeneratorOverride
+internal sealed class ClientCustomOverrideOfMemberGeneration<TType, TValue> : AutoGeneratorOverride
 {
     private readonly Type   _type;
     private readonly string _memberName;
 
     private readonly Func<AutoGenerateOverrideContext, TValue> _generator;
 
-    internal AutoGeneratorMemberOverride(string memberName, Func<AutoGenerateOverrideContext, TValue> generator)
+    internal ClientCustomOverrideOfMemberGeneration(
+        string                                    memberName,
+        Func<AutoGenerateOverrideContext, TValue> generator)
     {
         if (string.IsNullOrWhiteSpace(memberName))
         {

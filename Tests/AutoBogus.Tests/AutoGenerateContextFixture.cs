@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using AutoBogus.Generation;
+using AutoBogus.Internal;
 using Bogus;
 using Xunit;
 
@@ -8,7 +8,7 @@ namespace AutoBogus.Tests;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public class AutoGenerateContextFixture
 {
-    private readonly AutoConfig          _config   = new();
+    private readonly AutoFakerConfig          _config   = new();
     private readonly Faker               _faker    = new();
     private readonly IEnumerable<string> _ruleSets = Enumerable.Empty<string>();
 
@@ -38,7 +38,7 @@ public class AutoGenerateContextFixture
 
             _config.RepeatCount = _ => count;
 
-            Generator.GenerateMany(_context, _items, false, null, 1, () => _value);
+            Generation.GenerateMany(_context, _items, false, null, 1, () => _value);
 
             Assert.Equal(expected, _items);
         }
@@ -46,7 +46,7 @@ public class AutoGenerateContextFixture
         [Fact]
         public void Should_Generate_Duplicates_If_Not_Unique()
         {
-            Generator.GenerateMany(_context, _items, false, 2, 1, () => _value);
+            Generation.GenerateMany(_context, _items, false, 2, 1, () => _value);
 
             var expected = new List<int>
             {
@@ -63,7 +63,7 @@ public class AutoGenerateContextFixture
             var first  = _value;
             var second = _faker.Random.Int();
 
-            Generator.GenerateMany(_context, _items, true, 2, 1, () =>
+            Generation.GenerateMany(_context, _items, true, 2, 1, () =>
             {
                 var item = _value;
                 _value = second;
@@ -85,13 +85,13 @@ public class AutoGenerateContextFixture
         {
             var attempts = 0;
 
-            Generator.GenerateMany(_context, _items, true, 2, 1, () =>
+            Generation.GenerateMany(_context, _items, true, 2, 1, () =>
             {
                 attempts++;
                 return _value;
             });
 
-            Assert.Equal(AutoConfig.GenerateAttemptsThreshold, attempts);
+            Assert.Equal(AutoFakerConfig.GenerateAttemptsThreshold, attempts);
 
             var expected = new List<int> { _value };
 
